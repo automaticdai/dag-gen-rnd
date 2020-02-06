@@ -16,8 +16,9 @@ s_ = 1;
 n = 1;
 candi = [s_];
 type = 1;
+
 % Loop
-for i = 1:dagDepth - 1
+for i = 1:dagDepth - 2
     candi_new = [];
     for j = 1:numel(candi)
         a = candi(j);
@@ -26,7 +27,8 @@ for i = 1:dagDepth - 1
         if seed < spanProb
             % span
             type = 1;
-            for i = 1:spanSize            
+            spanSize_t = randi(spanSize - 1) + 1;
+            for i = 1:spanSize_t            
                 n = n + 1;
                 s = [s a];
                 t = [t n];
@@ -50,16 +52,15 @@ for i = 1:dagDepth - 1
 
                 s = [s a b];
                 t = [t n n];
-
                 candi_new = [candi_new n];
+                type = 3;
             else
                 % cont
                 s = [s a];
                 t = [t n];
                 candi_new = [candi_new n];
+                type = 4;
             end
-            
-            type = 3;
         end
     end
     
@@ -67,13 +68,15 @@ for i = 1:dagDepth - 1
 end
 
 % Finish
-% n = n + 1;
-% for k = 1:numel(candi)
-%     a = candi(k);
-%     s = [s a];
-%     t = [t n];
-% end
+n = n + 1;
+for k = 1:numel(candi)
+    a = candi(k);
+    s = [s a];
+    t = [t n];
+end
 
+s
+t
 D = digraph(s,t);
 D = simplify(D);
 
