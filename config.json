@@ -1,0 +1,9 @@
+{"tg": {
+    "name": "Task Graph",
+    "depth": 5,
+    "span": 2,
+    "pa": 0.5,
+    "pb": 0.2,
+    "pc": 0.1
+  }
+}
