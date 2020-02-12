@@ -7,7 +7,8 @@ Randomized Direct Acyclic Graph (DAG) generator for scheduling and allocation re
 - Matplotlib
 
 ## Install
-`pip3 install networkx matplotlib graphviz`
+`pip3 install -r requirements.txt`
+
 
 ## Configuration
 Use the configuration file `config.json` to config parameters.
