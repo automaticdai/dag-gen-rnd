@@ -1,5 +1,10 @@
 #!/usr/bin/python3
 
+# Randomized DAG Generator
+# by Xiaotian Dai
+# University of York, UK
+# 2020
+
 import networkx as nx
 from   networkx.drawing.nx_agraph import graphviz_layout, to_agraph
 import pygraphviz as pgv
@@ -13,6 +18,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton,
                              QSlider, QFormLayout, QMessageBox, QComboBox,
                              QLineEdit)
+
+from random import seed, randint, random
 
 
 def event_on_button_gen_clicked():
@@ -29,10 +36,10 @@ def gui_init():
     label = QLabel("Randomised DAG Generator")
 
     opt_alogrithm = QComboBox()
-    opt_alogrithm.addItem("Default")
+    opt_alogrithm.addItem("Layer-by-layer")
 
-    edit_util = QLineEdit()
-    edit_number = QLineEdit()
+    edit_crit = QLineEdit()
+    edit_parallism = QLineEdit()
     edit_depth = QLineEdit()
     edit_span = QLineEdit()
 
@@ -50,18 +57,20 @@ def gui_init():
     formLayout.addRow(label)
 
     formLayout.addRow("&Algorithm:", opt_alogrithm)
-    formLayout.addRow("&Total Utilization:", edit_util)
-    formLayout.addRow("&Number of DAGs", edit_number)
+    formLayout.addRow("&Length of critical Path", edit_crit)
+    formLayout.addRow("&Max Parallism", edit_parallism)
     formLayout.addRow("&Branches of Span:", edit_span)
     formLayout.addRow("&Depth of DAG:", edit_depth)
+
     formLayout.addRow("P(Proceed):", slider_pa)
     formLayout.addRow("P(Span):", slider_pb)
     formLayout.addRow("P(Join):", slider_pc)
+
     formLayout.addRow(button_gen)
 
     # set some default values
-    edit_util.setText("1.0")
-    edit_number.setText("1")
+    edit_crit.setText("[10, 100]")
+    edit_parallism.setText("3")
     edit_depth.setText("5")
     edit_span.setText("2")
 
@@ -81,31 +90,76 @@ def gui_init():
     app.exec_()
 
 
+# parameters
+rnd_seed = 1
+parallism = 5
+layer_num = 10
+connect_prob = 0.9
+
+
 def dag_gen():
+    # data structures
+    nodes = []
+    nodes_parent = []
+    nodes_orphan = []   # orphan is defined as a node without any parent
+
+    edges = []
+
     # initial a new graph
     G = nx.DiGraph()
 
-    # add nodes
-    G.add_node('A', rank=0)
-    G.add_nodes_from(['B', 'C', 'D'], style='filled', fillcolor='red',
-                     shape='diamond')
-    G.add_nodes_from(['E', 'F', 'G'])
-    G.add_nodes_from(['H'], label='H')
+    # add the root node
+    n = 1
+    G.add_node(n, rank=0)
+    nodes.append([n])
+    nodes_parent.append(n)
+    n = n + 1
 
-    # add edges
-    G.add_edge('A', 'B', arrowsize=2.0)
-    G.add_edge('A', 'C', penwidth=2.0)
-    G.add_edge('A', 'D')
-    G.add_edges_from([('B', 'E'), ('B', 'F')], color='blue')
-    G.add_edges_from([('C', 'E'), ('C', 'G')])
-    G.add_edges_from([('D', 'F'), ('D', 'G')])
-    G.add_edges_from([('E', 'H'), ('F', 'H'), ('G', 'H')])
+    print(nodes)
+    print(edges)
+
+    # generate layer by layer
+    for k in range(layer_num-1):
+        # randomised nodes in each layer
+        m = randint(1, parallism)
+
+        nodes_t = []
+        for j in range(m):
+            nodes_t.append(n)
+            nodes_orphan.append(n)
+            G.add_node(n, rank=k+1)
+            n = n + 1
+
+        nodes.append(nodes_t)
+
+        # iterates all nodes in the current layout
+        for i in nodes[k+1]:
+            print(i)
+            for ii in nodes_parent:
+                # add connections
+                if random() < connect_prob:
+                    G.add_edge(ii, i)
+                    if i in nodes_orphan:
+                        nodes_orphan.remove(i)
+                    # if ii in nodes_orphan:
+                    #     nodes_orphan.remove(ii)
+
+        nodes_parent[:] = nodes[k+1]
+
+    # mutate a conditional node
+
+    # G.add_node('2', style='filled', fillcolor='red', shape='diamond')
 
     # set graph properties
-    G.graph['graph'] = {'rankdir': 'TD'}
-    G.graph['node'] = {'shape': 'circle'}
-    G.graph['edges'] = {'arrowsize': '2.0'}
 
+    print(nodes)
+    print(nodes_orphan)
+
+    # how to handle orphans?
+
+    # also what happens if an orphans has a parent but no child???
+
+    # return the graph
     return G
 
 
@@ -121,6 +175,7 @@ def dag_plot(G):
 
     img = mpimg.imread(filename)
     plt.imshow(img)
+    plt.axis('off')
     plt.show()
 
 
@@ -128,12 +183,18 @@ def dag_save(G):
     pass
 
 
+# Main function
 if __name__ == "__main__":
-    # load configurations
-    with open('config.json', 'r') as f:
-        array = json.load(f)
+    # fix random seed
+    seed(rnd_seed)
 
-    print(array["tg"])
+    # load configurations
+    #with open('config.json', 'r') as f:
+    #    array = json.load(f)
+
+    #print(array["tg"])
 
     # initialize GUI
+    #event_on_button_gen_clicked()
+
     gui_init()
