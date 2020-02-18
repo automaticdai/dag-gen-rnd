@@ -43,11 +43,7 @@ def gui_init():
     edit_depth = QLineEdit()
     edit_span = QLineEdit()
 
-    slider_pa = QSlider(Qt.Horizontal)
-    slider_pb = QSlider(Qt.Horizontal)
     slider_pc = QSlider(Qt.Horizontal)
-    slider_pa.setRange(0, 100)
-    slider_pb.setRange(0, 100)
     slider_pc.setRange(0, 100)
 
     button_gen = QPushButton('Generate')
@@ -62,9 +58,7 @@ def gui_init():
     formLayout.addRow("&Branches of Span:", edit_span)
     formLayout.addRow("&Depth of DAG:", edit_depth)
 
-    formLayout.addRow("P(Proceed):", slider_pa)
-    formLayout.addRow("P(Span):", slider_pb)
-    formLayout.addRow("P(Join):", slider_pc)
+    formLayout.addRow("P(Connnection):", slider_pc)
 
     formLayout.addRow(button_gen)
 
@@ -74,8 +68,6 @@ def gui_init():
     edit_depth.setText("5")
     edit_span.setText("2")
 
-    slider_pa.setValue(50)
-    slider_pb.setValue(30)
     slider_pc.setValue(20)
 
     # create window
@@ -92,7 +84,7 @@ def gui_init():
 
 # parameters
 rnd_seed = 1
-parallism = 5
+parallism = 3
 layer_num = 10
 connect_prob = 0.9
 
@@ -159,6 +151,8 @@ def dag_gen():
 
     # also what happens if an orphans has a parent but no child???
 
+    # simplify: A->B->C to A->C
+
     # return the graph
     return G
 
@@ -171,11 +165,19 @@ def dag_plot(G):
 
     # plot graph
     filename = 'output/abcd.png'
-    A.draw(filename)
+    A.draw(filename, format="png")
 
     img = mpimg.imread(filename)
-    plt.imshow(img)
-    plt.axis('off')
+    ypixels, xpixels, bands = img.shape
+    dpi = 96.
+    xinch = xpixels / dpi
+    yinch = ypixels / dpi
+
+    # plot and save in the same size as the original
+    plt.figure(figsize=(xinch, yinch))
+    ax = plt.axes([0., 0., 1., 1.], frameon=False, xticks=[], yticks=[])
+    ax.imshow(img, interpolation='none')
+
     plt.show()
 
 
