@@ -83,17 +83,18 @@ def gui_init():
 
 
 # parameters
-rnd_seed = 1
-parallism = 3
-layer_num = 10
-connect_prob = 0.9
+rnd_seed = randint(1, 1000)
+parallism = 5
+layer_num = 5
+connect_prob = 0.7
 
 
 def dag_gen():
     # data structures
-    nodes = []
-    nodes_parent = []
-    nodes_orphan = []   # orphan is defined as a node without any parent
+    nodes = []          # nodes in all layers
+    nodes_parent = []   # nodes that can be parents
+    nodes_parent_childless = []  # nodes without child
+    nodes_orphan = []   # nodes without any parent
 
     edges = []
 
@@ -123,22 +124,34 @@ def dag_gen():
             n = n + 1
 
         nodes.append(nodes_t)
-
+        # initially assume all parents are childless
+        nodes_parent_childless[:] = nodes_parent_childless[:] + nodes_parent[:]
         # iterates all nodes in the current layout
         for i in nodes[k+1]:
-            print(i)
             for ii in nodes_parent:
                 # add connections
                 if random() < connect_prob:
                     G.add_edge(ii, i)
                     if i in nodes_orphan:
                         nodes_orphan.remove(i)
-                    # if ii in nodes_orphan:
-                    #     nodes_orphan.remove(ii)
-
+                    if ii in nodes_parent_childless:
+                        nodes_parent_childless.remove(ii)
+        # add all childs as candidate parents for the next layer
         nodes_parent[:] = nodes[k+1]
 
-    # mutate a conditional node
+        # remove all orphan (they cannot be parent)
+        for i in nodes_orphan:
+            if i in nodes_parent:
+                nodes_parent.remove(i)
+
+    # connect everything together to a final node
+    for i in nodes_parent:
+        G.add_edge(i, n)
+
+    for i in nodes_parent_childless:
+        G.add_edge(i, n)
+
+    # mutate a node to be conditional
 
     # G.add_node('2', style='filled', fillcolor='red', shape='diamond')
 
@@ -161,10 +174,11 @@ def dag_plot(G):
     # layout graph
     A = to_agraph(G)
     print(A)
+    print(type(A))
     A.layout('dot')
 
     # plot graph
-    filename = 'output/abcd.png'
+    filename = 'output/graph.png'
     A.draw(filename, format="png")
 
     img = mpimg.imread(filename)
@@ -197,6 +211,5 @@ if __name__ == "__main__":
     #print(array["tg"])
 
     # initialize GUI
-    #event_on_button_gen_clicked()
-
-    gui_init()
+    event_on_button_gen_clicked()
+    #gui_init()
