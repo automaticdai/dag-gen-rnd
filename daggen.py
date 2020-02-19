@@ -84,14 +84,14 @@ def gui_init():
 
 # parameters
 rnd_seed = randint(1, 1000)
-parallism = 5
-layer_num = 5
-connect_prob = 0.7
+parallism = 3
+layer_num = 5 - 2
+connect_prob = 0.9
 
 
 def dag_gen():
     # data structures
-    nodes = []          # nodes in all layers
+    nodes = []          # nodes in all layers (in form of shape decomposition)
     nodes_parent = []   # nodes that can be parents
     nodes_parent_childless = []  # nodes without child
     nodes_orphan = []   # nodes without any parent
@@ -112,7 +112,7 @@ def dag_gen():
     print(edges)
 
     # generate layer by layer
-    for k in range(layer_num-1):
+    for k in range(layer_num):
         # randomised nodes in each layer
         m = randint(1, parallism)
 
@@ -124,8 +124,10 @@ def dag_gen():
             n = n + 1
 
         nodes.append(nodes_t)
+
         # initially assume all parents are childless
         nodes_parent_childless[:] = nodes_parent_childless[:] + nodes_parent[:]
+
         # iterates all nodes in the current layout
         for i in nodes[k+1]:
             for ii in nodes_parent:
@@ -139,11 +141,14 @@ def dag_gen():
         # add all childs as candidate parents for the next layer
         nodes_parent[:] = nodes[k+1]
 
-        # remove all orphan (they cannot be parent)
+        # connect all orphan to the root node
         for i in nodes_orphan:
-            if i in nodes_parent:
-                nodes_parent.remove(i)
+            nodes_orphan.remove(i)
+            G.add_edge(1, i)
+            # if i in nodes_parent:
+            #     nodes_parent.remove(i)
 
+    # Dealing with the final layer
     # connect everything together to a final node
     for i in nodes_parent:
         G.add_edge(i, n)
@@ -151,6 +156,10 @@ def dag_gen():
     for i in nodes_parent_childless:
         G.add_edge(i, n)
 
+    # connect all orphan to the root node
+    for i in nodes_orphan:
+        nodes_orphan.remove(i)
+        G.add_edge(1, i)
     # mutate a node to be conditional
 
     # G.add_node('2', style='filled', fillcolor='red', shape='diamond')
@@ -183,7 +192,7 @@ def dag_plot(G):
 
     img = mpimg.imread(filename)
     ypixels, xpixels, bands = img.shape
-    dpi = 96.
+    dpi = 100.
     xinch = xpixels / dpi
     yinch = ypixels / dpi
 
@@ -192,7 +201,7 @@ def dag_plot(G):
     ax = plt.axes([0., 0., 1., 1.], frameon=False, xticks=[], yticks=[])
     ax.imshow(img, interpolation='none')
 
-    plt.show()
+    plt.show(block=False)
 
 
 def dag_save(G):
@@ -211,5 +220,8 @@ if __name__ == "__main__":
     #print(array["tg"])
 
     # initialize GUI
-    event_on_button_gen_clicked()
     #gui_init()
+
+    # for test only
+    event_on_button_gen_clicked()
+    plt.show()
