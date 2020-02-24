@@ -17,7 +17,7 @@ import json
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton,
                              QSlider, QFormLayout, QMessageBox, QComboBox,
-                             QLineEdit)
+                             QLineEdit, QCheckBox)
 
 from random import seed, randint, random
 
@@ -38,6 +38,8 @@ def gui_init():
     opt_alogrithm = QComboBox()
     opt_alogrithm.addItem("Layer-by-layer")
 
+    check_conditional = QCheckBox()
+
     edit_crit = QLineEdit()
     edit_parallism = QLineEdit()
     edit_depth = QLineEdit()
@@ -57,8 +59,8 @@ def gui_init():
     formLayout.addRow("&Max Parallism", edit_parallism)
     formLayout.addRow("&Branches of Span:", edit_span)
     formLayout.addRow("&Depth of DAG:", edit_depth)
-
     formLayout.addRow("P(Connnection):", slider_pc)
+    formLayout.addRow("&Conditional DAG?", check_conditional)
 
     formLayout.addRow(button_gen)
 
@@ -82,11 +84,12 @@ def gui_init():
     app.exec_()
 
 
-# parameters
+# parameters (default)
 rnd_seed = randint(1, 1000)
-parallism = 3
-layer_num = 5 - 2
-connect_prob = 0.9
+parallism = 5
+layer_num_max = 7  # critical path
+layer_num_min = 3 # critical path
+connect_prob = 0.2
 
 
 def dag_gen():
@@ -111,8 +114,11 @@ def dag_gen():
     print(nodes)
     print(edges)
 
+    # random and remove the source and the sink node
+    layer_num_this = randint(layer_num_min - 2, layer_num_max - 2)
+
     # generate layer by layer
-    for k in range(layer_num):
+    for k in range(layer_num_this):
         # randomised nodes in each layer
         m = randint(1, parallism)
 
@@ -181,7 +187,8 @@ def dag_gen():
 
 def dag_plot(G):
     # layout graph
-    A = to_agraph(G)
+    #A = to_agraph(G)
+    A = nx.nx_agraph.to_agraph(G)
     print(A)
     print(type(A))
     A.layout('dot')
@@ -220,8 +227,8 @@ if __name__ == "__main__":
     #print(array["tg"])
 
     # initialize GUI
-    #gui_init()
+    gui_init()
 
     # for test only
-    event_on_button_gen_clicked()
-    plt.show()
+    #event_on_button_gen_clicked()
+    #plt.show()
