@@ -21,75 +21,73 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton,
 
 from random import seed, randint, random
 
+class GUI:
+    def __init__(self):
+        # create application
+        app = QApplication([])
 
-def event_on_button_gen_clicked():
-    G = dag_gen()
-    dag_plot(G)
-    dag_save(G)
+        # create widgets
+        label = QLabel("MOCHA::Randomised DAG Generator")
+
+        opt_alogrithm = QComboBox()
+        opt_alogrithm.addItem("Default")
+
+        check_conditional = QCheckBox()
+
+        edit_crit = QLineEdit()
+        edit_parallism = QLineEdit()
+        edit_critical_max = QLineEdit()
+        edit_critical_min = QLineEdit()
+        edit_pc = QLineEdit()
+
+        #slider_pc = QSlider(Qt.Horizontal)
+        #slider_pc.setRange(0, 100)
+
+        button_gen = QPushButton('Generate')
+
+        # create layout
+        formLayout = QFormLayout()
+        formLayout.addRow(label)
+
+        formLayout.addRow("&Algorithm:", opt_alogrithm)
+        formLayout.addRow("&Maximum Parallelism <font color='blue'>>=1</font>:", edit_parallism)
+        formLayout.addRow("Critical Path (min) <font color='blue'>>=3</font>:", edit_critical_min)
+        formLayout.addRow("Critical Path (max) <font color='blue'>>=3</font>:", edit_critical_max)
+        formLayout.addRow("p(Connnection) <font color='blue'>[0,1]</font>:", edit_pc)
+        formLayout.addRow("with &Conditional DAG?", check_conditional)
+
+        formLayout.addRow(button_gen)
+
+        # set some default values
+        edit_parallism.setText("4")
+        edit_critical_max.setText("7")
+        edit_critical_min.setText("3")
+        edit_pc.setText("0.5")
+
+        # create window
+        window = QWidget()
+        window.setLayout(formLayout)
+        window.show()
+
+        # set signal / slots
+        button_gen.clicked.connect(self.event_on_button_gen_clicked)
+
+        # stary application
+        app.exec_()
 
 
-def gui_init():
-    # create application
-    app = QApplication([])
-
-    # create widgets
-    label = QLabel("Randomised DAG Generator")
-
-    opt_alogrithm = QComboBox()
-    opt_alogrithm.addItem("Layer-by-layer")
-
-    check_conditional = QCheckBox()
-
-    edit_crit = QLineEdit()
-    edit_parallism = QLineEdit()
-    edit_depth = QLineEdit()
-    edit_span = QLineEdit()
-
-    slider_pc = QSlider(Qt.Horizontal)
-    slider_pc.setRange(0, 100)
-
-    button_gen = QPushButton('Generate')
-
-    # create layout
-    formLayout = QFormLayout()
-    formLayout.addRow(label)
-
-    formLayout.addRow("&Algorithm:", opt_alogrithm)
-    formLayout.addRow("&Length of critical Path", edit_crit)
-    formLayout.addRow("&Max Parallism", edit_parallism)
-    formLayout.addRow("&Branches of Span:", edit_span)
-    formLayout.addRow("&Depth of DAG:", edit_depth)
-    formLayout.addRow("P(Connnection):", slider_pc)
-    formLayout.addRow("&Conditional DAG?", check_conditional)
-
-    formLayout.addRow(button_gen)
-
-    # set some default values
-    edit_crit.setText("[10, 100]")
-    edit_parallism.setText("3")
-    edit_depth.setText("5")
-    edit_span.setText("2")
-
-    slider_pc.setValue(20)
-
-    # create window
-    window = QWidget()
-    window.setLayout(formLayout)
-    window.show()
-
-    # set signal / slots
-    button_gen.clicked.connect(event_on_button_gen_clicked)
-
-    # stary application
-    app.exec_()
+    def event_on_button_gen_clicked(self):
+        G = dag_gen()
+        dag_plot(G)
+        dag_save(G)
 
 
 # parameters (default)
 rnd_seed = randint(1, 1000)
-parallism = 5
-layer_num_max = 7  # critical path
+parallelism = 4
 layer_num_min = 3 # critical path
-connect_prob = 0.2
+layer_num_max = 7  # critical path
+connect_prob = 0.5
 
 
 def dag_gen():
@@ -120,7 +118,7 @@ def dag_gen():
     # generate layer by layer
     for k in range(layer_num_this):
         # randomised nodes in each layer
-        m = randint(1, parallism)
+        m = randint(1, parallelism)
 
         nodes_t = []
         for j in range(m):
@@ -166,20 +164,17 @@ def dag_gen():
     for i in nodes_orphan:
         nodes_orphan.remove(i)
         G.add_edge(1, i)
-    # mutate a node to be conditional
 
+    # mutate a node to be conditional
     # G.add_node('2', style='filled', fillcolor='red', shape='diamond')
+
+    # handling critical Path
+
 
     # set graph properties
 
     print(nodes)
-    print(nodes_orphan)
-
-    # how to handle orphans?
-
-    # also what happens if an orphans has a parent but no child???
-
-    # simplify: A->B->C to A->C
+    #print(nodes_orphan)
 
     # return the graph
     return G
@@ -208,7 +203,8 @@ def dag_plot(G):
     ax = plt.axes([0., 0., 1., 1.], frameon=False, xticks=[], yticks=[])
     ax.imshow(img, interpolation='none')
 
-    plt.show(block=False)
+    # plt.show(block=False)
+    plt.show()
 
 
 def dag_save(G):
@@ -227,7 +223,7 @@ if __name__ == "__main__":
     #print(array["tg"])
 
     # initialize GUI
-    gui_init()
+    gui = GUI()
 
     # for test only
     #event_on_button_gen_clicked()
