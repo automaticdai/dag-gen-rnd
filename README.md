@@ -11,7 +11,6 @@ A randomized Direct Acyclic Graph (DAG) generator for scheduling and allocation 
 - Matplotlib >= 3.1.3
 - pygraphviz >= 1.5
 
----
 
 ## 1. Install
 
@@ -23,13 +22,11 @@ and then:
 
 `pip3 install -r requirements.txt`
 
----
 
 ## 2. Configure
 
 Use the configuration file `config.json` to configure parameters.
 
----
 
 ## 3. Usage
 
@@ -47,7 +44,6 @@ DAG visualization:
 
 `python3 dagviz.py param`
 
----
 
 ## 4. Citation
 
