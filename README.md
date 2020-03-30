@@ -2,7 +2,6 @@
 
 A randomized Direct Acyclic Graph (DAG) generator for scheduling and allocation research. Supports both command line and graphical user interface. Configurable and extensible.
 
----
 
 ## 0. Requirements
 
@@ -30,19 +29,16 @@ Use the configuration file `config.json` to configure parameters.
 
 ## 3. Usage
 
-### 3.1 Graphic user interface
-
-`python3 daggen.py`
-
-### 3.2 Command line tool
+### 3.1 Command line tool
 
 DAG generate:
 
-`python3 daggen-cmd.py param`
+`python3 daggen.py params`
 
-DAG visualization:
 
-`python3 dagviz.py param`
+### 3.2 Graphic user interface
+
+`python3 daggen-gui.py`
 
 
 ## 4. Citation
