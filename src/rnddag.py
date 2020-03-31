@@ -23,8 +23,11 @@ layer_num_min = 3  # critical path
 connect_prob = 0.5
 
 class rnddag:
-    @staticmethod
-    def gen():
+    def __init__(self):
+        pass
+
+
+    def gen(self):
         # data structures
         nodes = []          # nodes in all layers (in form of shape decomposition)
         nodes_parent = []   # nodes that can be parents
@@ -111,14 +114,17 @@ class rnddag:
         #print(nodes_orphan)
 
         # return the graph
-        return G
+        self.G = G
 
 
-    @staticmethod
-    def plot(G):
+    def config(self):
+        pass
+
+
+    def plot(self):
         # layout graph
         #A = to_agraph(G)
-        A = nx.nx_agraph.to_agraph(G)
+        A = nx.nx_agraph.to_agraph(self.G)
         print(A)
         print(type(A))
         A.layout('dot')
@@ -142,6 +148,5 @@ class rnddag:
         plt.show()
 
 
-    @staticmethod
-    def save(G):
+    def save(self):
         pass

@@ -6,17 +6,17 @@
 # University of York, UK
 # 2020
 
-import os, sys, logging, getopt, time, yaml
+import os, sys, logging, getopt, time, json
 
 
 def parse_configuration(config_path):
     try:
         with open(config_path, "r") as config_file:
-            config_yaml = config_file.read()
+            config_json = json.load(config_file)
     except:
         raise EnvironmentError("Unable to open %s" % (config_path))
 
-    return yaml.load(config_yaml)
+    return config_json
 
 
 def print_usage_info():
@@ -37,15 +37,15 @@ if __name__ == "__main__":
         os.makedirs(logs_path)
 
     # Parse arguments
-    config_path = None
+    config_path = "./config.json"
     directory = None
     load_jobs = False
     evaluate = False
     train = False
 
     try:
-        short_flags = "c:d:e:h"
-        long_flags = ["help", "config=", "directory=", "evaluate", "train"]
+        short_flags = "hc:d:e"
+        long_flags = ["help", "config=", "directory=", "evaluate"]
         opts, args = getopt.getopt(sys.argv[1:], short_flags, long_flags)
     except getopt.GetoptError as err:
         print(err)
@@ -53,11 +53,6 @@ if __name__ == "__main__":
         sys.exit(2)
 
     print(opts)
-
-    # Print help message
-    if len(opts) == 0:
-        print_usage_info()
-        sys.exit()
 
     for opt, arg in opts:
         if opt in ("-h", "--help"):
@@ -72,3 +67,7 @@ if __name__ == "__main__":
             evaluate = True
         else:
             raise ValueError("Unknown (opt, arg): (%s, %s)" % (opt, arg))
+
+    config = parse_configuration(config_path)
+
+    # start ...
