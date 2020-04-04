@@ -7,6 +7,7 @@
 # 2020
 
 import os, sys, logging, getopt, time, json
+from rnddag import dag, dagset
 
 
 def parse_configuration(config_path):
@@ -36,8 +37,8 @@ if __name__ == "__main__":
     if not os.path.exists(logs_path):
         os.makedirs(logs_path)
 
-    # Parse arguments
-    config_path = "./config.json"
+    # Parse cmd arguments
+    config_path = os.path.join(base_path, "config.json")
     directory = None
     load_jobs = False
     evaluate = False
@@ -70,4 +71,11 @@ if __name__ == "__main__":
 
     config = parse_configuration(config_path)
 
-    # start ...
+    # start evaluation
+    # create taskset
+    Gamma = dagset()
+
+    for i in range(1):
+        A = dag(i)
+        A.gen()
+        A.plot()

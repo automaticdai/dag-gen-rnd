@@ -6,6 +6,7 @@
 # University of York, UK
 # 2020
 
+import json
 import networkx as nx
 from   networkx.drawing.nx_agraph import graphviz_layout, to_agraph
 import pygraphviz as pgv
@@ -15,16 +16,42 @@ from random import seed, randint, random
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-# parameters (default)
-rnd_seed = randint(1, 1000)
-parallelism = 4
-layer_num_max = 7  # critical path
-layer_num_min = 3  # critical path
-connect_prob = 0.5
 
-class rnddag:
+class UUnifast:
+    
+
+# Class DAG Taskset
+class dagset:
     def __init__(self):
+        self.rnd_seed = randint(1, 1000)
+        self.util = 4.0
+        self.task_number = 10
+        self.tasks = []
+
+
+    def gen(self):
+        for i in range(self.task_number):
+            pass
+
+
+    def save(self):
+        # dump tasksets into a json file
         pass
+
+
+    def load(self):
+        pass
+
+
+# Class DAG Task
+class dag:
+    def __init__(self, i):
+        # parameters (default)
+        self.name = 'Tau_{:d}'.format(i)
+        self.parallelism = 4
+        self.layer_num_max = 5  # critical path
+        self.layer_num_min = 5  # critical path
+        self.connect_prob = 0.5
 
 
     def gen(self):
@@ -50,12 +77,12 @@ class rnddag:
         print(edges)
 
         # random and remove the source and the sink node
-        layer_num_this = randint(layer_num_min - 2, layer_num_max - 2)
+        layer_num_this = randint(self.layer_num_min - 2, self.layer_num_max - 2)
 
         # generate layer by layer
         for k in range(layer_num_this):
             # randomised nodes in each layer
-            m = randint(1, parallelism)
+            m = randint(1, self.parallelism)
 
             nodes_t = []
             for j in range(m):
@@ -73,7 +100,7 @@ class rnddag:
             for i in nodes[k+1]:
                 for ii in nodes_parent:
                     # add connections
-                    if random() < connect_prob:
+                    if random() < self.connect_prob:
                         G.add_edge(ii, i)
                         if i in nodes_orphan:
                             nodes_orphan.remove(i)
@@ -121,7 +148,7 @@ class rnddag:
         pass
 
 
-    def plot(self):
+    def save(self):
         # layout graph
         #A = to_agraph(G)
         A = nx.nx_agraph.to_agraph(self.G)
@@ -130,10 +157,14 @@ class rnddag:
         A.layout('dot')
 
         # plot graph
-        filename = 'output/graph.png'
+        filename = self.name + '.png'
         A.draw(filename, format="png")
 
-        img = mpimg.imread(filename)
+
+    def plot(self):
+        self.save()
+
+        img = mpimg.imread(self.name + '.png')
         ypixels, xpixels, bands = img.shape
         dpi = 100.
         xinch = xpixels / dpi
@@ -146,7 +177,3 @@ class rnddag:
 
         # plt.show(block=False)
         plt.show()
-
-
-    def save(self):
-        pass
