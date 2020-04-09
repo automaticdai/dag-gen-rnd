@@ -32,9 +32,20 @@ class DAGset:
             G = DAG(i)
 
         # generate periods
+        period_sets = [1,2,5,10,20,50,100,200,500,1000]
+        random.choice()
         pass
 
         # generate execution times
+
+        pass
+
+
+    def gen_periods(self):
+        pass
+
+
+    def gen_execution_times(self):
         pass
 
 
@@ -57,6 +68,14 @@ class DAG:
         self.layer_num_min = 5  # critical path
         self.connect_prob = 0.5
 
+        self.W = -1
+        self.L = -1
+
+
+    def __str__(self):
+        A = nx.nx_agraph.to_agraph(self.G)
+        return A.__str__()
+    
 
     def gen(self):
         # data structures
@@ -128,16 +147,13 @@ class DAG:
             nodes_orphan.remove(i)
             G.add_edge(1, i)
 
-        # mutate a node to be conditional
+        # (optional) mutate a node to be conditional
         # G.add_node('2', style='filled', fillcolor='red', shape='diamond')
 
         # handling critical Path
 
-
-        # set graph properties
-
-        print(nodes)
-        print(nodes_orphan)
+        #print(nodes)
+        #print(nodes_orphan)
 
         # return the graph
         self.G = G
@@ -151,22 +167,16 @@ class DAG:
         pass
 
 
-    def save(self):
+    def save(self, filename):
         # layout graph
         #A = to_agraph(G)
         A = nx.nx_agraph.to_agraph(self.G)
-        print(A)
-        print(type(A))
         A.layout('dot')
-
-        # plot graph
-        filename = self.name + '.png'
+        # save graph
         A.draw(filename, format="png")
 
 
     def plot(self):
-        self.save()
-
         img = mpimg.imread(self.name + '.png')
         ypixels, xpixels, bands = img.shape
         dpi = 100.

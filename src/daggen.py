@@ -7,7 +7,9 @@
 # 2020
 
 import os, sys, logging, getopt, time, json
+import networkx as nx
 from rnddag import DAG, DAGset
+from generator import *
 
 
 def parse_configuration(config_path):
@@ -75,9 +77,28 @@ if __name__ == "__main__":
     # create taskset
     Gamma = DAGset()
 
-    for i in range(1):
+    # task number
+    n = 10
+
+    # DAG 
+    utilizations = uunifast_discard(n, u=4.0, nsets=1)
+
+    # DAG period
+    period_set = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
+    periods = gen_period(period_set, n)
+
+    # DAG graph
+    for i in range(n):
+        w = utilizations[0][i] / periods[i]
+        print("Task {}: U = {}, T = {}, W = {}>>".format(i,utilizations[0][i],periods[i], w))
+        
         G = DAG(i)
         G.gen()
-        G.plot()
-
+        #G.save('data/{0}.png'.format(i))
         #G.plot()
+
+        # sub-DAG execution times
+        c_ = gen_execution_times(n=25, w=10)
+        nx.set_node_attributes(G.graph(), c_, 'c')
+
+        #print(G)

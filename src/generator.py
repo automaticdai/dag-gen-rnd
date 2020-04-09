@@ -7,6 +7,10 @@ import math
 
 # UUniFast-discard
 def uunifast_discard(n, u, nsets):
+    if (n <= u):
+        # no feasible solution
+        return []
+    
     sets = []
     while len(sets) < nsets:
         # Classic UUniFast algorithm:
@@ -22,7 +26,7 @@ def uunifast_discard(n, u, nsets):
         if all(ut <= 1 for ut in utilizations):
             sets.append(utilizations)
 
-        print(sum(utilizations))
+        #print(sum(utilizations))
 
     return sets
 
@@ -43,11 +47,11 @@ def uunifast(n, u):
 
 
 # random generate periods from a population set
-def gen_period_from_population(population, n):
+def gen_period(population, n):
     periods = []
 
     for i in range(n):
-        period = random.choice(period_set)
+        period = random.choice(population)
         periods.append(period)
 
     return periods
@@ -55,28 +59,37 @@ def gen_period_from_population(population, n):
 
 # distribute workloads, w, to n nodes.
 def gen_execution_times(n, w):
-    c_set = np.array([])
+    c_set = []
 
     for i in range(n):
         c = random.random()
         c_set.append(c)
 
-    c_sum = sum(c_set)
-    # normalise to w
-    c_set = c_set.div(c_sum)
+    # sum w'
+    w_p = sum(c_set)
+    f = w_p / w
 
-    return c_set
+    # normalise to w
+    c_dict = {}
+    for i in range(len(c_set)):
+        c_dict[i] = c_set[i] / f
+
+    return c_dict
 
 
 if __name__ == "__main__":
-    vectU = uunifast(10, 1.0)
+    number_of_tasks = 10
+
+    vectU = uunifast(n=10, u=1.0)
     print(vectU)
 
-    sets = uunifast_discard(10, 4.0, 100)
+    sets = uunifast_discard(n=10, u=4.0, nsets=1)
     print(sets)
 
     period_set = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
-    periods = gen_period_from_population(period_set, 10000)
+    periods = gen_period(period_set, n=10)
+
+    # test the uniformality
     print(periods.count(1),
         periods.count(2),
         periods.count(5),
@@ -88,6 +101,5 @@ if __name__ == "__main__":
         periods.count(500),
         periods.count(1000))
 
-
-    c_set = gen_execution_times(10, 1)
+    c_set = gen_execution_times(n=20, w=100)
     print(c_set)
