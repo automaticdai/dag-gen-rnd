@@ -7,7 +7,7 @@
 # 2020
 
 import os, sys, logging, getopt, time, json
-from rnddag import dag, dagset
+from rnddag import DAG, DAGset
 
 
 def parse_configuration(config_path):
@@ -53,7 +53,7 @@ if __name__ == "__main__":
         print_usage_info()
         sys.exit(2)
 
-    print(opts)
+    print("Options:", opts)
 
     for opt, arg in opts:
         if opt in ("-h", "--help"):
@@ -76,6 +76,8 @@ if __name__ == "__main__":
     Gamma = DAGset()
 
     for i in range(1):
-        A = DAG(i)
-        A.gen()
-        A.plot()
+        G = DAG(i)
+        G.gen()
+        G.plot()
+
+        #G.plot()

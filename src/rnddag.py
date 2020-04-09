@@ -29,7 +29,7 @@ class DAGset:
     def gen(self, u, n):
         # generate tasks
         for i in range(self.task_number):
-            node = dag
+            G = DAG(i)
 
         # generate periods
         pass
@@ -65,20 +65,15 @@ class DAG:
         nodes_parent_childless = []  # nodes without child
         nodes_orphan = []   # nodes without any parent
 
-        edges = []
-
         # initial a new graph
         G = nx.DiGraph()
 
         # add the root node
         n = 1
-        G.add_node(n, rank=0)
+        G.add_node(n, rank=0, c=1)
         nodes.append([n])
         nodes_parent.append(n)
         n = n + 1
-
-        print(nodes)
-        print(edges)
 
         # random and remove the source and the sink node
         layer_num_this = randint(self.layer_num_min - 2, self.layer_num_max - 2)
@@ -92,7 +87,7 @@ class DAG:
             for j in range(m):
                 nodes_t.append(n)
                 nodes_orphan.append(n)
-                G.add_node(n, rank=k+1)
+                G.add_node(n, rank=k+1, c=n**2)
                 n = n + 1
 
             nodes.append(nodes_t)
@@ -142,10 +137,14 @@ class DAG:
         # set graph properties
 
         print(nodes)
-        #print(nodes_orphan)
+        print(nodes_orphan)
 
         # return the graph
         self.G = G
+
+
+    def graph(self):
+        return self.G
 
 
     def config(self):
