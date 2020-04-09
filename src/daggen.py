@@ -73,9 +73,9 @@ if __name__ == "__main__":
 
     # start evaluation
     # create taskset
-    Gamma = dagset()
+    Gamma = DAGset()
 
     for i in range(1):
-        A = dag(i)
+        A = DAG(i)
         A.gen()
         A.plot()

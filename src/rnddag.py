@@ -17,21 +17,25 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 
-class UUnifast:
-    
-
 # Class DAG Taskset
-class dagset:
+class DAGset:
     def __init__(self):
         self.rnd_seed = randint(1, 1000)
-        self.util = 4.0
-        self.task_number = 10
+        self.util = 0
+        self.task_number = 0
         self.tasks = []
 
 
-    def gen(self):
+    def gen(self, u, n):
+        # generate tasks
         for i in range(self.task_number):
-            pass
+            node = dag
+
+        # generate periods
+        pass
+
+        # generate execution times
+        pass
 
 
     def save(self):
@@ -44,7 +48,7 @@ class dagset:
 
 
 # Class DAG Task
-class dag:
+class DAG:
     def __init__(self, i):
         # parameters (default)
         self.name = 'Tau_{:d}'.format(i)

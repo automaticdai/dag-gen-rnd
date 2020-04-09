@@ -9,6 +9,7 @@ A randomized Direct Acyclic Graph (DAG) generator for scheduling and allocation 
 - NetworkX >= 2.4
 - Matplotlib >= 3.1.3
 - pygraphviz >= 1.5
+- numpy > 1.17
 
 
 ## 1. Install
