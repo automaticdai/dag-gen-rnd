@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 
-# Class DAG Taskset
+# Class: DAG Taskset
 class DAGset:
     def __init__(self):
         self.rnd_seed = randint(1, 1000)
@@ -58,7 +58,7 @@ class DAGset:
         pass
 
 
-# Class DAG Task
+# Class: DAG Task
 class DAG:
     def __init__(self, i):
         # parameters (default)
@@ -76,6 +76,18 @@ class DAG:
         A = nx.nx_agraph.to_agraph(self.G)
         return A.__str__()
     
+
+    def get_graph(self):
+        return self.G
+    
+
+    def get_number_of_nodes(self):
+        return self.G.number_of_nodes()
+
+
+    def get_number_of_edges(self):
+        return self.G.number_of_edges()
+
 
     def gen(self):
         # data structures
@@ -103,7 +115,7 @@ class DAG:
             m = randint(1, self.parallelism)
 
             nodes_t = []
-            for j in range(m):
+            for _ in range(m):
                 nodes_t.append(n)
                 nodes_orphan.append(n)
                 G.add_node(n, rank=k+1, c=n**2)
@@ -157,10 +169,6 @@ class DAG:
 
         # return the graph
         self.G = G
-
-
-    def graph(self):
-        return self.G
 
 
     def config(self):

@@ -5,11 +5,21 @@ import random
 import math
 
 
-# UUniFast-discard
-def uunifast_discard(n, u, nsets):
-    if (n <= u):
-        # no feasible solution
-        return []
+def uunifast_discard(n, u, nsets, ulimit=1):
+    """ UUniFast-discard
+
+    Args:
+        n (int): number of tasks
+        u (float): total utilization
+        nsets (int): number of sets
+
+    Returns:
+        sets (list)
+    
+    """
+    # if (n <= u):
+    #     # no feasible solution
+    #     return []
     
     sets = []
     while len(sets) < nsets:
@@ -22,8 +32,8 @@ def uunifast_discard(n, u, nsets):
             sumU = nextSumU
         utilizations.append(sumU)
 
-        # If no task utilization exceeds 1:
-        if all(ut <= 1 for ut in utilizations):
+        # If no task utilization exceeds ulimit:
+        if all(ut <= ulimit for ut in utilizations):
             sets.append(utilizations)
 
         #print(sum(utilizations))
@@ -58,7 +68,7 @@ def gen_period(population, n):
 
 
 # distribute workloads, w, to n nodes.
-def gen_execution_times(n, w):
+def gen_execution_times(n, w, round_c=False):
     c_set = []
 
     for i in range(n):
@@ -72,7 +82,11 @@ def gen_execution_times(n, w):
     # normalise to w
     c_dict = {}
     for i in range(len(c_set)):
-        c_dict[i] = c_set[i] / f
+        if round_c == False:
+            c_dict[i] = c_set[i] / f
+        else:
+            # round the value to integer but should be more than 1!
+            c_dict[i] = max(round(c_set[i] / f), 1)
 
     return c_dict
 

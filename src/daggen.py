@@ -27,7 +27,9 @@ def print_usage_info():
 
 
 if __name__ == "__main__":
+    ############################################################################
     # Initialize directories
+    ############################################################################
     src_path = os.path.abspath(os.path.dirname(__file__))
     base_path = os.path.abspath(os.path.join(src_path, os.pardir))
 
@@ -39,7 +41,9 @@ if __name__ == "__main__":
     if not os.path.exists(logs_path):
         os.makedirs(logs_path)
 
+    ############################################################################
     # Parse cmd arguments
+    ############################################################################
     config_path = os.path.join(base_path, "config.json")
     directory = None
     load_jobs = False
@@ -73,32 +77,59 @@ if __name__ == "__main__":
 
     config = parse_configuration(config_path)
 
-    # start evaluation
+    ############################################################################
+    # start generation
+    ############################################################################
     # create taskset
     Gamma = DAGset()
+
+    # number of partitions
+    p = 2
+
+    # number of cores per partition
+    cores = 4
 
     # task number
     n = 10
 
     # DAG 
-    utilizations = uunifast_discard(n, u=4.0, nsets=1)
+    # u_max = p * cores
+    U = uunifast_discard(n, u=8.0, nsets=1, ulimit=cores)
 
-    # DAG period
+    # DAG period (in us)
     period_set = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
+    period_set = [(x * 1000) for x in period_set]
     periods = gen_period(period_set, n)
 
     # DAG graph
+    U_p = []
     for i in range(n):
-        w = utilizations[0][i] / periods[i]
-        print("Task {}: U = {}, T = {}, W = {}>>".format(i,utilizations[0][i],periods[i], w))
+        # calculate workload (in us)
+        w = U[0][i] * (periods[i])
         
         G = DAG(i)
         G.gen()
         #G.save('data/{0}.png'.format(i))
         #G.plot()
-
+        
+        n_nodes = G.get_number_of_nodes()
+        
         # sub-DAG execution times
-        c_ = gen_execution_times(n=25, w=10)
-        nx.set_node_attributes(G.graph(), c_, 'c')
+        c_ = gen_execution_times(n_nodes, w, round_c=True)
+        nx.set_node_attributes(G.get_graph(), c_, 'c')
+
+        # calculate actual workload and utilization
+        w_p = 0
+        for item in c_.items():
+            w_p = w_p + item[1]
+        
+        u_p = w_p / periods[i]
+        U_p.append(u_p)
+
+        print("Task {}: U = {}, T = {}, W = {}>>".format(i, U[0][i],
+                                                        periods[i], w))
+        print("w = {}, w' = {}, diff = {}".format(w, w_p, (w_p - w) / w * 100))
 
         #print(G)
+    
+    print("Total U:", sum(U_p), U_p)

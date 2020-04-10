@@ -21,6 +21,8 @@ G.add_edge(4,5)
 # print
 print("Nodes:", G.nodes())
 print("Edges:", G.edges())
+print("Number of Nodes:", G.number_of_nodes())
+print("Number of Edges:", G.number_of_edges())
 print("In degree:", G.in_degree)
 print("Out degree:",G.out_degree)
 
