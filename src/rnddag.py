@@ -31,6 +31,9 @@ class DAGset:
         for i in range(self.task_number):
             G = DAG(i)
 
+        # generate utilizations
+
+
         # generate periods
         period_sets = [1,2,5,10,20,50,100,200,500,1000]
         random.choice()
@@ -41,20 +44,13 @@ class DAGset:
         pass
 
 
-    def gen_periods(self):
-        pass
-
-
-    def gen_execution_times(self):
-        pass
-
-
-    def save(self):
+    def dump(self):
         # dump tasksets into a json file
         pass
 
 
     def load(self):
+        # load tasksets from a json file
         pass
 
 
@@ -66,7 +62,13 @@ class DAG:
         self.parallelism = 4
         self.layer_num_max = 5  # critical path
         self.layer_num_min = 5  # critical path
+
+        # for gen()
         self.connect_prob = 0.5
+
+        # for gen_NFJ()
+        self.p_fork = 0.5
+        self.p_terminate = 1 - self.p_fork
 
         self.W = -1
         self.L = -1
@@ -101,7 +103,7 @@ class DAG:
 
         # add the root node
         n = 1
-        G.add_node(n, rank=0, c=1)
+        G.add_node(n, rank=0)
         nodes.append([n])
         nodes_parent.append(n)
         n = n + 1
@@ -118,7 +120,7 @@ class DAG:
             for _ in range(m):
                 nodes_t.append(n)
                 nodes_orphan.append(n)
-                G.add_node(n, rank=k+1, c=n**2)
+                G.add_node(n, rank=k+1)
                 n = n + 1
 
             nodes.append(nodes_t)
@@ -171,21 +173,67 @@ class DAG:
         self.G = G
 
 
+    def gen_NFJ(self):
+        """ Generate Nested Fork-Join DAG
+        """
+        # data structures
+        nodes = []          # nodes in all layers (in form of shape decomposition)
+        nodes_parent = []
+
+        # initial a new graph
+        G = nx.DiGraph()
+        n = 1
+        r = 0
+
+        G.add_node(n, rank=r)
+        nodes.append([n])
+        nodes_parent.append(n)
+        n = n + 1
+        r = r + 1
+
+        # randomised
+        for i in range(5):
+            nodes_parent_next = []
+            for node_p in nodes_parent:
+                if random() < self.p_fork:
+                    G.add_node(n, rank=r)
+                    G.add_edge(node_p, n)
+                    nodes_parent_next.append(n)
+
+                    G.add_node(n + 1, rank=r)
+                    G.add_edge(node_p, n+1)
+                    nodes_parent_next.append(n + 1)
+
+                    n = n + 2
+                else:
+                    nodes_parent_next.append(node_p)
+            r = r + 1
+            nodes_parent = nodes_parent_next
+
+        # connect all terminal nodes to the sink
+        # G.add_node(n, rank=r)
+        # for node_p in nodes_parent:
+        #     G.add_edge(node_p, n)
+
+        # return the generated graph
+        self.G = G
+
+
     def config(self):
         pass
 
 
-    def save(self, filename):
+    def save(self, folder="./"):
         # layout graph
         #A = to_agraph(G)
         A = nx.nx_agraph.to_agraph(self.G)
         A.layout('dot')
         # save graph
-        A.draw(filename, format="png")
+        A.draw(folder + self.name + '.png', format="png")
 
 
-    def plot(self):
-        img = mpimg.imread(self.name + '.png')
+    def plot(self, folder="./"):
+        img = mpimg.imread(folder + self.name + '.png')
         ypixels, xpixels, bands = img.shape
         dpi = 100.
         xinch = xpixels / dpi

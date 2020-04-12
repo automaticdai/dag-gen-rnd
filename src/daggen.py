@@ -27,6 +27,15 @@ def print_usage_info():
 
 
 if __name__ == "__main__":
+    G = DAG(0)
+    G.gen_NFJ()
+    G.save()
+    print(G)
+
+    sys.exit(0)
+
+
+if __name__ == "__main__":
     ############################################################################
     # Initialize directories
     ############################################################################
@@ -83,6 +92,9 @@ if __name__ == "__main__":
     # create taskset
     Gamma = DAGset()
 
+    # total utilization
+    u_total = 8.0
+
     # number of partitions
     p = 2
 
@@ -94,7 +106,7 @@ if __name__ == "__main__":
 
     # DAG 
     # u_max = p * cores
-    U = uunifast_discard(n, u=8.0, nsets=1, ulimit=cores)
+    U = uunifast_discard(n, u=u_total, nsets=1, ulimit=cores)
 
     # DAG period (in us)
     period_set = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
@@ -108,8 +120,8 @@ if __name__ == "__main__":
         w = U[0][i] * (periods[i])
         
         G = DAG(i)
-        G.gen()
-        #G.save('data/{0}.png'.format(i))
+        G.gen_NFJ()
+        #G.save('data/{}.png'.format(i))
         #G.plot()
         
         n_nodes = G.get_number_of_nodes()
@@ -130,6 +142,6 @@ if __name__ == "__main__":
                                                         periods[i], w))
         print("w = {}, w' = {}, diff = {}".format(w, w_p, (w_p - w) / w * 100))
 
-        #print(G)
+        print(G)
     
     print("Total U:", sum(U_p), U_p)
