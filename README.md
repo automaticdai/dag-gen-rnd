@@ -50,7 +50,7 @@ Use the configuration file `config.json` to configure parameters.
 
 ## Citation
 
-Please use the following for cite this work: "Xiaotian Dai. rnd-dag-gen: A Randomized DAG Generator. https://github.com/automaticdai/rnd-dag-gen. University of York, UK".
+Please use the following for cite this work: "Xiaotian Dai. rnd-dag-gen: A Randomized DAG Generator. https://github.com/automaticdai/rnd-dag-gen".
 
 ---
 
@@ -59,6 +59,6 @@ Please use the following for cite this work: "Xiaotian Dai. rnd-dag-gen: A Rando
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 - **[MIT license](http://opensource.org/licenses/mit-license.php)**
-- Copyright 2020 © Xiaotian Dai. University of York, UK.
+- Copyright 2020 © Xiaotian Dai.
 
 ---
