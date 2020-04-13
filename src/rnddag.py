@@ -67,8 +67,8 @@ class DAG:
         self.connect_prob = 0.5
 
         # for gen_NFJ()
-        self.p_fork = 0.5
-        self.p_terminate = 1 - self.p_fork
+        self.p_fork = 0.2
+        self.p_join = 0.8
 
         self.W = -1
         self.L = -1
@@ -164,8 +164,6 @@ class DAG:
         # (optional) mutate a node to be conditional
         # G.add_node('2', style='filled', fillcolor='red', shape='diamond')
 
-        # handling critical Path
-
         #print(nodes)
         #print(nodes_orphan)
 
@@ -177,8 +175,10 @@ class DAG:
         """ Generate Nested Fork-Join DAG
         """
         # data structures
-        nodes = []          # nodes in all layers (in form of shape decomposition)
-        nodes_parent = []
+        nodes = []        # nodes in all layers (in form of shape decomposition)
+        nodes_parent = [] # nodes that can become parent
+
+        ancestor_dict = {}  # dict stores traces of nodes' all ancestors
 
         # initial a new graph
         G = nx.DiGraph()
@@ -191,29 +191,71 @@ class DAG:
         n = n + 1
         r = r + 1
 
-        # randomised
+        ancestor_dict[1] = [] 
+
+        # I. fork phase
         for i in range(5):
             nodes_parent_next = []
             for node_p in nodes_parent:
-                if random() < self.p_fork:
-                    G.add_node(n, rank=r)
-                    G.add_edge(node_p, n)
-                    nodes_parent_next.append(n)
+                if random() < self.p_fork or node_p == 1:
+                    kk = randint(2, 3)
+                    for i in range(kk):
+                        G.add_node(n, rank=r)
+                        G.add_edge(node_p, n)
+                        nodes_parent_next.append(n)
+                        ancestor_dict[n] = ancestor_dict[node_p] + [node_p]
 
-                    G.add_node(n + 1, rank=r)
-                    G.add_edge(node_p, n+1)
-                    nodes_parent_next.append(n + 1)
-
-                    n = n + 2
+                        n = n + 1
                 else:
                     nodes_parent_next.append(node_p)
             r = r + 1
             nodes_parent = nodes_parent_next
 
+        print(ancestor_dict)
+
+        # II. join phase
+        # table contains all ancestors and nodes list, with ancestor as the key
+        # it is a reverse of ancestor_dict
+        table = {}
+        for i in nodes_parent:
+            for j in ancestor_dict[i]:
+                ret = table.get(j, None)
+                if ret == None:
+                    table[j] = [i]
+                else:
+                    table[j] = table[j] + [i]
+
+        print(table)
+
+        # start to join
+        join_list = []
+        for node_p in nodes_parent:
+            if random() < self.p_join:
+                join_list.append(node_p)
+
+        print(join_list)
+
+        # connect edges if all ancestor constraints are satisfied.
+        for i in sorted(table.keys()):
+            v = table[i]
+            print(v)
+            if set(v).issubset(set(join_list)):
+                G.add_node(n)
+                nodes_parent.append(n)
+
+                for cc in v:
+                    G.add_edge(cc, n)
+                    # remove from join list & parent list
+                    join_list.remove(cc)
+                    nodes_parent.remove(cc)
+
+                n = n + 1
+        
         # connect all terminal nodes to the sink
-        # G.add_node(n, rank=r)
-        # for node_p in nodes_parent:
-        #     G.add_edge(node_p, n)
+        if len(nodes_parent) > 1:
+            G.add_node(n, rank=r)
+            for i in nodes_parent:
+                G.add_edge(i, n)
 
         # return the generated graph
         self.G = G

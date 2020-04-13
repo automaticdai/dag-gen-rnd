@@ -26,13 +26,13 @@ def print_usage_info():
     print("[Usage] python3 daggen.py --config config_file")
 
 
-if __name__ == "__main__":
-    G = DAG(0)
-    G.gen_NFJ()
-    G.save()
-    print(G)
+# if __name__ == "__main__":
+#     G = DAG(0)
+#     G.gen_NFJ()
+#     G.save()
+#     print(G)
 
-    sys.exit(0)
+#     sys.exit(0)
 
 
 if __name__ == "__main__":
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     cores = 4
 
     # task number
-    n = 10
+    n = 20
 
     # DAG 
     # u_max = p * cores
@@ -121,7 +121,7 @@ if __name__ == "__main__":
         
         G = DAG(i)
         G.gen_NFJ()
-        #G.save('data/{}.png'.format(i))
+        G.save('data/'.format(i))
         #G.plot()
         
         n_nodes = G.get_number_of_nodes()
