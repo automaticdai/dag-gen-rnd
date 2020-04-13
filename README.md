@@ -3,7 +3,9 @@
 A randomized Direct Acyclic Graph (DAG) generator for scheduling and allocation research. Supports both command line and graphical user interface. Configurable and extensible.
 
 
-## 0. Requirements
+---
+
+## Requirements
 
 - Python > 3.5
 - NetworkX >= 2.4
@@ -12,36 +14,56 @@ A randomized Direct Acyclic Graph (DAG) generator for scheduling and allocation 
 - numpy > 1.17
 
 
-## 1. Install
+---
 
-`sudo apt-get install python3-dev graphviz libgraphviz-dev pkg-config`
+## Installation
 
-`sudo apt-get install python3-pyqt5`
+Install depedencies using apt:
 
-and then:
+`$ sudo apt install python3-dev graphviz libgraphviz-dev pkg-config`
 
-`pip3 install -r requirements.txt`
+`$ sudo apt install python3-pyqt5`
+
+and then install more depedencies through Python requirements:
+
+`$ pip3 install -r requirements.txt`
 
 
-## 2. Configure
+---
+
+## Configure
 
 Use the configuration file `config.json` to configure parameters.
 
+---
 
-## 3. Usage
+## Usage
 
-### 3.1 Command line tool
+### 1. Command line tool
 
 DAG generate:
 
-`python3 daggen.py params`
+`$ python3 daggen.py params`
 
 
-### 3.2 Graphic user interface
+### 2. Graphic user interface
 
-`python3 daggen-gui.py`
+`$ python3 daggen-gui.py`
 
 
-## 4. Citation
+---
 
-Please use the following for citation: "Xiaotian Dai. rnd-dag-gen: A Randomized DAG Generator. https://github.com/automaticdai/rnd-dag-gen".
+## Citation
+
+Please use the following for cite this work: "Xiaotian Dai. rnd-dag-gen: A Randomized DAG Generator. https://github.com/automaticdai/rnd-dag-gen".
+
+---
+
+## License
+
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+
+- **[MIT license](http://opensource.org/licenses/mit-license.php)**
+- Copyright 2020 © <a href="http://fvcproductions.com" target="_blank">Xiaotian Dai</a>.
+
+---
