@@ -104,6 +104,9 @@ if __name__ == "__main__":
     # task number
     n = 20
 
+    # set random seed
+    random.seed(12345)
+
     # DAG 
     # u_max = p * cores
     U = uunifast_discard(n, u=u_total, nsets=1, ulimit=cores)
@@ -121,7 +124,7 @@ if __name__ == "__main__":
         
         G = DAG(i)
         G.gen_NFJ()
-        G.save('data/'.format(i))
+        G.save('data/')
         #G.plot()
         
         n_nodes = G.get_number_of_nodes()
