@@ -1,6 +1,6 @@
 # Randomized DAG Generator
 
-A randomized Direct Acyclic Graph (DAG) generator for scheduling and allocation research. Supports both command line and graphical user interface. Configurable and extensible.
+A randomized Direct Acyclic Graph (DAG) generator for scheduling and allocation research. Supports both command line and graphical user interface. This generator is configurable and extensible.
 
 
 ---
@@ -12,7 +12,6 @@ A randomized Direct Acyclic Graph (DAG) generator for scheduling and allocation 
 - Matplotlib >= 3.1.3
 - pygraphviz >= 1.5
 - numpy > 1.17
-
 
 ---
 
@@ -28,10 +27,9 @@ and then install more depedencies through Python requirements:
 
 `$ pip3 install -r requirements.txt`
 
-
 ---
 
-## Configure
+## Configuration
 
 Use the configuration file `config.json` to configure parameters.
 
@@ -41,21 +39,18 @@ Use the configuration file `config.json` to configure parameters.
 
 ### 1. Command line tool
 
-DAG generate:
-
-`$ python3 daggen.py params`
+`$ python3 daggen.py`
 
 
 ### 2. Graphic user interface
 
 `$ python3 daggen-gui.py`
 
-
 ---
 
 ## Citation
 
-Please use the following for cite this work: "Xiaotian Dai. rnd-dag-gen: A Randomized DAG Generator. https://github.com/automaticdai/rnd-dag-gen".
+Please use the following for cite this work: "Xiaotian Dai. rnd-dag-gen: A Randomized DAG Generator. https://github.com/automaticdai/rnd-dag-gen. University of York, UK".
 
 ---
 
@@ -64,6 +59,6 @@ Please use the following for cite this work: "Xiaotian Dai. rnd-dag-gen: A Rando
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 - **[MIT license](http://opensource.org/licenses/mit-license.php)**
-- Copyright 2020 © <a href="http://fvcproductions.com" target="_blank">Xiaotian Dai</a>.
+- Copyright 2020 © Xiaotian Dai. University of York, UK.
 
 ---
