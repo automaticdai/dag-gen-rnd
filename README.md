@@ -2,9 +2,10 @@
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+[![Issues](https://img.shields.io/github/issues/automaticdai/rnd-dag-gen)](https://github.com/automaticdai/rnd-dag-gen/issues)
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
-A randomized Direct Acyclic Graph (DAG) generator for scheduling and allocation research. Supports both command line and graphical user interface. This generator is configurable and extensible.
+Randomized Direct Acyclic Graph generator (rnd-dag-gen) for scheduling and allocation research. rnd-dag-gen supports both command line and graphical user interface. This generator is configurable through a json file and is highly extensible.
 
 
 ---

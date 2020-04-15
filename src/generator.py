@@ -1,4 +1,10 @@
-# Task Generator
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+# Randomized DAG Generator
+# by Xiaotian Dai
+# University of York, UK
+# 2020
 
 import numpy as np
 import random
@@ -60,7 +66,7 @@ def uunifast(n, u):
 def gen_period(population, n):
     periods = []
 
-    for i in range(n):
+    for _ in range(n):
         period = random.choice(population)
         periods.append(period)
 
@@ -71,7 +77,7 @@ def gen_period(population, n):
 def gen_execution_times(n, w, round_c=False):
     c_set = []
 
-    for i in range(n):
+    for _ in range(n):
         c = random.random()
         c_set.append(c)
 

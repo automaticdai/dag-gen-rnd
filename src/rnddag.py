@@ -191,11 +191,14 @@ class DAG:
         n = n + 1
         r = r + 1
 
-        ancestor_dict[1] = [] 
+        ancestor_dict[1] = []
+
+        layer_num = max(self.layer_num_max - 2, 0)
 
         # I. fork phase
-        for i in range(5):
+        for i in range(layer_num):
             nodes_parent_next = []
+            fork_happened = False
             for node_p in nodes_parent:
                 if random() < self.p_fork or node_p == 1:
                     kk = randint(2, 3)
@@ -205,13 +208,18 @@ class DAG:
                         nodes_parent_next.append(n)
                         ancestor_dict[n] = ancestor_dict[node_p] + [node_p]
 
+                        fork_happened = True
+
                         n = n + 1
                 else:
                     nodes_parent_next.append(node_p)
-            r = r + 1
+            
+            if fork_happened:
+                r = r + 1
+            
             nodes_parent = nodes_parent_next
 
-        print(ancestor_dict)
+        # print(ancestor_dict)
 
         # II. join phase
         # table contains all ancestors and nodes list, with ancestor as the key
@@ -225,7 +233,7 @@ class DAG:
                 else:
                     table[j] = table[j] + [i]
 
-        print(table)
+        # print(table)
 
         # start to join
         join_list = []
@@ -233,14 +241,15 @@ class DAG:
             if random() < self.p_join:
                 join_list.append(node_p)
 
-        print(join_list)
+        # print(join_list)
 
         # connect edges if all ancestor constraints are satisfied.
+        joined_happened = False
         for i in sorted(table.keys()):
             v = table[i]
-            print(v)
+            # print(v)
             if set(v).issubset(set(join_list)):
-                G.add_node(n)
+                G.add_node(n, rank=r)
                 nodes_parent.append(n)
 
                 for cc in v:
@@ -248,9 +257,13 @@ class DAG:
                     # remove from join list & parent list
                     join_list.remove(cc)
                     nodes_parent.remove(cc)
-
+                    joined_happened = True
+                
                 n = n + 1
         
+        if joined_happened:
+            r = r + 1
+
         # connect all terminal nodes to the sink
         if len(nodes_parent) > 1:
             G.add_node(n, rank=r)

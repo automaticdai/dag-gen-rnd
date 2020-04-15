@@ -87,7 +87,6 @@ if __name__ == "__main__":
         else:
             raise ValueError("Unknown (opt, arg): (%s, %s)" % (opt, arg))
 
-
     # load configuration
     config = parse_configuration(config_path)
 
@@ -112,7 +111,7 @@ if __name__ == "__main__":
     n = config["taskset"]["task_number"]
 
     # set random seed
-    random.seed(12345)
+    random.seed(config["taskset"]["rnd_seed"])
 
     # DAG 
     # u_max = p * cores
@@ -153,5 +152,5 @@ if __name__ == "__main__":
         print("w = {}, w' = {}, diff = {}".format(w, w_p, (w_p - w) / w * 100))
 
         print(G)
-    
+
     print("Total U:", sum(U_p), U_p)
