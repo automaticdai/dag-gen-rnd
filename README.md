@@ -7,11 +7,11 @@ A randomized Direct Acyclic Graph (DAG) generator for scheduling and allocation 
 
 ## Requirements
 
-- Python > 3.5
+- Python >= 3.5
 - NetworkX >= 2.4
 - Matplotlib >= 3.1.3
 - pygraphviz >= 1.5
-- numpy > 1.17
+- numpy >= 1.17
 
 ---
 
@@ -21,11 +21,13 @@ Install depedencies using apt:
 
 `$ sudo apt install python3-dev graphviz libgraphviz-dev pkg-config`
 
-`$ sudo apt install python3-pyqt5`
-
-and then install more depedencies through Python requirements:
+and then install Python depedencies through `requirements.txt`:
 
 `$ pip3 install -r requirements.txt`
+
+(Optional) To use GUI, install Qt5 for python:
+
+`$ sudo apt install python3-pyqt5`
 
 ---
 
@@ -50,15 +52,10 @@ Use the configuration file `config.json` to configure parameters.
 
 ## Citation
 
-Please use the following for cite this work: "Xiaotian Dai. rnd-dag-gen: A Randomized DAG Generator. https://github.com/automaticdai/rnd-dag-gen".
+Please use the following to cite this work: "Xiaotian Dai. rnd-dag-gen: A Randomized DAG Generator. https://github.com/automaticdai/rnd-dag-gen".
 
 ---
 
 ## License
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
-
-- **[MIT license](http://opensource.org/licenses/mit-license.php)**
-- Copyright 2020 © Xiaotian Dai.
-
----
