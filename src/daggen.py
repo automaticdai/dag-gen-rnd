@@ -8,8 +8,11 @@
 
 import os, sys, logging, getopt, time, json
 import networkx as nx
+import random
+
 from rnddag import DAG, DAGset
-from generator import *
+from generator import uunifast_discard, uunifast
+from generator import gen_period, gen_execution_times
 
 
 def parse_configuration(config_path):
@@ -84,7 +87,11 @@ if __name__ == "__main__":
         else:
             raise ValueError("Unknown (opt, arg): (%s, %s)" % (opt, arg))
 
+
+    # load configuration
     config = parse_configuration(config_path)
+
+    print("Configurations:", config)
 
     ############################################################################
     # start generation
@@ -93,16 +100,16 @@ if __name__ == "__main__":
     Gamma = DAGset()
 
     # total utilization
-    u_total = 8.0
+    u_total = config["taskset"]["utilization"]
 
     # number of partitions
-    p = 2
+    p = config["taskset"]["partitions"]
 
     # number of cores per partition
-    cores = 4
+    cores = config["taskset"]["cores"]
 
     # task number
-    n = 20
+    n = config["taskset"]["task_number"]
 
     # set random seed
     random.seed(12345)
@@ -112,7 +119,7 @@ if __name__ == "__main__":
     U = uunifast_discard(n, u=u_total, nsets=1, ulimit=cores)
 
     # DAG period (in us)
-    period_set = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
+    period_set = config["taskset"]["periods"]
     period_set = [(x * 1000) for x in period_set]
     periods = gen_period(period_set, n)
 
