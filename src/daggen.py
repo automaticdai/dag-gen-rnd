@@ -9,6 +9,7 @@
 import os, sys, logging, getopt, time, json
 import networkx as nx
 import random
+from tqdm import tqdm
 
 from rnddag import DAG, DAGset
 from generator import uunifast_discard, uunifast
@@ -122,35 +123,40 @@ if __name__ == "__main__":
     period_set = [(x * 1000) for x in period_set]
     periods = gen_period(period_set, n)
 
-    # DAG graph
+    # DAG generation
     U_p = []
-    for i in range(n):
-        # calculate workload (in us)
-        w = U[0][i] * (periods[i])
-        
-        G = DAG(i)
-        G.gen_NFJ()
-        G.save('data/')
-        #G.plot()
-        
-        n_nodes = G.get_number_of_nodes()
-        
-        # sub-DAG execution times
-        c_ = gen_execution_times(n_nodes, w, round_c=True)
-        nx.set_node_attributes(G.get_graph(), c_, 'c')
 
-        # calculate actual workload and utilization
-        w_p = 0
-        for item in c_.items():
-            w_p = w_p + item[1]
-        
-        u_p = w_p / periods[i]
-        U_p.append(u_p)
+    with tqdm(total=n) as pbar:
+        for i in range(n):
+            # calculate workload (in us)
+            w = U[0][i] * (periods[i])
+            
+            G = DAG(i)
+            G.gen_NFJ()
+            G.save('data/')
+            #G.plot()
+            
+            n_nodes = G.get_number_of_nodes()
+            
+            # sub-DAG execution times
+            c_ = gen_execution_times(n_nodes, w, round_c=True)
+            nx.set_node_attributes(G.get_graph(), c_, 'c')
 
-        print("Task {}: U = {}, T = {}, W = {}>>".format(i, U[0][i],
-                                                        periods[i], w))
-        print("w = {}, w' = {}, diff = {}".format(w, w_p, (w_p - w) / w * 100))
+            # calculate actual workload and utilization
+            w_p = 0
+            for item in c_.items():
+                w_p = w_p + item[1]
+            
+            u_p = w_p / periods[i]
+            U_p.append(u_p)
 
-        print(G)
+            # print("Task {}: U = {}, T = {}, W = {}>>".format(i, U[0][i],
+            #                                                 periods[i], w))
+            # print("w = {}, w' = {}, diff = {}".format(w, w_p, (w_p - w) / w * 100))
 
+            # print(G)
+
+            pbar.update(i)
+
+    pbar.close()
     print("Total U:", sum(U_p), U_p)
