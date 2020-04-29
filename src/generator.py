@@ -73,26 +73,61 @@ def gen_period(population, n):
     return periods
 
 
-# distribute workloads, w, to n nodes.
+# distribute workloads, w, to n nodes
 def gen_execution_times(n, w, round_c=False):
     c_set = []
 
-    for _ in range(n):
+    for i in range(n):
         c = random.random()
         c_set.append(c)
 
-    # sum w'
+    # normalise to w & assign to the execution time list
+    c_dict = {}
     w_p = sum(c_set)
     f = w_p / w
 
-    # normalise to w
-    c_dict = {}
-    for i in range(len(c_set)):
+    for i in range(n):
         if round_c == False:
-            c_dict[i] = c_set[i] / f
+            # +1 as node number starts from 1, not 0
+            c_dict[i + 1] = c_set[i] / f
         else:
             # round the value to integer but should be more than 1!
-            c_dict[i] = max(round(c_set[i] / f), 1)
+            c_dict[i + 1] = max(round(c_set[i] / f), 1)
+
+    return c_dict
+
+
+# distribute workloads, w, to n nodes (with dummy source and sink nodes)
+# c(source) == c(sink) == 1
+def gen_execution_times_with_dummy(n, w, round_c=False):
+    c_set = []
+
+    # a dummy source / sink node only has unit execution times
+    # -> exclude them from the generation process
+    # -> append them at the last
+    for i in range(n - 2):
+        c = random.random()
+        c_set.append(c)
+
+    # normalise to w & assign to the execution time list
+    c_dict = {}
+    w_p = sum(c_set)
+    f = w_p / w
+
+    # dummy source node
+    c_dict[1] = 1
+
+    for i in range(n - 2):
+        if round_c == False:
+            # +1 as node number starts from 1, not 0
+            # +1 more as the source node is skipped
+            c_dict[i + 1 + 1] = c_set[i] / f
+        else:
+            # round the value to integer but should be more than 1!
+            c_dict[i + 1 + 1] = max(round(c_set[i] / f), 1)
+
+    # dummy sink node
+    c_dict[n] = 1
 
     return c_dict
 
@@ -100,14 +135,18 @@ def gen_execution_times(n, w, round_c=False):
 if __name__ == "__main__":
     number_of_tasks = 10
 
+    print(">> Utilization:")
+
     vectU = uunifast(n=10, u=1.0)
     print(vectU)
 
     sets = uunifast_discard(n=10, u=4.0, nsets=1)
     print(sets)
 
+    print(">> Period:")
+
     period_set = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
-    periods = gen_period(period_set, n=10)
+    periods = gen_period(period_set, n=10000)
 
     # test the uniformality
     print(periods.count(1),
@@ -121,5 +160,9 @@ if __name__ == "__main__":
         periods.count(500),
         periods.count(1000))
 
-    c_set = gen_execution_times(n=20, w=100)
+    print(">> Execution Times:")
+    c_set = gen_execution_times(n=10, w=1000, round_c=True)
+    print(c_set)
+
+    c_set = gen_execution_times_with_dummy(n=10, w=1000, round_c=True)
     print(c_set)
