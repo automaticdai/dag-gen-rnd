@@ -1,11 +1,11 @@
 {
   "taskset": {
-    "utilization": 4.0,
+    "utilization": 1.0,
     "cores": 4,
     "partitions": 2,
     "periods": [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000],
     "task_number": 20,
-    "rnd_seed": 1234
+    "rnd_seed": 123456
   },
   "RND": {
     "depth": 5,

@@ -28,19 +28,12 @@ class DAGset:
 
     def gen(self, u, n):
         # generate tasks
-        for i in range(self.task_number):
-            G = DAG(i)
 
         # generate utilizations
 
-
         # generate periods
-        period_sets = [1,2,5,10,20,50,100,200,500,1000]
-        random.choice()
-        pass
 
         # generate execution times
-
         pass
 
 
@@ -56,9 +49,16 @@ class DAGset:
 
 # Class: DAG Task
 class DAG:
-    def __init__(self, i):
+    def __init__(self, i=0, U=-1, T=-1, W=-1):
         # parameters (default)
+        self.task_num = i
         self.name = 'Tau_{:d}'.format(i)
+
+        self.U = U
+        self.T = T
+        self.W = W
+        self.L = -1
+
         self.parallelism = 4
         self.layer_num_max = 5  # critical path
         self.layer_num_min = 5  # critical path
@@ -70,18 +70,15 @@ class DAG:
         self.p_fork = 0.2
         self.p_join = 0.8
 
-        self.W = -1
-        self.L = -1
-
 
     def __str__(self):
         A = nx.nx_agraph.to_agraph(self.G)
         return A.__str__()
-    
+
 
     def get_graph(self):
         return self.G
-    
+
 
     def get_number_of_nodes(self):
         return self.G.number_of_nodes()
@@ -99,7 +96,7 @@ class DAG:
         nodes_orphan = []   # nodes without any parent
 
         # initial a new graph
-        G = nx.DiGraph()
+        G = nx.DiGraph(Index=self.task_num, U=self.U, T=self.T, W=self.W)
 
         # add the root node
         n = 1
@@ -107,7 +104,7 @@ class DAG:
         nodes.append([n])
         nodes_parent.append(n)
         n = n + 1
-
+        
         # random and remove the source and the sink node
         layer_num_this = randint(self.layer_num_min - 2, self.layer_num_max - 2)
 
@@ -138,6 +135,7 @@ class DAG:
                             nodes_orphan.remove(i)
                         if ii in nodes_parent_childless:
                             nodes_parent_childless.remove(ii)
+            
             # add all childs as candidate parents for the next layer
             nodes_parent[:] = nodes[k+1]
 
@@ -171,6 +169,10 @@ class DAG:
         self.G = G
 
 
+    def gen_fully_random(self):
+        pass
+
+
     def gen_NFJ(self):
         """ Generate Nested Fork-Join DAG
         """
@@ -181,7 +183,7 @@ class DAG:
         ancestor_dict = {}  # dict stores traces of nodes' all ancestors
 
         # initial a new graph
-        G = nx.DiGraph()
+        G = nx.DiGraph(Index=self.task_num, U=self.U, T=self.T, W=self.W)
         n = 1
         r = 0
 
@@ -204,7 +206,7 @@ class DAG:
                     kk = randint(2, 3)
                     for i in range(kk):
                         G.add_node(n, rank=r)
-                        G.add_edge(node_p, n)
+                        G.add_edge(node_p, n, label="n/a")
                         nodes_parent_next.append(n)
                         ancestor_dict[n] = ancestor_dict[node_p] + [node_p]
 
@@ -253,7 +255,7 @@ class DAG:
                 nodes_parent.append(n)
 
                 for cc in v:
-                    G.add_edge(cc, n)
+                    G.add_edge(cc, n, label="n/a")
                     # remove from join list & parent list
                     join_list.remove(cc)
                     nodes_parent.remove(cc)
@@ -278,17 +280,21 @@ class DAG:
         pass
 
 
-    def save(self, folder="./"):
+    def save(self, basefolder="./data"):
         # layout graph
-        #A = to_agraph(G)
         A = nx.nx_agraph.to_agraph(self.G)
-        A.layout('dot')
+
+        #print("G", self.G.graph)
+        print(A)
+
+        A.layout(prog='dot')
+
         # save graph
-        A.draw(folder + self.name + '.png', format="png")
+        A.draw(basefolder + self.name + '.png', format="png")
 
 
-    def plot(self, folder="./"):
-        img = mpimg.imread(folder + self.name + '.png')
+    def plot(self, basefolder="./data"):
+        img = mpimg.imread(basefolder + self.name + '.png')
         ypixels, xpixels, bands = img.shape
         dpi = 100.
         xinch = xpixels / dpi
