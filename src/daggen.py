@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 # Randomized DAG Generator
-# by Xiaotian Dai
+# Xiaotian Dai
+# Real-Time Systems Group
 # University of York, UK
-# 2020
 
 import os, sys, logging, getopt, time, json
 import networkx as nx
@@ -28,15 +28,6 @@ def parse_configuration(config_path):
 
 def print_usage_info():
     print("[Usage] python3 daggen.py --config config_file")
-
-
-# if __name__ == "__main__":
-#     G = DAG(0)
-#     G.gen_NFJ()
-#     G.save()
-#     print(G)
-
-#     sys.exit(0)
 
 
 if __name__ == "__main__":
@@ -114,7 +105,7 @@ if __name__ == "__main__":
     # set random seed
     random.seed(config["taskset"]["rnd_seed"])
 
-    # DAG 
+    # DAG utilization
     # u_max = p * cores
     U = uunifast_discard(n, u=u_total, nsets=1, ulimit=cores)
 
@@ -123,7 +114,7 @@ if __name__ == "__main__":
     period_set = [(x * 1000) for x in period_set]
     periods = gen_period(period_set, n)
 
-    # DAG generation
+    # DAG generation main loop
     U_p = []
 
     for i in tqdm(range(n)):
@@ -156,5 +147,6 @@ if __name__ == "__main__":
 
         print(G.get_graph().graph)
         print(G.get_graph().nodes.data())
+        print(G.get_graph().edges.data())
 
     print("Total U:", sum(U_p), U_p)

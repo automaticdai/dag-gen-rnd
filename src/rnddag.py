@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 # Randomized DAG Generator
-# by Xiaotian Dai
+# Xiaotian Dai
+# Real-Time Systems Group
 # University of York, UK
-# 2020
 
 import json
 import networkx as nx
