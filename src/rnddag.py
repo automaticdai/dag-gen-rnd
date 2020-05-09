@@ -69,6 +69,8 @@ class DAG:
         # for gen_NFJ()
         self.p_fork = 0.2
         self.p_join = 0.8
+        self.fork_n_min = 2
+        self.fork_n_max = 4
 
 
     def __str__(self):
@@ -203,7 +205,7 @@ class DAG:
             fork_happened = False
             for node_p in nodes_parent:
                 if random() < self.p_fork or node_p == 1:
-                    kk = randint(2, 3)
+                    kk = randint(self.fork_n_min, self.fork_n_max)
                     for i in range(kk):
                         G.add_node(n, rank=r)
                         G.add_edge(node_p, n, label="n/a")
@@ -280,7 +282,7 @@ class DAG:
         pass
 
 
-    def save(self, basefolder="./data"):
+    def save(self, basefolder="./data/"):
         # layout graph
         A = nx.nx_agraph.to_agraph(self.G)
 

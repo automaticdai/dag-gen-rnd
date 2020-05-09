@@ -13,7 +13,7 @@ from tqdm import tqdm
 
 from rnddag import DAG, DAGset
 from generator import uunifast_discard, uunifast
-from generator import gen_period, gen_execution_times
+from generator import gen_period, gen_execution_times_with_dummy
 
 
 def parse_configuration(config_path):
@@ -126,12 +126,10 @@ if __name__ == "__main__":
         
         # generate nodes in the DAG
         G.gen_NFJ()
-        G.save()
-        G.plot()
         
         # generate sub-DAG execution times
         n_nodes = G.get_number_of_nodes()
-        c_ = gen_execution_times(n_nodes, w, round_c=True)
+        c_ = gen_execution_times_with_dummy(n_nodes, w, round_c=True)
         nx.set_node_attributes(G.get_graph(), c_, 'c')
         
         # calculate actual workload and utilization
@@ -142,11 +140,22 @@ if __name__ == "__main__":
         u_p = w_p / periods[i]
         U_p.append(u_p)
 
-        # print("Task {}: U = {}, T = {}, W = {}>>".format(i, U[0][i], periods[i], w))
-        # print("w = {}, w' = {}, diff = {}".format(w, w_p, (w_p - w) / w * 100))
+        #print("Task {}: U = {}, T = {}, W = {}>>".format(i, U[0][i], periods[i], w))
+        #print("w = {}, w' = {}, diff = {}".format(w, w_p, (w_p - w) / w * 100))
 
-        print(G.get_graph().graph)
+        w_e = {}
+        for e in G.get_graph().edges():
+            ccc = c_[e[0]]
+            w_e[e] = ccc
+
+        nx.set_edge_attributes(G.get_graph(), w_e, 'label')
+
+        #print(G.get_graph().graph)
         print(G.get_graph().nodes.data())
         print(G.get_graph().edges.data())
+
+        # save the node and plot
+        G.save()
+        #G.plot()
 
     print("Total U:", sum(U_p), U_p)
