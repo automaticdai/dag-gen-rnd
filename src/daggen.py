@@ -11,7 +11,7 @@ import networkx as nx
 import random
 from tqdm import tqdm
 
-from rnddag import DAG, DAGset
+from rnddag import DAG, DAGTaskset
 from generator import uunifast_discard, uunifast
 from generator import gen_period, gen_execution_times_with_dummy
 
@@ -87,8 +87,8 @@ if __name__ == "__main__":
     ############################################################################
     # start generation
     ############################################################################
-    # create taskset
-    Gamma = DAGset()
+    # create a taskset
+    Gamma = DAGTaskset()
 
     # total utilization
     u_total = config["taskset"]["utilization"]
@@ -150,12 +150,13 @@ if __name__ == "__main__":
 
         nx.set_edge_attributes(G.get_graph(), w_e, 'label')
 
-        #print(G.get_graph().graph)
-        print(G.get_graph().nodes.data())
-        print(G.get_graph().edges.data())
+        # print internal data
+        G.print_data()
 
-        # save the node and plot
+        # save the graph
         G.save()
+
+        # (optional) plot the graph
         #G.plot()
 
     print("Total U:", sum(U_p), U_p)

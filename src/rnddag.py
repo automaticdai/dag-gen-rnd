@@ -17,8 +17,8 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 
-# Class: DAG Taskset
-class DAGset:
+# Class: DAGTaskset
+class DAGTaskset:
     def __init__(self):
         self.rnd_seed = randint(1, 1000)
         self.util = 0
@@ -37,6 +37,16 @@ class DAGset:
         pass
 
 
+    def add(self, tau):
+        # add a task to taskset
+        pass
+
+
+    def remove(self, tau):
+        # remove a task from taskset
+        pass
+
+
     def dump(self):
         # dump tasksets into a json file
         pass
@@ -47,7 +57,7 @@ class DAGset:
         pass
 
 
-# Class: DAG Task
+# Class: DAG (Directed Acyclic Graph Task)
 class DAG:
     def __init__(self, i=0, U=-1, T=-1, W=-1):
         # parameters (default)
@@ -67,7 +77,8 @@ class DAG:
         self.connect_prob = 0.5
 
         # for gen_NFJ()
-        self.p_fork = 0.2
+        self.depth = 5
+        self.p_fork = 0.3
         self.p_join = 0.8
         self.fork_n_min = 2
         self.fork_n_max = 4
@@ -171,10 +182,6 @@ class DAG:
         self.G = G
 
 
-    def gen_fully_random(self):
-        pass
-
-
     def gen_NFJ(self):
         """ Generate Nested Fork-Join DAG
         """
@@ -197,7 +204,7 @@ class DAG:
 
         ancestor_dict[1] = []
 
-        layer_num = max(self.layer_num_max - 2, 0)
+        layer_num = max(self.depth - 2, 0)
 
         # I. fork phase
         for i in range(layer_num):
@@ -282,6 +289,12 @@ class DAG:
         pass
 
 
+    def print_data(self):
+        #print(self.G.graph)
+        print(self.G.nodes.data())
+        print(self.G.edges.data())
+
+
     def save(self, basefolder="./data/"):
         # layout graph
         A = nx.nx_agraph.to_agraph(self.G)
@@ -293,6 +306,12 @@ class DAG:
 
         # save graph
         A.draw(basefolder + self.name + '.png', format="png")
+        nx.write_gpickle(self.G, basefolder + self.name + '.pickle')
+        nx.write_gml(self.G, basefolder + self.name + '.gml')
+
+
+    def load(self, basefolder="./data/"):
+        pass
 
 
     def plot(self, basefolder="./data"):
