@@ -299,14 +299,14 @@ class DAG:
         # layout graph
         A = nx.nx_agraph.to_agraph(self.G)
 
-        #print("G", self.G.graph)
+        print("G", self.G.graph)
         print(A)
 
         A.layout(prog='dot')
 
         # save graph
         A.draw(basefolder + self.name + '.png', format="png")
-        nx.write_gpickle(self.G, basefolder + self.name + '.pickle')
+        nx.write_gpickle(self.G, basefolder + self.name + '.gpickle')
         nx.write_gml(self.G, basefolder + self.name + '.gml')
 
 
@@ -315,6 +315,9 @@ class DAG:
 
 
     def plot(self, basefolder="./data"):
+        """ The current version of plot draws the generated png file to benefit
+        from AGraph (Graphviz) layout functions.
+        """
         img = mpimg.imread(basefolder + self.name + '.png')
         ypixels, xpixels, bands = img.shape
         dpi = 100.
@@ -328,3 +331,10 @@ class DAG:
 
         # plt.show(block=False)
         plt.show()
+
+
+if __name__ == "__main__":
+    G = DAG()
+    G.gen_NFJ()
+    G.save(basefolder="./")
+    G.plot(basefolder="./")
