@@ -30,7 +30,7 @@ def print_usage_info():
     print("[Usage] python3 daggen.py --config config_file")
 
 
-if __name__ == "__main__":
+def gen(multi_dag=True):
     ############################################################################
     # Initialize directories
     ############################################################################
@@ -87,24 +87,50 @@ if __name__ == "__main__":
     ############################################################################
     # start generation
     ############################################################################
+    # set number of cores
+    cores = config["hardware"]["cores"]
+
+    # set random seed
+    random.seed(config["misc"]["rnd_seed"])
+
     # create a taskset
     Gamma = DAGTaskset()
 
     # total utilization
     u_total = config["taskset"]["utilization"]
 
-    # number of partitions
-    p = config["taskset"]["partitions"]
-
-    # number of cores per partition
-    cores = config["taskset"]["cores"]
-
     # task number
     n = config["taskset"]["task_number"]
 
-    # set random seed
-    random.seed(config["taskset"]["rnd_seed"])
+    # DAG single generation
+    if multi_dag == False:
+        n = config["single_task"]["task_number"]
+        w = config["single_task"]["workload"]
+        
+        for i in tqdm(range(n)):
+            # create a new DAG
+            G = DAG(i=i, U=-1, T=-1, W=w)
+            G.gen_rnd_new()
 
+            # generate sub-DAG execution times
+            n_nodes = G.get_number_of_nodes()
+            c_ = gen_execution_times_with_dummy(n_nodes, w, round_c=True)
+            nx.set_node_attributes(G.get_graph(), c_, 'c')
+
+            # set execution times on edges
+            w_e = {}
+            for e in G.get_graph().edges():
+                ccc = c_[e[0]]
+                w_e[e] = ccc
+
+            nx.set_edge_attributes(G.get_graph(), w_e, 'label')
+
+            # save graph
+            G.save()
+        
+        return
+
+    # Multi-DAG generation
     # DAG utilization
     # u_max = p * cores
     U = uunifast_discard(n, u=u_total, nsets=1, ulimit=cores)
@@ -125,7 +151,9 @@ if __name__ == "__main__":
         G = DAG(i=i, U=U[0][i], T=periods[i], W=w)
         
         # generate nodes in the DAG
-        G.gen_NFJ()
+        #G.gen_NFJ()
+        #G.gen_rnd()
+        G.gen_rnd_new()
         
         # generate sub-DAG execution times
         n_nodes = G.get_number_of_nodes()
@@ -143,6 +171,7 @@ if __name__ == "__main__":
         #print("Task {}: U = {}, T = {}, W = {}>>".format(i, U[0][i], periods[i], w))
         #print("w = {}, w' = {}, diff = {}".format(w, w_p, (w_p - w) / w * 100))
 
+        # set execution times on edges
         w_e = {}
         for e in G.get_graph().edges():
             ccc = c_[e[0]]
@@ -160,3 +189,7 @@ if __name__ == "__main__":
         #G.plot()
 
     print("Total U:", sum(U_p), U_p)
+
+
+if __name__ == "__main__":
+    gen(multi_dag=False)

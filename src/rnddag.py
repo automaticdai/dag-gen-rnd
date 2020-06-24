@@ -60,23 +60,21 @@ class DAGTaskset:
 # Class: DAG (Directed Acyclic Graph Task)
 class DAG:
     def __init__(self, i=0, U=-1, T=-1, W=-1):
-        # parameters (default)
+        # parameters (or use default)
         self.task_num = i
         self.name = 'Tau_{:d}'.format(i)
-
         self.U = U
         self.T = T
         self.W = W
-        self.L = -1
+        self.L = -1 # needs to be computed later
 
-        self.parallelism = 4
-        self.layer_num_max = 5  # critical path
-        self.layer_num_min = 5  # critical path
-
-        # for gen()
+        # configs for gen_rnd()
+        self.parallelism = 8
+        self.layer_num_min = 5   # critical path length (min)
+        self.layer_num_max = 12  # critical path length (max)
         self.connect_prob = 0.5
 
-        # for gen_NFJ()
+        # configs for gen_NFJ()
         self.depth = 5
         self.p_fork = 0.3
         self.p_join = 0.8
@@ -101,7 +99,7 @@ class DAG:
         return self.G.number_of_edges()
 
 
-    def gen(self):
+    def gen_rnd(self):
         # data structures
         nodes = []          # nodes in all layers (in form of shape decomposition)
         nodes_parent = []   # nodes that can be parents
@@ -178,6 +176,87 @@ class DAG:
         #print(nodes)
         #print(nodes_orphan)
 
+        # return the graph
+        self.G = G
+
+
+    def gen_rnd_new(self):
+        # data structures
+        nodes = []          # nodes in all layers (in form of shape decomposition)
+        nodes_parent = []   # nodes that can be parents
+        nodes_parent_childless = []  # nodes without child
+        nodes_orphan = []   # nodes without any parent
+
+        # initial a new graph
+        G = nx.DiGraph(Index=self.task_num, U=self.U, T=self.T, W=self.W)
+
+        # add the root node
+        n = 1
+        G.add_node(n, rank=0)
+        nodes.append([n])
+        nodes_parent.append(n)
+        n = n + 1
+        
+        # random and remove the source and the sink node
+        layer_num_this = randint(self.layer_num_min - 2, self.layer_num_max - 2)
+
+        # generate layer by layer
+        for k in range(layer_num_this):
+            # randomised nodes in each layer
+            m = randint(1, self.parallelism)
+
+            nodes_t = []
+            for _ in range(m):
+                nodes_t.append(n)
+                nodes_orphan.append(n)
+                G.add_node(n, rank=k+1)
+                n = n + 1
+
+            nodes.append(nodes_t)
+
+            # initially assume all parents are childless
+            nodes_parent_childless[:] = nodes_parent_childless[:] + nodes_parent[:]
+
+            # iterates all nodes in the current layout
+            for i in nodes[k+1]:
+                for ii in nodes_parent:
+                    # add connections
+                    if random() < self.connect_prob:
+                        G.add_edge(ii, i)
+                        if i in nodes_orphan:
+                            nodes_orphan.remove(i)
+                        if ii in nodes_parent_childless:
+                            nodes_parent_childless.remove(ii)
+            
+            # add all childs as candidate parents for the next layer
+            nodes_parent[:] = nodes[k+1]
+
+            # connect all orphan to the root node
+            for i in nodes_orphan:
+                nodes_orphan.remove(i)
+                G.add_edge(1, i)
+                # if i in nodes_parent:
+                #     nodes_parent.remove(i)
+
+        # Dealing with the final layer
+        # connect everything together to a final node
+        for i in nodes_parent:
+            G.add_edge(i, n)
+
+        for i in nodes_parent_childless:
+            G.add_edge(i, n)
+
+        # connect all orphan to the root node
+        for i in nodes_orphan:
+            nodes_orphan.remove(i)
+            G.add_edge(1, i)
+
+        # (optional) mutate a node to be conditional
+        # G.add_node('2', style='filled', fillcolor='red', shape='diamond')
+
+        #print(nodes)
+        #print(nodes_orphan)
+        
         # return the graph
         self.G = G
 
