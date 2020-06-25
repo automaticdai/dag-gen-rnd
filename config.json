@@ -1,4 +1,10 @@
 {
+  "misc": {
+    "multi-DAG": false,
+    "print_DAG": false,
+    "save_to_file": true,
+    "rnd_seed": 123
+  },
   "hardware": {
     "cores": 4
   },
@@ -8,10 +14,7 @@
     "task_number": 10
   },
   "single_task": {
-    "task_number": 100,
+    "task_number": 1000,
     "workload": 10000
-  },
-  "misc": {
-    "rnd_seed": 123
   }
 }

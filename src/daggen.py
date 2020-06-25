@@ -30,7 +30,7 @@ def print_usage_info():
     print("[Usage] python3 daggen.py --config config_file")
 
 
-def gen(multi_dag=True):
+def gen():
     ############################################################################
     # Initialize directories
     ############################################################################
@@ -103,6 +103,8 @@ def gen(multi_dag=True):
     n = config["taskset"]["task_number"]
 
     # DAG single generation
+    multi_dag = config["misc"]["multi-DAG"]
+
     if multi_dag == False:
         n = config["single_task"]["task_number"]
         w = config["single_task"]["workload"]
@@ -125,8 +127,13 @@ def gen(multi_dag=True):
 
             nx.set_edge_attributes(G.get_graph(), w_e, 'label')
 
+            # print internal data
+            if config["misc"]["print_DAG"]:
+                G.print_data()
+
             # save graph
-            G.save()
+            if config["misc"]["save_to_file"]:
+                G.save()
         
         return
 
@@ -180,10 +187,12 @@ def gen(multi_dag=True):
         nx.set_edge_attributes(G.get_graph(), w_e, 'label')
 
         # print internal data
-        G.print_data()
+        if config["misc"]["print_DAG"]:
+            G.print_data()
 
         # save the graph
-        G.save()
+        if config["misc"]["save_to_file"]:
+            G.save()
 
         # (optional) plot the graph
         #G.plot()
@@ -192,4 +201,4 @@ def gen(multi_dag=True):
 
 
 if __name__ == "__main__":
-    gen(multi_dag=False)
+    gen()
