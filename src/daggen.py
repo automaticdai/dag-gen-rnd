@@ -102,7 +102,9 @@ def gen():
     # task number
     n = config["taskset"]["task_number"]
 
-    # DAG single generation
+    ############################################################################
+    # single DAG generation
+    ############################################################################
     multi_dag = config["misc"]["multi-DAG"]
 
     if multi_dag == False:
@@ -112,7 +114,7 @@ def gen():
         for i in tqdm(range(n)):
             # create a new DAG
             G = DAG(i=i, U=-1, T=-1, W=w)
-            G.gen_rnd_new()
+            G.gen_rnd(parallelism=5, layer_num_min=5, layer_num_max=12, connect_prob=0.5)
 
             # generate sub-DAG execution times
             n_nodes = G.get_number_of_nodes()
@@ -133,11 +135,13 @@ def gen():
 
             # save graph
             if config["misc"]["save_to_file"]:
-                G.save()
+                G.save(basefolder="./data/")
         
         return
 
+    ############################################################################
     # Multi-DAG generation
+    ############################################################################
     # DAG utilization
     # u_max = p * cores
     U = uunifast_discard(n, u=u_total, nsets=1, ulimit=cores)
@@ -159,8 +163,7 @@ def gen():
         
         # generate nodes in the DAG
         #G.gen_NFJ()
-        #G.gen_rnd()
-        G.gen_rnd_new()
+        G.gen_rnd()
         
         # generate sub-DAG execution times
         n_nodes = G.get_number_of_nodes()
@@ -192,7 +195,7 @@ def gen():
 
         # save the graph
         if config["misc"]["save_to_file"]:
-            G.save()
+            G.save(basefolder="./data/")
 
         # (optional) plot the graph
         #G.plot()

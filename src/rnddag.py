@@ -99,7 +99,7 @@ class DAG:
         return self.G.number_of_edges()
 
 
-    def gen_rnd(self):
+    def gen_rnd_legacy(self):
         # data structures
         nodes = []          # nodes in all layers (in form of shape decomposition)
         nodes_parent = []   # nodes that can be parents
@@ -180,7 +180,7 @@ class DAG:
         self.G = G
 
 
-    def gen_rnd_new(self):
+    def gen_rnd(self, parallelism=8, layer_num_min=5, layer_num_max=12, connect_prob=0.5):
         # data structures
         nodes = []          # nodes in all layers (in form of shape decomposition)
         nodes_parent = []   # nodes that can be parents
@@ -198,12 +198,12 @@ class DAG:
         n = n + 1
         
         # random and remove the source and the sink node
-        layer_num_this = randint(self.layer_num_min - 2, self.layer_num_max - 2)
+        layer_num_this = randint(layer_num_min - 2, layer_num_max - 2)
 
         # generate layer by layer
         for k in range(layer_num_this):
             # randomised nodes in each layer
-            m = randint(1, self.parallelism)
+            m = randint(1, parallelism)
 
             nodes_t = []
             for _ in range(m):
@@ -221,20 +221,20 @@ class DAG:
             for i in nodes[k+1]:
                 for ii in nodes_parent:
                     # add connections
-                    if random() < self.connect_prob:
+                    if random() < connect_prob:
                         G.add_edge(ii, i)
-                        if i in nodes_orphan:
+                        if i in nodes_orphan.copy():
                             nodes_orphan.remove(i)
-                        if ii in nodes_parent_childless:
+                        if ii in nodes_parent_childless.copy():
                             nodes_parent_childless.remove(ii)
             
             # add all childs as candidate parents for the next layer
             nodes_parent[:] = nodes[k+1]
 
             # connect all orphan to the root node
-            for i in nodes_orphan:
-                nodes_orphan.remove(i)
+            for i in nodes_orphan.copy():
                 G.add_edge(1, i)
+                nodes_orphan.remove(i)
                 # if i in nodes_parent:
                 #     nodes_parent.remove(i)
 
@@ -247,9 +247,9 @@ class DAG:
             G.add_edge(i, n)
 
         # connect all orphan to the root node
-        for i in nodes_orphan:
-            nodes_orphan.remove(i)
+        for i in nodes_orphan.copy():
             G.add_edge(1, i)
+            nodes_orphan.remove(i)
 
         # (optional) mutate a node to be conditional
         # G.add_node('2', style='filled', fillcolor='red', shape='diamond')

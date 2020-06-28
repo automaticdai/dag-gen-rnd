@@ -110,6 +110,7 @@ def gen_execution_times_with_dummy(n, w, round_c=False):
         c_set.append(c)
 
     # normalise to w & assign to the execution time list
+    w = w - 2 # remove c(source) and c(sink)
     c_dict = {}
     w_p = sum(c_set)
     f = w_p / w
