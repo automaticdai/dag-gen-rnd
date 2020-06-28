@@ -85,30 +85,19 @@ def gen():
     print("Configurations:", config)
 
     ############################################################################
-    # start generation
+    # load generator basic configurarion
     ############################################################################
-    # set number of cores
-    cores = config["hardware"]["cores"]
-
     # set random seed
     random.seed(config["misc"]["rnd_seed"])
 
-    # create a taskset
-    Gamma = DAGTaskset()
-
-    # total utilization
-    u_total = config["taskset"]["utilization"]
-
-    # task number
-    n = config["taskset"]["task_number"]
+    # multi-or-single dag
+    multi_dag = config["misc"]["multi-DAG"]
 
     ############################################################################
     # single DAG generation
     ############################################################################
-    multi_dag = config["misc"]["multi-DAG"]
-
     if multi_dag == False:
-        n = config["single_task"]["task_number"]
+        n = config["single_task"]["set_number"]
         w = config["single_task"]["workload"]
         
         for i in tqdm(range(n)):
@@ -142,65 +131,79 @@ def gen():
     ############################################################################
     # Multi-DAG generation
     ############################################################################
+    # set of tasksets
+    n_set = config["taskset"]["set_number"]
+
+    # total utilization
+    u_total = config["taskset"]["utilization"]
+
+    # task number
+    n = config["taskset"]["task_number"]
+
+    # number of cores
+    cores = config["hardware"]["cores"]
+
+    # create a taskset
+    Gamma = DAGTaskset()
+
     # DAG utilization
-    # u_max = p * cores
-    U = uunifast_discard(n, u=u_total, nsets=1, ulimit=cores)
+    U = uunifast_discard(n, u=u_total, nsets=n_set, ulimit=cores)
 
     # DAG period (in us)
     period_set = config["taskset"]["periods"]
-    period_set = [(x * 1000) for x in period_set]
+    period_set = [(x) for x in period_set]
     periods = gen_period(period_set, n)
 
     # DAG generation main loop
-    U_p = []
+    for set_index in tqdm(range(n_set)):
+        U_p = []
+        for i in tqdm(range(n)):
+            # calculate workload (in us)
+            w = U[set_index][i] * periods[i]
+            
+            # create a new DAG
+            G = DAG(i=i, U=U[set_index][i], T=periods[i], W=w)
+            
+            # generate nodes in the DAG
+            #G.gen_NFJ()
+            G.gen_rnd()
+            
+            # generate sub-DAG execution times
+            n_nodes = G.get_number_of_nodes()
+            c_ = gen_execution_times_with_dummy(n_nodes, w, round_c=True)
+            nx.set_node_attributes(G.get_graph(), c_, 'c')
+            
+            # calculate actual workload and utilization
+            w_p = 0
+            for item in c_.items():
+                w_p = w_p + item[1]
+            
+            u_p = w_p / periods[i]
+            U_p.append(u_p)
 
-    for i in tqdm(range(n)):
-        # calculate workload (in us)
-        w = U[0][i] * (periods[i])
-        
-        # create a new DAG
-        G = DAG(i=i, U=U[0][i], T=periods[i], W=w)
-        
-        # generate nodes in the DAG
-        #G.gen_NFJ()
-        G.gen_rnd()
-        
-        # generate sub-DAG execution times
-        n_nodes = G.get_number_of_nodes()
-        c_ = gen_execution_times_with_dummy(n_nodes, w, round_c=True)
-        nx.set_node_attributes(G.get_graph(), c_, 'c')
-        
-        # calculate actual workload and utilization
-        w_p = 0
-        for item in c_.items():
-            w_p = w_p + item[1]
-        
-        u_p = w_p / periods[i]
-        U_p.append(u_p)
+            #print("Task {}: U = {}, T = {}, W = {}>>".format(i, U[0][i], periods[i], w))
+            #print("w = {}, w' = {}, diff = {}".format(w, w_p, (w_p - w) / w * 100))
 
-        #print("Task {}: U = {}, T = {}, W = {}>>".format(i, U[0][i], periods[i], w))
-        #print("w = {}, w' = {}, diff = {}".format(w, w_p, (w_p - w) / w * 100))
+            # set execution times on edges
+            w_e = {}
+            for e in G.get_graph().edges():
+                ccc = c_[e[0]]
+                w_e[e] = ccc
 
-        # set execution times on edges
-        w_e = {}
-        for e in G.get_graph().edges():
-            ccc = c_[e[0]]
-            w_e[e] = ccc
+            nx.set_edge_attributes(G.get_graph(), w_e, 'label')
 
-        nx.set_edge_attributes(G.get_graph(), w_e, 'label')
+            # print internal data
+            if config["misc"]["print_DAG"]:
+                G.print_data()
 
-        # print internal data
-        if config["misc"]["print_DAG"]:
-            G.print_data()
+            # save the graph
+            if config["misc"]["save_to_file"]:
+                G.save(basefolder="./data-multi-m{}-u{:.1f}/{}/".format(cores, u_total, set_index))
 
-        # save the graph
-        if config["misc"]["save_to_file"]:
-            G.save(basefolder="./data/")
+            # (optional) plot the graph
+            #G.plot()
 
-        # (optional) plot the graph
-        #G.plot()
-
-    print("Total U:", sum(U_p), U_p)
+        print("Total U:", sum(U_p), U_p)
 
 
 if __name__ == "__main__":

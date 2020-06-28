@@ -6,6 +6,7 @@
 # Real-Time Systems Group
 # University of York, UK
 
+import os
 import json
 import networkx as nx
 from   networkx.drawing.nx_agraph import graphviz_layout, to_agraph
@@ -376,6 +377,10 @@ class DAG:
         print(A)
 
         A.layout(prog='dot')
+
+        # create basefolder (if not exists)
+        if not os.path.exists(basefolder):
+            os.makedirs(basefolder)
 
         # save graph
         A.draw(basefolder + self.name + '.png', format="png")

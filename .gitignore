@@ -1,4 +1,4 @@
 *.pyc
 *.png
 output/
-data/
+data*/
