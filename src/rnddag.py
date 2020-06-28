@@ -68,12 +68,6 @@ class DAG:
         self.W = W
         self.L = -1 # needs to be computed later
 
-        # configs for gen_rnd()
-        self.parallelism = 8
-        self.layer_num_min = 5   # critical path length (min)
-        self.layer_num_max = 12  # critical path length (max)
-        self.connect_prob = 0.5
-
         # configs for gen_NFJ()
         self.depth = 5
         self.p_fork = 0.3

@@ -114,7 +114,7 @@ def gen():
         for i in tqdm(range(n)):
             # create a new DAG
             G = DAG(i=i, U=-1, T=-1, W=w)
-            G.gen_rnd(parallelism=5, layer_num_min=5, layer_num_max=12, connect_prob=0.5)
+            G.gen_rnd(parallelism=8, layer_num_min=5, layer_num_max=12, connect_prob=0.5)
 
             # generate sub-DAG execution times
             n_nodes = G.get_number_of_nodes()
