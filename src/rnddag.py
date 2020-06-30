@@ -373,8 +373,8 @@ class DAG:
         # layout graph
         A = nx.nx_agraph.to_agraph(self.G)
 
-        print("G", self.G.graph)
-        print(A)
+        #print("G", self.G.graph)
+        #print(A)
 
         A.layout(prog='dot')
 

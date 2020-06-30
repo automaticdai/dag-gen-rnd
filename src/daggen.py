@@ -157,7 +157,7 @@ def gen():
     # DAG generation main loop
     for set_index in tqdm(range(n_set)):
         U_p = []
-        for i in tqdm(range(n)):
+        for i in range(n):
             # calculate workload (in us)
             w = U[set_index][i] * periods[i]
             

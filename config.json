@@ -10,9 +10,9 @@
   },
   "taskset": {
     "set_number": 1000,
-    "utilization": 4.8,
+    "utilization": 3.9,
     "task_number": 10,
-    "periods": [1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000]
+    "periods": [1000, 2000]
   },
   "single_task": {
     "set_number": 1000,

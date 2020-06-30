@@ -67,7 +67,11 @@ def gen_period(population, n):
     periods = []
 
     for _ in range(n):
-        period = random.choice(population)
+        if len(population) == 2:
+            # in this case, the period set actually defines a range
+            period = random.randint(population[0], population[1])
+        else:
+            period = random.choice(population)
         periods.append(period)
 
     return periods
