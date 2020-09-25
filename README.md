@@ -29,7 +29,7 @@ and then install Python depedencies through `requirements.txt`:
 
 `$ pip3 install -r requirements.txt`
 
-(Optional) To use GUI, install Qt5 for python:
+(Optional) To use the GUI, you need to install Qt5 for python:
 
 `$ sudo apt install python3-pyqt5`
 
@@ -43,14 +43,16 @@ Use the configuration file `config.json` to configure parameters.
 
 ## Usage
 
-### 1. Command line tool
+First, change the configurations in `config.json`. Then, depending on your perference:
 
-`$ python3 daggen.py`
+### 1.Use command line tool
+
+`$ python3 src/daggen.py`
 
 
-### 2. Graphic user interface
+### 2. Use graphic user interface (not fully developed)
 
-`$ python3 daggen-gui.py`
+`$ python3 src/daggen-gui.py`
 
 ---
 

@@ -90,7 +90,7 @@ def gen():
     # set random seed
     random.seed(config["misc"]["rnd_seed"])
 
-    # multi-or-single dag
+    # multi- or single-dag
     multi_dag = config["misc"]["multi-DAG"]
 
     ############################################################################
