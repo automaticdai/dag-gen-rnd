@@ -4,7 +4,7 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
-Randomized Direct Acyclic Graph generator (rnd-dag-gen) for scheduling and allocation research. rnd-dag-gen supports both command line and graphical user interface. This generator is configurable through a json file and is highly extensible.
+Randomized Direct Acyclic Graph generator (rnd-dag-gen) for scheduling and allocation research. The dag-gen-rnd supports both command line and graphical user interface. This generator is configurable through a json file and is highly extensible.
 
 
 ---
