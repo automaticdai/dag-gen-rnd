@@ -58,7 +58,9 @@ First, change the configurations in `config.json`. Then, depending on your perfe
 
 ## Citation
 
-Please use the following to cite this work: "Xiaotian Dai. dag-gen-rnd: A randomized DAG generator for scheduling and allocation research. https://github.com/automaticdai/dag-gen-rnd". 2020.
+To cite this work, please use the following format: 
+
+"Xiaotian Dai. dag-gen-rnd: A randomized DAG generator for scheduling and allocation research (2020). https://github.com/automaticdai/dag-gen-rnd."
 
 ---
 
