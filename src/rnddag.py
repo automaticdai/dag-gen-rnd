@@ -94,6 +94,15 @@ class DAG:
         return self.G.number_of_edges()
 
 
+    def gen(algorithm):
+        if algorithm == "NFJ":
+            gen_rnd_nfj()
+        elif algorithm == "RND":
+            gen_rnd()
+        else:
+            gen_rnd_legacy()
+
+
     def gen_rnd_legacy(self):
         # data structures
         nodes = []          # nodes in all layers (in form of shape decomposition)
@@ -413,6 +422,6 @@ class DAG:
 
 if __name__ == "__main__":
     G = DAG()
-    G.gen_NFJ()
+    G.gen("NFJ")
     G.save(basefolder="./")
     G.plot(basefolder="./")
