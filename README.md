@@ -4,7 +4,8 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
-Randomized Direct Acyclic Graph generator (dag-gen-rnd) for scheduling and allocation research. The dag-gen-rnd supports both command line and graphical user interface. This generator is configurable through a json file and is highly extensible.
+Randomized multiple Direct Acyclic Graph generator (multi-DAG) for scheduling and allocation research. 
+The `dag-gen-rnd` supports both command line and graphical user interface (GUI). This generator is configurable through a json file and is highly extensible to other purposes.
 
 
 ---
@@ -19,7 +20,7 @@ Randomized Direct Acyclic Graph generator (dag-gen-rnd) for scheduling and alloc
 
 ---
 
-## Installation
+## Installation on Linux
 
 Install depedencies using apt:
 
@@ -39,18 +40,23 @@ and then install Python depedencies through `requirements.txt`:
 
 Use the configuration file `config.json` to configure parameters.
 
+Generation algorithms:
+- NFJ: Nested fork join
+- rnd: Standard randomized DAG
+- rnd_legacy (default)
+
 ---
 
 ## Usage
 
 First, change the configurations in `config.json`. Then, depending on your perference:
 
-### 1.Use command line tool
+### 1. Use the command line interface
 
-`$ python3 src/daggen.py`
+`$ python3 src/daggen-cli.py`
 
 
-### 2. Use graphic user interface (not fully developed)
+### 2. Use the graphic user interface (development in process)
 
 `$ python3 src/daggen-gui.py`
 
@@ -67,4 +73,3 @@ To cite this work, please use the following format:
 ## License
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
-
