@@ -62,6 +62,18 @@ First, change the configurations in `config.json`. Then, depending on your perfe
 
 ---
 
+## Examples
+
+Here are some simple examples of generated DAGs:
+
+![](img/example_1.png)
+
+![](img/example_2.png)
+
+![](img/example_3.png)
+
+---
+
 ## Citation
 
 To cite this work, please use the following format: 
