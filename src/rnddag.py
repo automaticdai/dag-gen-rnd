@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+################################################################################
 # Randomized DAG Generator
 # Xiaotian Dai
 # Real-Time Systems Group
 # University of York, UK
+################################################################################
 
 import os
 import json
@@ -97,7 +99,7 @@ class DAG:
     def gen(algorithm):
         if algorithm == "NFJ":
             gen_rnd_nfj()
-        elif algorithm == "RND":
+        elif algorithm == "rnd":
             gen_rnd()
         else:
             gen_rnd_legacy()

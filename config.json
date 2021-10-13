@@ -1,18 +1,18 @@
 {
   "misc": {
     "multi-DAG": true,
-    "print_DAG": false,
+    "print_DAG": true,
     "save_to_file": true,
     "rnd_seed": 123
   },
   "hardware": {
-    "cores": 6
+    "cores": 4
   },
   "taskset": {
-    "set_number": 1000,
-    "utilization": 3.9,
-    "task_number": 10,
-    "periods": [1000, 2000]
+    "set_number": 10,
+    "utilization": 2.0,
+    "task_number": 3,
+    "periods": [1000, 2000, 5000, 10000]
   },
   "single_task": {
     "set_number": 1000,

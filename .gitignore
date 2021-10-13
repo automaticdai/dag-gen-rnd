@@ -2,3 +2,4 @@
 *.png
 output/
 data*/
+__pycache__/

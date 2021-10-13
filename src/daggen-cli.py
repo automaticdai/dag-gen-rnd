@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+################################################################################
 # Randomized DAG Generator
 # Xiaotian Dai
 # Real-Time Systems Group
 # University of York, UK
+################################################################################
 
 import os, sys, logging, getopt, time, json
 import networkx as nx
@@ -27,10 +29,10 @@ def parse_configuration(config_path):
 
 
 def print_usage_info():
-    print("[Usage] python3 daggen.py --config config_file")
+    print("[Usage] python3 daggen-cli.py --config config_file")
 
 
-def gen():
+if __name__ == "__main__":
     ############################################################################
     # Initialize directories
     ############################################################################
@@ -94,7 +96,7 @@ def gen():
     multi_dag = config["misc"]["multi-DAG"]
 
     ############################################################################
-    # single DAG generation
+    # I. single DAG generation
     ############################################################################
     if multi_dag == False:
         n = config["single_task"]["set_number"]
@@ -126,10 +128,10 @@ def gen():
             if config["misc"]["save_to_file"]:
                 G.save(basefolder="./data/")
         
-        return
+        sys.exit(0)
 
     ############################################################################
-    # Multi-DAG generation
+    # II. multi-DAG generation
     ############################################################################
     # set of tasksets
     n_set = config["taskset"]["set_number"]
@@ -166,7 +168,7 @@ def gen():
             
             # generate nodes in the DAG
             #G.gen_NFJ()
-            G.gen_rnd()
+            G.gen_rnd(parallelism=3, layer_num_min=3, layer_num_max=5, connect_prob=0.5)
             
             # generate sub-DAG execution times
             n_nodes = G.get_number_of_nodes()
@@ -204,7 +206,5 @@ def gen():
             #G.plot()
 
         print("Total U:", sum(U_p), U_p)
-
-
-if __name__ == "__main__":
-    gen()
+    
+    sys.exit(0)

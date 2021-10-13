@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+################################################################################
 # Randomized DAG Generator
 # Xiaotian Dai
 # Real-Time Systems Group
 # University of York, UK
+################################################################################
 
 import os, logging
 
@@ -24,7 +26,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton,
 
 from random import seed, randint, random
 
-from rnddag import rnddag
+import rnddag
 
 
 class GUI:
@@ -90,16 +92,16 @@ class GUI:
 
 # Main function
 if __name__ == "__main__":
-    # fix random seed
-    # seed(rnd_seed)
-
     # load configurations
     #with open('config.json', 'r') as f:
     #    array = json.load(f)
 
+    # fix random seed
+    # seed(rnd_seed)
+
     #print(array["tg"])
 
-    # initialize GUI
+    # initialize the GUI
     gui = GUI()
 
     # for test only
