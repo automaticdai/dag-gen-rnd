@@ -3,6 +3,7 @@
     "multi-DAG": true,
     "print_DAG": true,
     "save_to_file": true,
+    "dummy_source_and_sink": false,
     "rnd_seed": 123
   },
   "hardware": {

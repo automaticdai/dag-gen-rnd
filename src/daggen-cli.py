@@ -15,7 +15,7 @@ from tqdm import tqdm
 
 from rnddag import DAG, DAGTaskset
 from generator import uunifast_discard, uunifast
-from generator import gen_period, gen_execution_times_with_dummy
+from generator import gen_period, gen_execution_times, gen_execution_times_with_dummy
 
 
 def parse_configuration(config_path):
@@ -109,7 +109,12 @@ if __name__ == "__main__":
 
             # generate sub-DAG execution times
             n_nodes = G.get_number_of_nodes()
-            c_ = gen_execution_times_with_dummy(n_nodes, w, round_c=True)
+            
+            if config["misc"]["dummy_source_and_sink"]:
+                c_ = gen_execution_times_with_dummy(n_nodes, w, round_c=True)
+            else:
+                c_ = gen_execution_times(n_nodes, w, round_c=True)
+            
             nx.set_node_attributes(G.get_graph(), c_, 'c')
 
             # set execution times on edges
@@ -172,7 +177,12 @@ if __name__ == "__main__":
             
             # generate sub-DAG execution times
             n_nodes = G.get_number_of_nodes()
-            c_ = gen_execution_times_with_dummy(n_nodes, w, round_c=True)
+            
+            if config["misc"]["dummy_source_and_sink"]:
+                c_ = gen_execution_times_with_dummy(n_nodes, w, round_c=True)
+            else:
+                c_ = gen_execution_times(n_nodes, w, round_c=True)
+            
             nx.set_node_attributes(G.get_graph(), c_, 'c')
             
             # calculate actual workload and utilization

@@ -393,9 +393,13 @@ class DAG:
         if not os.path.exists(basefolder):
             os.makedirs(basefolder)
 
-        # save graph
+        # save graph (png)
         A.draw(basefolder + self.name + '.png', format="png")
+        
+        # save graph (gpickle)
         nx.write_gpickle(self.G, basefolder + self.name + '.gpickle')
+        
+        # save graph (gml)
         nx.write_gml(self.G, basefolder + self.name + '.gml')
 
 

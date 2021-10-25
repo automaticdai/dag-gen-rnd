@@ -21,6 +21,8 @@ def load_task(task_idx, dag_base_folder = "../data/"):
     G_dict = {}
     C_dict = {}
     V_array = []
+    T = G.graph["T"]
+    
     max_key = 0
     for u, v, weight in G.edges(data='label'):
         if u not in G_dict:
@@ -50,13 +52,14 @@ def load_task(task_idx, dag_base_folder = "../data/"):
     W = sum(C_array)
 
     # >> end of load DAG task >>
-    return G_dict, V_array, C_dict, C_array, W
+    return G_dict, V_array, C_dict, C_array, T, W
 
 
 # below is an example of how to use the load function:
 if __name__ == "__main__":
-    G, V, C, _, W = load_task(task_idx = 1, dag_base_folder = "../data-multi-m4-u2.0/0/")
+    G, V, C, _, T, W = load_task(task_idx = 1, dag_base_folder = "../data-multi-m4-u2.0/0/")
     print("G: ", G)
     print("V: ", V)
+    print("T: ", T)
     print("C: ", C)
     print("W: ", W)
