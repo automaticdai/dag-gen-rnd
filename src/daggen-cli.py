@@ -156,14 +156,18 @@ if __name__ == "__main__":
     # DAG utilization
     U = uunifast_discard(n, u=u_total, nsets=n_set, ulimit=cores)
 
-    # DAG period (in us)
+    # Load DAG period set (in us)
     period_set = config["taskset"]["periods"]
     period_set = [(x) for x in period_set]
-    periods = gen_period(period_set, n)
 
     # DAG generation main loop
     for set_index in tqdm(range(n_set)):
         U_p = []
+        
+        # generate periods
+        periods = gen_period(period_set, n)
+        print(periods)
+        
         for i in range(n):
             # calculate workload (in us)
             w = U[set_index][i] * periods[i]
