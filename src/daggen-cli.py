@@ -150,19 +150,19 @@ if __name__ == "__main__":
     # number of cores
     cores = config["hardware"]["cores"]
 
-    # create a taskset
-    Gamma = DAGTaskset()
-
-    # DAG utilization
-    U = uunifast_discard(n, u=u_total, nsets=n_set, ulimit=cores)
-
     # Load DAG period set (in us)
     period_set = config["taskset"]["periods"]
     period_set = [(x) for x in period_set]
 
     # DAG generation main loop
     for set_index in tqdm(range(n_set)):
+        # create a new taskset
+        Gamma = DAGTaskset()
+        
         U_p = []
+        
+        # DAG taskset utilization
+        U = uunifast_discard(n, u=u_total, nsets=n_set, ulimit=cores)
         
         # generate periods
         periods = gen_period(period_set, n)
