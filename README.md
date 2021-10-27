@@ -1,22 +1,27 @@
-# Randomized DAG Generator
+# Randomized Multi-DAG Generator for Scheduling and Allocation Research
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
-Randomized multiple Direct Acyclic Graph generator (multi-DAG) for scheduling and allocation research. 
-The `dag-gen-rnd` supports both command line and graphical user interface (GUI). This generator is configurable through a json file and is highly extensible to other purposes.
+**dag-gen-rnd** --- Randomized multiple Direct Acyclic Graph generator (DAG) designed for scheduling and allocation research in parallel and multi-core computing. 
 
+**dag-gen-rnd** supports both command line (`daggen-cli`) and graphical user interface (`daggen-gui`). This generator can be easily configured through a `.json` file and is highly extensible for other purposes.
+
+Supported generation algorithms:
+- NFJ: Nested fork-join
+- rnd: standard randomized DAG (layer-by-layer)
+- rnd_legacy: default randomized DAG
 
 ---
 
 ## Requirements
 
-- Python >= 3.5
-- NetworkX >= 2.4
-- Matplotlib >= 3.1.3
-- pygraphviz >= 1.5
-- numpy >= 1.17
+- `Python >= 3.5`
+- `NetworkX >= 2.4`
+- `Matplotlib >= 3.1.3`
+- `pygraphviz >= 1.5`
+- `numpy >= 1.17`
 
 ---
 
@@ -40,11 +45,6 @@ and then install Python depedencies through `requirements.txt`:
 
 Use the configuration file `config.json` to configure parameters.
 
-Generation algorithms:
-- NFJ: Nested fork join
-- rnd: Standard randomized DAG
-- rnd_legacy (default)
-
 ---
 
 ## Usage
@@ -60,6 +60,8 @@ First, change the configurations in `config.json`. Then, depending on your perfe
 
 `$ python3 src/daggen-gui.py`
 
+To use the generated DAGs, see the provided API in `utlity.py` which also gives an example.
+
 ---
 
 ## Examples
@@ -72,16 +74,31 @@ Here are some simple examples of generated DAGs:
 
 ![](img/example_3.png)
 
+
+---
+
+## Notes
+
+This code is not tested on Windows, but should not have too many problems. The only thing that can be an issue is the difference is in folder naming where Windows uses a backslash, instead of a forwardslash. I will test it and make it compatitable. 
+
+---
+
+## Publications using this generator
+
+- Zhao, Shuai, Xiaotian Dai, Iain Bate, Alan Burns, and Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency." In 2020 IEEE Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
+
 ---
 
 ## Citation
 
-To cite this work, please use the following format: 
+Please use the following format if you want to cite this work: 
 
 "Xiaotian Dai. dag-gen-rnd: A randomized DAG generator for scheduling and allocation research. Access at https://github.com/automaticdai/dag-gen-rnd."
 
 ---
 
 ## License
+
+Licensed under MIT.
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
