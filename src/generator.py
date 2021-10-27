@@ -12,16 +12,14 @@ import math
 
 
 def uunifast_discard(n, u, nsets, ulimit=1):
-    """ UUniFast-discard
-
-    Args:
+    """ Function: UUniFast-discard
+    Inputs:
         n (int): number of tasks
         u (float): total utilization
         nsets (int): number of sets
-
+        ulimit: upper limit of the utlization of a single DAG
     Returns:
         sets (list)
-    
     """
     # if (n <= u):
     #     # no feasible solution
@@ -49,6 +47,13 @@ def uunifast_discard(n, u, nsets, ulimit=1):
 
 # UUniFast
 def uunifast(n, u):
+    """ Function: UUniFast
+    Inputs:
+        n (int): number of tasks
+        u (float): total utilization
+    Returns:
+        sets (list)
+    """
     sumU = u
     vectU = []
 
@@ -78,61 +83,55 @@ def gen_period(population, n):
 
 
 # distribute workloads, w, to n nodes
-def gen_execution_times(n, w, round_c=False):
+def gen_execution_times(n, w, round_c=False, dummy=False):
     c_set = []
 
-    for i in range(n):
-        c = random.random()
-        c_set.append(c)
+    if dummy == False:
+        for i in range(n):
+            c = random.random()
+            c_set.append(c)
 
-    # normalise to w & assign to the execution time list
-    c_dict = {}
-    w_p = sum(c_set)
-    f = w_p / w
+        # normalise to w & assign to the execution time list
+        c_dict = {}
+        w_p = sum(c_set)
+        f = w_p / w
 
-    for i in range(n):
-        if round_c == False:
-            # +1 as node number starts from 1, not 0
-            c_dict[i + 1] = c_set[i] / f
-        else:
-            # round the value to integer but should be more than 1!
-            c_dict[i + 1] = max(round(c_set[i] / f), 1)
+        for i in range(n):
+            if round_c == False:
+                # +1 as node number starts from 1, not 0
+                c_dict[i + 1] = c_set[i] / f
+            else:
+                # round the value to integer but should be more than 1!
+                c_dict[i + 1] = max(round(c_set[i] / f), 1)
 
-    return c_dict
+    else:
+        # a dummy source / sink node only has unit execution times
+        # -> exclude them from the generation process
+        # -> append them at the last
+        for i in range(n - 2):
+            c = random.random()
+            c_set.append(c)
 
+        # normalise to w & assign to the execution time list
+        w = w - 2 # remove c(source) and c(sink)
+        c_dict = {}
+        w_p = sum(c_set)
+        f = w_p / w
 
-# distribute workloads, w, to n nodes (with dummy source and sink nodes)
-# c(source) == c(sink) == 1
-def gen_execution_times_with_dummy(n, w, round_c=False):
-    c_set = []
+        # dummy source node
+        c_dict[1] = 1
 
-    # a dummy source / sink node only has unit execution times
-    # -> exclude them from the generation process
-    # -> append them at the last
-    for i in range(n - 2):
-        c = random.random()
-        c_set.append(c)
+        for i in range(n - 2):
+            if round_c == False:
+                # +1 as node number starts from 1, not 0
+                # +1 more as the source node is skipped
+                c_dict[i + 1 + 1] = c_set[i] / f
+            else:
+                # round the value to integer but should be more than 1!
+                c_dict[i + 1 + 1] = max(round(c_set[i] / f), 1)
 
-    # normalise to w & assign to the execution time list
-    w = w - 2 # remove c(source) and c(sink)
-    c_dict = {}
-    w_p = sum(c_set)
-    f = w_p / w
-
-    # dummy source node
-    c_dict[1] = 1
-
-    for i in range(n - 2):
-        if round_c == False:
-            # +1 as node number starts from 1, not 0
-            # +1 more as the source node is skipped
-            c_dict[i + 1 + 1] = c_set[i] / f
-        else:
-            # round the value to integer but should be more than 1!
-            c_dict[i + 1 + 1] = max(round(c_set[i] / f), 1)
-
-    # dummy sink node
-    c_dict[n] = 1
+        # dummy sink node
+        c_dict[n] = 1
 
     return c_dict
 
