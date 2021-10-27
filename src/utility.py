@@ -51,13 +51,18 @@ def load_task(task_idx, dag_base_folder = "../data/"):
     V_array.sort()
     W = sum(C_array)
 
+    # read the ET of the sink node
+    # C = G.nodes[max_key]['C']
+    # print(C)
+    
     # >> end of load DAG task >>
     return G_dict, V_array, C_dict, C_array, T, W
 
 
 # below is an example of how to use the load function:
 if __name__ == "__main__":
-    G, V, C, _, T, W = load_task(task_idx = 1, dag_base_folder = "../data-multi-m4-u2.0/0/")
+    G, V, C, _, T, W = load_task(task_idx = 0, dag_base_folder = "data-multi-m4-u0.8/0/")
+    
     print("G: ", G)
     print("V: ", V)
     print("T: ", T)

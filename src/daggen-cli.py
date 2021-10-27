@@ -15,7 +15,7 @@ from tqdm import tqdm
 
 from rnddag import DAG, DAGTaskset
 from generator import uunifast_discard, uunifast
-from generator import gen_period, gen_execution_times, gen_execution_times_with_dummy
+from generator import gen_period, gen_execution_times
 
 
 def parse_configuration(config_path):
@@ -109,13 +109,9 @@ if __name__ == "__main__":
 
             # generate sub-DAG execution times
             n_nodes = G.get_number_of_nodes()
-            
-            if config["misc"]["dummy_source_and_sink"]:
-                c_ = gen_execution_times_with_dummy(n_nodes, w, round_c=True)
-            else:
-                c_ = gen_execution_times(n_nodes, w, round_c=True)
-            
-            nx.set_node_attributes(G.get_graph(), c_, 'c')
+            dummy = config["misc"]["dummy_source_and_sink"]
+            c_ = gen_execution_times(n_nodes, w, round_c=True, dummy=dummy)
+            nx.set_node_attributes(G.get_graph(), c_, 'C')
 
             # set execution times on edges
             w_e = {}
@@ -156,6 +152,7 @@ if __name__ == "__main__":
 
     # DAG generation main loop
     for set_index in tqdm(range(n_set)):
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         # create a new taskset
         Gamma = DAGTaskset()
         
@@ -181,13 +178,9 @@ if __name__ == "__main__":
             
             # generate sub-DAG execution times
             n_nodes = G.get_number_of_nodes()
-            
-            if config["misc"]["dummy_source_and_sink"]:
-                c_ = gen_execution_times_with_dummy(n_nodes, w, round_c=True)
-            else:
-                c_ = gen_execution_times(n_nodes, w, round_c=True)
-            
-            nx.set_node_attributes(G.get_graph(), c_, 'c')
+            dummy = config["misc"]["dummy_source_and_sink"] 
+            c_ = gen_execution_times(n_nodes, w, round_c=True, dummy=dummy)
+            nx.set_node_attributes(G.get_graph(), c_, 'C')
             
             # calculate actual workload and utilization
             w_p = 0
@@ -211,6 +204,7 @@ if __name__ == "__main__":
             # print internal data
             if config["misc"]["print_DAG"]:
                 G.print_data()
+                print()
 
             # save the graph
             if config["misc"]["save_to_file"]:
@@ -220,5 +214,7 @@ if __name__ == "__main__":
             #G.plot()
 
         print("Total U:", sum(U_p), U_p)
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+        print()
     
     sys.exit(0)

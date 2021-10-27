@@ -22,6 +22,7 @@ Supported generation algorithms:
 - `Matplotlib >= 3.1.3`
 - `pygraphviz >= 1.5`
 - `numpy >= 1.17`
+- `tqdm >= 4.45.0`
 
 ---
 
