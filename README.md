@@ -9,6 +9,7 @@
 **dag-gen-rnd** supports both command line (`daggen-cli`) and graphical user interface (`daggen-gui`). This generator can be easily configured through a `.json` file and is highly extensible for other purposes.
 
 Supported generation algorithms:
+
 - NFJ: Nested fork-join
 - rnd: standard randomized DAG (layer-by-layer)
 - rnd_legacy: default randomized DAG
@@ -78,13 +79,13 @@ Here are some simple examples of generated DAGs:
 
 ---
 
-## Notes
+## Known Issues
 
-This code is not tested on Windows, but should not have too many problems. The only thing that can be an issue is the difference is in folder naming where Windows uses a backslash, instead of a forwardslash. I will test it and make it compatitable. 
+This code is not tested on Windows, but it should not have too many problems. The only thing that can be an issue is the difference is in folder naming where Windows uses a backslash (`\`), instead of a forwardslash (`/`). I will test it and make it compatitable in the future. 
 
 ---
 
-## Publications using this generator
+## Publications used this generator
 
 - Zhao, Shuai, Xiaotian Dai, Iain Bate, Alan Burns, and Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency." In 2020 IEEE Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
 
@@ -92,9 +93,11 @@ This code is not tested on Windows, but should not have too many problems. The o
 
 ## Citation
 
-Please use the following format if you want to cite this work: 
+Please use the following citation if you use this code for your work: 
 
-"Xiaotian Dai. dag-gen-rnd: A randomized DAG generator for scheduling and allocation research. Access at https://github.com/automaticdai/dag-gen-rnd."
+```
+@article{xiaotian dai_2022, title={automaticdai/dag-gen-rnd: v0.1}, DOI={10.5281/zenodo.6334205}, abstractNote={<p>First published version (beta test phase).</p>}, publisher={Zenodo}, author={Xiaotian Dai}, year={2022}, month={Mar} }
+```
 
 ---
 
