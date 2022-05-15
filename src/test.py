@@ -1,3 +1,13 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+# -------------------------------------------------------------------------------
+# Randomized Multi-DAG Task Generator
+# Xiaotian Dai
+# Real-Time Systems Group
+# University of York, UK
+# -------------------------------------------------------------------------------
+
 import networkx as nx
 
 G = nx.DiGraph()
@@ -10,13 +20,13 @@ G.add_node(4)
 G.add_node(5)
 
 # add edges
-G.add_edge(1,2)
-G.add_edge(2,3)
-G.add_edge(3,4)
-G.add_edge(4,5)
-G.add_edge(1,3)
-G.add_edge(3,5)
-G.add_edge(4,5)
+G.add_edge(1, 2)
+G.add_edge(2, 3)
+G.add_edge(3, 4)
+G.add_edge(4, 5)
+G.add_edge(1, 3)
+G.add_edge(3, 5)
+G.add_edge(4, 5)
 
 # print
 print("Nodes:", G.nodes())

@@ -1,48 +1,16 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Randomized DAG Generator
+# -------------------------------------------------------------------------------
+# Randomized Multi-DAG Task Generator
 # Xiaotian Dai
 # Real-Time Systems Group
 # University of York, UK
+# -------------------------------------------------------------------------------
 
 import numpy as np
 import random
 import math
-
-
-def uunifast_discard(n, u, nsets, ulimit=1):
-    """ Function: UUniFast-discard
-    Inputs:
-        n (int): number of tasks
-        u (float): total utilization
-        nsets (int): number of sets
-        ulimit: upper limit of the utlization of a single DAG
-    Returns:
-        sets (list)
-    """
-    # if (n <= u):
-    #     # no feasible solution
-    #     return []
-    
-    sets = []
-    while len(sets) < nsets:
-        # Classic UUniFast algorithm:
-        utilizations = []
-        sumU = u
-        for i in range(1, n):
-            nextSumU = sumU * random.random() ** (1.0 / (n - i))
-            utilizations.append(sumU - nextSumU)
-            sumU = nextSumU
-        utilizations.append(sumU)
-
-        # If no task utilization exceeds ulimit:
-        if all(ut <= ulimit for ut in utilizations):
-            sets.append(utilizations)
-
-        #print(sum(utilizations))
-
-    return sets
 
 
 # UUniFast
@@ -66,6 +34,38 @@ def uunifast(n, u):
 
     return vectU
 
+def uunifast_discard(n, u, nsets, ulimit=1):
+    """ Function: UUniFast-discard
+    Inputs:
+        n (int): number of tasks
+        u (float): total utilization
+        nsets (int): number of sets
+        ulimit: upper limit of the utlization of a single DAG
+    Returns:
+        sets (list)
+    """
+    # if (n <= u):
+    #     # no feasible solution
+    #     return []
+
+    sets = []
+    while len(sets) < nsets:
+        # Classic UUniFast algorithm:
+        utilizations = []
+        sumU = u
+        for i in range(1, n):
+            nextSumU = sumU * random.random() ** (1.0 / (n - i))
+            utilizations.append(sumU - nextSumU)
+            sumU = nextSumU
+        utilizations.append(sumU)
+
+        # If no task utilization exceeds ulimit:
+        if all(ut <= ulimit for ut in utilizations):
+            sets.append(utilizations)
+
+        # print(sum(utilizations))
+
+    return sets
 
 # random generate periods from a population set
 def gen_period(population, n):

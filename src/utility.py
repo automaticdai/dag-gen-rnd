@@ -1,14 +1,15 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-################################################################################
-# Randomized DAG Generator
+# -------------------------------------------------------------------------------
+# Randomized Multi-DAG Task Generator
 # Xiaotian Dai
 # Real-Time Systems Group
 # University of York, UK
-################################################################################
+# -------------------------------------------------------------------------------
 
 import networkx as nx
+
 
 def load_task(task_idx, dag_base_folder = "../data/"):
     # << load DAG task <<
@@ -22,7 +23,7 @@ def load_task(task_idx, dag_base_folder = "../data/"):
     C_dict = {}
     V_array = []
     T = G.graph["T"]
-    
+
     max_key = 0
     for u, v, weight in G.edges(data='label'):
         if u not in G_dict:
@@ -40,7 +41,6 @@ def load_task(task_idx, dag_base_folder = "../data/"):
 
         C_dict[u] = weight
     C_dict[max_key] = 1
-
     G_dict[max_key] = []
 
     # formulate the c list (c[0] is c for v1!!)
@@ -54,15 +54,15 @@ def load_task(task_idx, dag_base_folder = "../data/"):
     # read the ET of the sink node
     # C = G.nodes[max_key]['C']
     # print(C)
-    
+
     # >> end of load DAG task >>
     return G_dict, V_array, C_dict, C_array, T, W
 
 
 # below is an example of how to use the load function:
 if __name__ == "__main__":
-    G, V, C, _, T, W = load_task(task_idx = 0, dag_base_folder = "data-multi-m4-u0.8/0/")
-    
+    G, V, C, _, T, W = load_task(task_idx=0, dag_base_folder="data-multi-m4-u0.8/0/")
+
     print("G: ", G)
     print("V: ", V)
     print("T: ", T)

@@ -1,17 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-################################################################################
-# Randomized DAG Generator
+# -------------------------------------------------------------------------------
+# Randomized Multi-DAG Task Generator
 # Xiaotian Dai
 # Real-Time Systems Group
 # University of York, UK
-################################################################################
+# -------------------------------------------------------------------------------
 
 import os
 import json
 import networkx as nx
-from   networkx.drawing.nx_agraph import graphviz_layout, to_agraph
+from networkx.drawing.nx_agraph import graphviz_layout, to_agraph
 import pygraphviz as pgv
 
 from random import seed, randint, random
@@ -28,7 +28,6 @@ class DAGTaskset:
         self.task_number = 0
         self.tasks = []
 
-
     def gen(self, u, n):
         # generate tasks
 
@@ -39,21 +38,17 @@ class DAGTaskset:
         # generate execution times
         pass
 
-
     def add(self, tau):
         # add a task to taskset
         pass
-
 
     def remove(self, tau):
         # remove a task from taskset
         pass
 
-
     def dump(self):
         # dump tasksets into a json file
         pass
-
 
     def load(self):
         # load tasksets from a json file
@@ -71,39 +66,33 @@ class DAG:
         self.W = W
         self.L = -1 # needs to be computed later
 
-        # configs for gen_NFJ()
+        # configs for gen_nfj()
         self.depth = 5
         self.p_fork = 0.3
         self.p_join = 0.8
         self.fork_n_min = 2
         self.fork_n_max = 4
 
-
     def __str__(self):
         A = nx.nx_agraph.to_agraph(self.G)
         return A.__str__()
 
-
     def get_graph(self):
         return self.G
-
 
     def get_number_of_nodes(self):
         return self.G.number_of_nodes()
 
-
     def get_number_of_edges(self):
         return self.G.number_of_edges()
 
-
     def gen(algorithm):
-        if algorithm == "NFJ":
+        if algorithm == "nfj":
             gen_rnd_nfj()
         elif algorithm == "rnd":
             gen_rnd()
         else:
             gen_rnd_legacy()
-
 
     def gen_rnd_legacy(self):
         # data structures
@@ -185,7 +174,6 @@ class DAG:
         # return the graph
         self.G = G
 
-
     def gen_rnd(self, parallelism=8, layer_num_min=5, layer_num_max=12, connect_prob=0.5):
         # data structures
         nodes = []          # nodes in all layers (in form of shape decomposition)
@@ -266,8 +254,7 @@ class DAG:
         # return the graph
         self.G = G
 
-
-    def gen_NFJ(self):
+    def gen_nfj(self):
         """ Generate Nested Fork-Join DAG
         """
         # data structures
@@ -369,16 +356,13 @@ class DAG:
         # return the generated graph
         self.G = G
 
-
     def config(self):
         pass
-
 
     def print_data(self):
         #print(self.G.graph)
         print(self.G.nodes.data())
         print(self.G.edges.data())
-
 
     def save(self, basefolder="./data/"):
         # layout graph
@@ -402,10 +386,8 @@ class DAG:
         # save graph (gml)
         nx.write_gml(self.G, basefolder + self.name + '.gml')
 
-
     def load(self, basefolder="./data/"):
         pass
-
 
     def plot(self, basefolder="./data"):
         """ The current version of plot draws the generated png file to benefit
@@ -428,6 +410,6 @@ class DAG:
 
 if __name__ == "__main__":
     G = DAG()
-    G.gen("NFJ")
+    G.gen("nfj")
     G.save(basefolder="./")
     G.plot(basefolder="./")
