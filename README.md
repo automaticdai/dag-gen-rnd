@@ -115,17 +115,23 @@ Here are some simple examples of generated DAGs:
 
 Please use the following citation if you use this code for your work: 
 
+```
+Xiaotian Dai. (2022). dag-gen-rnd: A randomized multi-DAG task generator (v0.1). Zenodo. https://doi.org/10.5281/zenodo.6334205
+```
+
 BibTex:
 
 ```
-@misc{xiaotian dai_2022, 
-      title={automaticdai/dag-gen-rnd: v0.1}, 
-      DOI={10.5281/zenodo.6334205}, 
-      abstractNote={<p>First published version (beta test phase).</p>}, 
-      publisher={Zenodo}, 
-      author={Xiaotian Dai}, 
-      year={2022}, 
-      month={Mar} }
+@software{xiaotian_dai_2022_6334205,
+  author       = {Xiaotian Dai},
+  title        = {dag-gen-rnd: A randomized multi-DAG task generator},
+  month        = mar,
+  year         = 2022,
+  publisher    = {Zenodo},
+  version      = {v0.1},
+  doi          = {10.5281/zenodo.6334205},
+  url          = {https://doi.org/10.5281/zenodo.6334205}
+}
 ```
 
 ---
