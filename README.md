@@ -1,35 +1,41 @@
-# Multi-DAG Randomized Task Generator for Scheduling and Allocation Research
+# Randomized Multi-DAG Task Generator for Scheduling and Allocation Research
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
-**dag-gen-rnd** --- Randomized multiple Direct Acyclic Graph generator (DAG) designed for scheduling and allocation research in parallel and multi-core computing. 
+**dag-gen-rnd** --- A randomized multiple Direct Acyclic Graph (DAG) task generator designed for scheduling and allocation research in parallel and multi-core computing. 
 
-**dag-gen-rnd** supports both command line (`daggen-cli`) and graphical user interface (`daggen-gui`). This generator can be easily configured through a `.json` file and is highly extensible for other purposes.
+**dag-gen-rnd** supports both command line (`daggen-cli`) and graphical user interface (`daggen-gui`; in development). This generator can be easily configured through a `.json` file and is highly extensible for other purposes.
 
 Supported generation algorithms:
 
-- NFJ: Nested fork-join
-- rnd: standard randomized DAG (layer-by-layer)
-- rnd_legacy: default randomized DAG
+- `nfj`: Nested fork-join
+- `rnd`: standard randomized DAG (layer-by-layer)
+- `rnd_legacy`: default randomized DAG
+
+The utilization generation is based on:
+
+- UUnifast
+- UUnifast-discard
 
 ---
 
 ## Requirements
 
-- `Python >= 3.5`
+- `Python >= 3.7`
 - `NetworkX >= 2.4`
 - `Matplotlib >= 3.1.3`
 - `pygraphviz >= 1.5`
 - `numpy >= 1.17`
 - `tqdm >= 4.45.0`
+- `pyqt5` (optional for GUI)
 
 ---
 
 ## Installation on Linux
 
-Install depedencies using apt:
+Install dependencies using apt:
 
 `$ sudo apt install python3-dev graphviz libgraphviz-dev pkg-config`
 
@@ -46,6 +52,19 @@ and then install Python depedencies through `requirements.txt`:
 ## Configuration
 
 Use the configuration file `config.json` to configure parameters.
+
+To generate single DAG task, set `multi-DAG`=`false`, then in `single_task`:
+
+- `multi-DAG`: false
+- `set_number`: number of tasksets
+- `workload`: sum(C_i)
+
+To generate multi-DAG taskset, set `multi-DAG`=`true`, then in `multi_task`:
+
+- `set_number`: number of tasksets
+- `utilization`: total utilization
+- `task_number_per_set`: number of tasks in each taskset
+- `periods`: period set candidates
 
 ---
 
@@ -70,24 +89,25 @@ To use the generated DAGs, see the provided API in `utlity.py` which also gives 
 
 Here are some simple examples of generated DAGs:
 
-![](img/example_1.png)
+![](doc/example_1.png)
 
-![](img/example_2.png)
+![](doc/example_2.png)
 
-![](img/example_3.png)
+![](doc/example_3.png)
 
 
 ---
 
 ## Known Issues
 
-This code is not tested on Windows, but it should not have too many problems. The only thing that can be an issue is the difference is in folder naming where Windows uses a backslash (`\`), instead of a forwardslash (`/`). I will test it and make it compatitable in the future. 
+1. This code is not tested on Windows, but it should not have too many problems. The only potential issue is that the difference is in folder naming where Windows uses a backslash (`\`), instead of a forwardslash (`/`). I will test it and make it compatitable in the future. 
+2. In some cases, the critical path could be larger than the period.
 
 ---
 
-## Publications used this generator
+## Publications used the generator
 
-- Zhao, Shuai, Xiaotian Dai, Iain Bate, Alan Burns, and Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency." In 2020 IEEE Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
+- Shuai Zhao, Xiaotian Dai, Iain Bate, Alan Burns, Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency". In 2020 IEEE Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
 
 ---
 
@@ -95,8 +115,17 @@ This code is not tested on Windows, but it should not have too many problems. Th
 
 Please use the following citation if you use this code for your work: 
 
+BibTex:
+
 ```
-@article{xiaotian dai_2022, title={automaticdai/dag-gen-rnd: v0.1}, DOI={10.5281/zenodo.6334205}, abstractNote={<p>First published version (beta test phase).</p>}, publisher={Zenodo}, author={Xiaotian Dai}, year={2022}, month={Mar} }
+@misc{xiaotian dai_2022, 
+      title={automaticdai/dag-gen-rnd: v0.1}, 
+      DOI={10.5281/zenodo.6334205}, 
+      abstractNote={<p>First published version (beta test phase).</p>}, 
+      publisher={Zenodo}, 
+      author={Xiaotian Dai}, 
+      year={2022}, 
+      month={Mar} }
 ```
 
 ---

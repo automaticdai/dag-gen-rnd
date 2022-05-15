@@ -1,5 +1,7 @@
 *.pyc
-*.png
+.idea/
+venv/
 output/
-data*/
+data/
+logs/
 __pycache__/
