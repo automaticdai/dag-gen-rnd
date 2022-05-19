@@ -86,13 +86,13 @@ class DAG:
     def get_number_of_edges(self):
         return self.G.number_of_edges()
 
-    def gen(algorithm):
+    def gen(self, algorithm):
         if algorithm == "nfj":
-            gen_rnd_nfj()
+            self.gen_rnd_nfj()
         elif algorithm == "rnd":
-            gen_rnd()
+            self.gen_rnd()
         else:
-            gen_rnd_legacy()
+            self.gen_rnd_legacy()
 
     def gen_rnd_legacy(self):
         # data structures

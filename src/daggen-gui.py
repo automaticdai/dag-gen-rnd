@@ -35,12 +35,14 @@ class GUI:
         app = QApplication([])
 
         # create widgets
-        label = QLabel("MOCHA::Randomised DAG Generator")
+        label = QLabel("dag-gen-rnd: Randomised DAG Generator")
 
         opt_alogrithm = QComboBox()
         opt_alogrithm.addItem("Default")
+        opt_alogrithm.addItem("Nested-Fork Join (NFJ)")
 
         check_conditional = QCheckBox()
+        check_mcs_dag = QCheckBox()
 
         edit_crit = QLineEdit()
         edit_parallism = QLineEdit()
@@ -51,7 +53,8 @@ class GUI:
         #slider_pc = QSlider(Qt.Horizontal)
         #slider_pc.setRange(0, 100)
 
-        button_gen = QPushButton('Generate')
+        button_gen_conf = QPushButton('Generate Configuration')
+        button_gen = QPushButton('Generate DAGs')
 
         # create layout
         formLayout = QFormLayout()
@@ -62,8 +65,10 @@ class GUI:
         formLayout.addRow("Critical Path (min) <font color='blue'>>=3</font>:", edit_critical_min)
         formLayout.addRow("Critical Path (max) <font color='blue'>>=3</font>:", edit_critical_max)
         formLayout.addRow("p(Connnection) <font color='blue'>[0,1]</font>:", edit_pc)
+        formLayout.addRow("&Mixed-Criticality DAG?", check_mcs_dag)
         formLayout.addRow("&Conditional DAG?", check_conditional)
 
+        formLayout.addRow(button_gen_conf)
         formLayout.addRow(button_gen)
 
         # set some default values
