@@ -107,6 +107,7 @@ Here are some simple examples of generated DAGs:
 
 ## Publications used the generator
 
+- Shuai Zhao, Xiaotian Dai, Iain Bate. "DAG Scheduling and Analysis on Multi-core Systems by Modelling Parallelism and Dependency". IEEE Transactions on Parallel and Distributed Systems (TPDS). 2022.
 - Shuai Zhao, Xiaotian Dai, Iain Bate, Alan Burns, Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency". In Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
 
 ---
