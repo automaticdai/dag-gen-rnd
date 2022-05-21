@@ -9,12 +9,18 @@
   },
   "multi_task": {
     "set_number": 10,
-    "utilization": 0.8,
     "task_number_per_set": 5,
+    "utilization": 0.8,
     "periods": [1000, 2000, 5000, 10000, 20000, 50000]
   },
   "single_task": {
     "set_number": 1000,
     "workload": 10000
+  },
+  "dag_config": {
+    "parallelism": 5,
+    "layer_num_min": 3,
+    "layer_num_max": 8,
+    "connect_prob": 0.5
   }
 }

@@ -35,6 +35,10 @@ class GUI:
         app = QApplication([])
 
         # create widgets
+        myFont = Qt.QFont()
+        myFont.setBold(True)
+        self.label.setFont(myFont)
+
         label = QLabel("dag-gen-rnd: Randomised DAG Generator")
 
         opt_alogrithm = QComboBox()

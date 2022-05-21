@@ -95,6 +95,9 @@ if __name__ == "__main__":
     # single- or multi-dag
     multi_dag = config["misc"]["multi-DAG"]
 
+    # DAG config
+    dag_config = config["dag_config"]
+
     ############################################################################
     # I. single DAG generation
     ############################################################################
@@ -105,7 +108,10 @@ if __name__ == "__main__":
         for i in tqdm(range(n)):
             # create a new DAG
             G = DAG(i=i, U=-1, T=-1, W=w)
-            G.gen_rnd(parallelism=8, layer_num_min=5, layer_num_max=12, connect_prob=0.5)
+            G.gen_rnd(parallelism=dag_config["parallelism"],
+                      layer_num_min=dag_config["layer_num_min"],
+                      layer_num_max=dag_config["layer_num_max"],
+                      connect_prob=dag_config["connect_prob"])
 
             # generate sub-DAG execution times
             n_nodes = G.get_number_of_nodes()
@@ -173,7 +179,10 @@ if __name__ == "__main__":
 
                 # generate nodes in the DAG
                 # G.gen_nfj()
-                G.gen_rnd(parallelism=3, layer_num_min=3, layer_num_max=5, connect_prob=0.5)
+                G.gen_rnd(parallelism=dag_config["parallelism"],
+                          layer_num_min=dag_config["layer_num_min"],
+                          layer_num_max=dag_config["layer_num_max"],
+                          connect_prob=dag_config["connect_prob"])
 
                 # generate sub-DAG execution times
                 n_nodes = G.get_number_of_nodes()
