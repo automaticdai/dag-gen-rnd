@@ -95,6 +95,13 @@ Here are some simple examples of generated DAGs:
 
 ![](doc/example_3.png)
 
+or more complicated DAGs:
+
+![](doc/example_4.png)
+
+![](doc/example_5.png)
+
+![](doc/example_6.png)
 
 ---
 
@@ -107,7 +114,7 @@ Here are some simple examples of generated DAGs:
 
 ## Publications used the generator
 
-- Shuai Zhao, Xiaotian Dai, Iain Bate. "DAG Scheduling and Analysis on Multi-core Systems by Modelling Parallelism and Dependency". IEEE Transactions on Parallel and Distributed Systems (TPDS). 2022.
+- Shuai Zhao, Xiaotian Dai, Iain Bate. "DAG Scheduling and Analysis on Multi-core Systems by Modelling Parallelism and Dependency". Transactions on Parallel and Distributed Systems (TPDS). IEEE. 2022.
 - Shuai Zhao, Xiaotian Dai, Iain Bate, Alan Burns, Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency". In Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
 
 ---
@@ -140,6 +147,6 @@ BibTex:
 
 ## License
 
-Licensed under MIT.
+This software is licensed under MIT. See [LICENSE](LICENSE) for details.
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
