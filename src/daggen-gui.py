@@ -34,10 +34,13 @@ class GUI:
         # create application
         app = QApplication([])
 
+        # load default configuration
+
+
         # create widgets
-        myFont = Qt.QFont()
-        myFont.setBold(True)
-        self.label.setFont(myFont)
+        # myFont = Qt.QFont()
+        # myFont.setBold(True)
+        # self.label.setFont(myFont)
 
         label = QLabel("dag-gen-rnd: Randomised DAG Generator")
 

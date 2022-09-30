@@ -43,7 +43,7 @@ and then install Python depedencies through `requirements.txt`:
 
 `$ pip3 install -r requirements.txt`
 
-(Optional) To use the GUI, you need to install Qt5 for python:
+(Optional) To use the GUI, you need to install Qt5 for Python:
 
 `$ sudo apt install python3-pyqt5`
 
@@ -53,13 +53,13 @@ and then install Python depedencies through `requirements.txt`:
 
 Use the configuration file `config.json` to configure parameters.
 
-To generate single DAG task, set `multi-DAG`=`false`, then in `single_task`:
+(1) To generate single DAG task, set `multi-DAG=false`, then in `single_task`:
 
 - `multi-DAG`: false
 - `set_number`: number of tasksets
 - `workload`: sum(C_i)
 
-To generate multi-DAG taskset, set `multi-DAG`=`true`, then in `multi_task`:
+(2) To generate multi-DAG taskset, set `multi-DAG=true`, then in `multi_task`:
 
 - `set_number`: number of tasksets
 - `utilization`: total utilization
@@ -101,18 +101,16 @@ or more complicated DAGs:
 
 ![](doc/example_5.png)
 
-![](doc/example_6.png)
-
 ---
 
 ## Known Issues
 
 1. This code is not tested on Windows, but it should not have too many problems. The only potential issue is that the difference is in folder naming where Windows uses a backslash (`\`), instead of a forwardslash (`/`). I will test it and make it compatitable in the future. 
-2. In some cases, the critical path could be larger than the period.
+2. In some cases, the workload of the critical path could be larger than the period. The generator does not prohibit this case as this is not treated a bug. Users need to be aware this and deal with them in their favors.
 
 ---
 
-## Publications used the generator
+## Publications use the generator
 
 - Shuai Zhao, Xiaotian Dai, Iain Bate. "DAG Scheduling and Analysis on Multi-core Systems by Modelling Parallelism and Dependency". Transactions on Parallel and Distributed Systems (TPDS). IEEE. 2022.
 - Shuai Zhao, Xiaotian Dai, Iain Bate, Alan Burns, Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency". In Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
@@ -121,7 +119,7 @@ or more complicated DAGs:
 
 ## Citation
 
-Please use the following citation if you use this code for your work: 
+Please cite our work if you use this software in your work: 
 
 ```
 Xiaotian Dai. (2022). dag-gen-rnd: A randomized multi-DAG task generator for scheduling and allocation research (v0.1). Zenodo. https://doi.org/10.5281/zenodo.6334205
