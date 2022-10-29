@@ -89,31 +89,27 @@ To use the generated DAGs, see the provided API in `utlity.py` which also gives 
 
 Here are some simple examples of generated DAGs:
 
-![](doc/example_1.png)
+|![](doc/example_1.png)|![](doc/example_2.png)|![](doc/example_3.png)|
+|--|--|--|
 
-![](doc/example_2.png)
+or more complicated DAGs that can also be generated:
 
-![](doc/example_3.png)
-
-or more complicated DAGs:
-
-![](doc/example_4.png)
-
-![](doc/example_5.png)
+|![](doc/example_4.png)|![](doc/example_5.png)|
+|--|--|
 
 ---
 
 ## Known Issues
 
-1. This code is not tested on Windows, but it should not have too many problems. The only potential issue is that the difference is in folder naming where Windows uses a backslash (`\`), instead of a forwardslash (`/`). I will test it and make it compatitable in the future. 
-2. In some cases, the workload of the critical path could be larger than the period. The generator does not prohibit this case as this is not treated a bug. Users need to be aware this and deal with them in their favors.
+1. This code is tested on Linux (Ubuntu) but not on Windows. There should not be too many problems as Python is good at cross-platform. However, the only potential issue is that the difference is in folder naming where Windows uses a backslash (`\`), instead of a forwardslash (`/`). I will test it and make it compatitable in the future. 
+2. In some cases, the workload of the critical path could be larger than the period. The generator does not prohibit this case as this is not treated as a bug. The users need to be aware this and deal with them in their favority way, e.g. discarding.
 
 ---
 
 ## Publications use the generator
 
-- Shuai Zhao, Xiaotian Dai, Iain Bate. "DAG Scheduling and Analysis on Multi-core Systems by Modelling Parallelism and Dependency". Transactions on Parallel and Distributed Systems (TPDS). IEEE. 2022.
-- Shuai Zhao, Xiaotian Dai, Iain Bate, Alan Burns, Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency". In Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
+1. Shuai Zhao, Xiaotian Dai, Iain Bate. "DAG Scheduling and Analysis on Multi-core Systems by Modelling Parallelism and Dependency". Transactions on Parallel and Distributed Systems (TPDS). IEEE. 2022.
+2. Shuai Zhao, Xiaotian Dai, Iain Bate, Alan Burns, Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency". In Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
 
 ---
 
