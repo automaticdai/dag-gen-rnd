@@ -74,10 +74,11 @@ class daggen_gui(QMainWindow):
         # myFont.setBold(True)
         # self.label.setFont(myFont)
 
-        label = QLabel("Parameter Configurations:")
+        label = QLabel("<b>Parameter Configurations:</b>")
 
         opt_alogrithm = QComboBox()
         opt_alogrithm.addItem("Default (rnd)")
+        opt_alogrithm.addItem("Random Legacy (rnd_legacy)")
         opt_alogrithm.addItem("Nested-Fork Join (nfj)")
 
         check_conditional = QCheckBox()
@@ -106,6 +107,7 @@ class daggen_gui(QMainWindow):
         formLayout.addRow("Max critical path length <font color='blue'>>=3</font>:", edit_critical_max)
         formLayout.addRow("p(Connnection) <font color='blue'>[0,1]</font>:", edit_pc)
         formLayout.addRow("&Mixed-criticality DAG?", check_mcs_dag)
+        formLayout.addRow("p(High)", edit_mcs)
         formLayout.addRow("&Conditional DAG?", check_conditional)
 
         formLayout.addRow(button_gen_conf)
