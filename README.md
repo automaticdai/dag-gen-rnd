@@ -16,9 +16,12 @@ Supported generation algorithms:
 
 The utilization generation is based on:
 
-- UUnifast
-- UUnifast-discard
+- UUnifast [1]
+- UUnifast-discard [2]
 
+References:  
+[1]: Bini, E. and Buttazzo, G.C., 2005. Measuring the performance of schedulability tests. Real-Time Systems, 30(1), pp.129-154.  
+[2]: Davis, R.I. and Burns, A., 2011. Improved priority assignment for global fixed priority pre-emptive scheduling in multiprocessor real-time systems. Real-Time Systems, 47(1), pp.1-40.
 ---
 
 ## Requirements
