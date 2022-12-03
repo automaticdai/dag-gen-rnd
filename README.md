@@ -19,8 +19,8 @@ The utilization generation is based on:
 
 References:  
 
-[1] Bini, Enrico, and Giorgio C. Buttazzo. "Measuring the performance of schedulability tests." Real-Time Systems 30, no. 1 (2005): 129-154.
-[2] Davis, Robert I., and Alan Burns. "Improved priority assignment for global fixed priority pre-emptive scheduling in multiprocessor real-time systems." Real-Time Systems 47, no. 1 (2011): 1-40.
+[1] Bini, Enrico, and Giorgio C. Buttazzo. "Measuring the performance of schedulability tests." Real-Time Systems 30, no. 1 (2005): 129-154.  
+[2] Davis, Robert I., and Alan Burns. "Improved priority assignment for global fixed priority pre-emptive scheduling in multiprocessor real-time systems." Real-Time Systems 47, no. 1 (2011): 1-40.  
 [3] Griffin, David, Iain Bate, and Robert I. Davis. "Generating utilization vectors for the systematic evaluation of schedulability tests." In 2020 IEEE Real-Time Systems Symposium (RTSS), pp. 76-88. IEEE, 2020.
 
 ---
