@@ -4,7 +4,7 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
-The **dag-gen-rnd** is a randomized multiple Direct Acyclic Graph (DAG) task generator designed for scheduling and allocation research in parallel and multi-core computing. dag-gen-rnd supports both command line (`daggen-cli`) and graphical user interface (`daggen-gui`; in development). This generator can be easily configured through a `.json` file and is highly extensible for other purposes.
+The **dag-gen-rnd** is a randomized multiple Direct Acyclic Graph (DAG) task generator designed for scheduling and allocation research in parallel and multi-core computing. dag-gen-rnd supports both command line (`daggen-cli`) and graphical user interface (`daggen-gui`; under development). This generator can be easily configured through a `.json` file and is highly extensible for other purposes.
 
 Supported generation algorithms:
 
@@ -14,12 +14,14 @@ Supported generation algorithms:
 
 The utilization generation is based on:
 
-- UUnifast [1]
-- UUnifast-discard [2]
+- `UUnifast` [1]
+- `UUnifast-discard` [2]
 
 References:  
-[1]: Bini, E. and Buttazzo, G.C., 2005. Measuring the performance of schedulability tests. Real-Time Systems, 30(1), pp.129-154.  
-[2]: Davis, R.I. and Burns, A., 2011. Improved priority assignment for global fixed priority pre-emptive scheduling in multiprocessor real-time systems. Real-Time Systems, 47(1), pp.1-40.
+
+[1] Bini, Enrico, and Giorgio C. Buttazzo. "Measuring the performance of schedulability tests." Real-Time Systems 30, no. 1 (2005): 129-154.
+[2] Davis, Robert I., and Alan Burns. "Improved priority assignment for global fixed priority pre-emptive scheduling in multiprocessor real-time systems." Real-Time Systems 47, no. 1 (2011): 1-40.
+[3] Griffin, David, Iain Bate, and Robert I. Davis. "Generating utilization vectors for the systematic evaluation of schedulability tests." In 2020 IEEE Real-Time Systems Symposium (RTSS), pp. 76-88. IEEE, 2020.
 
 ---
 
