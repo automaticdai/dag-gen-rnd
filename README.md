@@ -4,17 +4,17 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
-**dag-gen-rnd** --- A randomized multiple Direct Acyclic Graph (DAG) task generator designed for scheduling and allocation research in parallel and multi-core computing. 
+**dag-gen-rnd** --- A randomized multiple Directed Acyclic Graph (DAG) task generator designed for scheduling and allocation research in parallel and multi-core computing. 
 
 **dag-gen-rnd** supports both command line (`daggen-cli`) and graphical user interface (`daggen-gui`; in development). This generator can be easily configured through a `.json` file and is highly extensible for other purposes.
 
-Supported generation algorithms:
+Support the following DAG generation algorithms:
 
 - `nfj`: Nested fork-join
 - `rnd`: standard randomized DAG (layer-by-layer)
 - `rnd_legacy`: default randomized DAG
 
-The utilization generation is based on:
+Supported utilization generation algorithms:
 
 - UUnifast
 - UUnifast-discard
@@ -53,13 +53,17 @@ and then install Python depedencies through `requirements.txt`:
 
 Use the configuration file `config.json` to configure parameters.
 
-(1) To generate single DAG task, set `multi-DAG=false`, then in `single_task`:
+### Single DAG
+
+To generate single DAG task, set `multi-DAG=false`, then in `single_task`:
 
 - `multi-DAG`: false
 - `set_number`: number of tasksets
 - `workload`: sum(C_i)
 
-(2) To generate multi-DAG taskset, set `multi-DAG=true`, then in `multi_task`:
+## Multiple DAGs
+
+To generate multi-DAG taskset, set `multi-DAG=true`, then in `multi_task`:
 
 - `set_number`: number of tasksets
 - `utilization`: total utilization
@@ -101,21 +105,28 @@ or more complicated DAGs that can also be generated:
 
 ## Known Issues
 
-1. This code is tested on Linux (Ubuntu) but not on Windows. There should not be too many problems as Python is good at cross-platform. However, the only potential issue is that the difference is in folder naming where Windows uses a backslash (`\`), instead of a forwardslash (`/`). I will test it and make it compatitable in the future. 
-2. In some cases, the workload of the critical path could be larger than the period. The generator does not prohibit this case as this is not treated as a bug. The users need to be aware this and deal with them in their favority way, e.g. discarding.
+1. *Compatiability on Windows*: This code is tested on Linux (Ubuntu) but not on Windows. There should not be too many problems as Python is good at cross-platform. However, the only potential issue is that the difference is in folder naming where Windows uses a backslash (`\`), instead of a forwardslash (`/`). I will test it and make it compatitable in the future. 
+2. In some cases, the workload of the critical path could be larger than the period. The generator does not prohibit this case as this is not treated as a bug (as you can distribute the workload to multiple cores). The users need to be aware this and deal with them in their favority way, e.g. discarding.
+3. If you get an error while building pygraphviz during installing the dependencies: install graphviz with `apt install graphviz graphviz-dev`.
 
 ---
 
-## Publications use the generator
+## Published papers used the generator
 
-1. Shuai Zhao, Xiaotian Dai, Iain Bate. "DAG Scheduling and Analysis on Multi-core Systems by Modelling Parallelism and Dependency". Transactions on Parallel and Distributed Systems (TPDS). IEEE. 2022.
-2. Shuai Zhao, Xiaotian Dai, Iain Bate, Alan Burns, Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency". In Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
+1. Shuai Zhao, Xiaotian Dai, Iain Bate, Alan Burns, Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency". In Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
+2. Shuai Zhao, Xiaotian Dai, Iain Bate. "DAG Scheduling and Analysis on Multi-core Systems by Modelling Parallelism and Dependency". Transactions on Parallel and Distributed Systems (TPDS). IEEE. 2022.
 
 ---
 
 ## Citation
 
-Please cite our work if you use this software in your work: 
+Please cite the following work if you use this software in your research: 
+
+```
+Shuai Zhao, Xiaotian Dai, Iain Bate, Alan Burns, Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency". In Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
+```
+
+Alternatively, if you just want to cite the software:
 
 ```
 Xiaotian Dai. (2022). dag-gen-rnd: A randomized multi-DAG task generator for scheduling and allocation research (v0.1). Zenodo. https://doi.org/10.5281/zenodo.6334205
