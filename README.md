@@ -126,6 +126,19 @@ Please cite the following work if you use this software in your research:
 Shuai Zhao, Xiaotian Dai, Iain Bate, Alan Burns, Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency". In Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
 ```
 
+BibTex:
+
+```
+@inproceedings{zhao2020dag,
+  title={DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency},
+  author={Zhao, Shuai and Dai, Xiaotian and Bate, Iain and Burns, Alan and Chang, Wanli},
+  booktitle={2020 IEEE Real-Time Systems Symposium (RTSS)},
+  pages={128--140},
+  year={2020},
+  organization={IEEE}
+}
+```
+
 Alternatively, if you just want to cite the software:
 
 ```
