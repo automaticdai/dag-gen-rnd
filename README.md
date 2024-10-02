@@ -61,7 +61,7 @@ To generate single DAG task, set `multi-DAG=false`, then in `single_task`:
 - `set_number`: number of tasksets
 - `workload`: sum(C_i)
 
-## Multiple DAGs
+### Multiple DAGs
 
 To generate multi-DAG taskset, set `multi-DAG=true`, then in `multi_task`:
 
@@ -74,14 +74,14 @@ To generate multi-DAG taskset, set `multi-DAG=true`, then in `multi_task`:
 
 ## Usage
 
-First, change the configurations in `config.json`. Then, depending on your perference:
+### Use the cli
 
-### 1. Use the command line interface
+First, change the configurations in `config.json`. Then, run the command line interface:
 
 `$ python3 src/daggen-cli.py`
 
 
-### 2. Use the graphic user interface (development in process)
+### Use the GUI (development in process)
 
 `$ python3 src/daggen-gui.py`
 
