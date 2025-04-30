@@ -1,20 +1,22 @@
-# Randomized Multi-DAG Task Generator for Scheduling and Allocation Research
+# Randomised Multi-DAG Task Generator for Scheduling and Allocation Research
+
+![](doc/logo.png)
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
-**dag-gen-rnd** --- A randomized multiple Directed Acyclic Graph (DAG) task generator designed for scheduling and allocation research in parallel and multi-core computing. 
+**dag-gen-rnd** --- A randomised multiple Directed Acyclic Graph (DAG) task generator designed for scheduling and allocation research in parallel and multi-core computing. 
 
 **dag-gen-rnd** supports both command line (`daggen-cli`) and graphical user interface (`daggen-gui`; in development). This generator can be easily configured through a `.json` file and is highly extensible for other purposes.
 
 Support the following DAG generation algorithms:
 
 - `nfj`: Nested fork-join
-- `rnd`: standard randomized DAG (layer-by-layer)
-- `rnd_legacy`: default randomized DAG
+- `rnd`: standard randomised DAG (layer-by-layer)
+- `rnd_legacy`: default randomised DAG
 
-Supported utilization generation algorithms:
+Supported utilisation generation algorithms:
 
 - UUnifast
 - UUnifast-discard
@@ -39,7 +41,7 @@ Install dependencies using apt:
 
 `$ sudo apt install python3-dev graphviz libgraphviz-dev pkg-config`
 
-and then install Python depedencies through `requirements.txt`:
+and then install Python dependencies through `requirements.txt`:
 
 `$ pip3 install -r requirements.txt`
 
@@ -55,7 +57,7 @@ Use the configuration file `config.json` to configure parameters.
 
 ### Single DAG
 
-To generate single DAG task, set `multi-DAG=false`, then in `single_task`:
+To generate a single DAG task, set `multi-DAG=false`, then in `single_task`:
 
 - `multi-DAG`: false
 - `set_number`: number of tasksets
@@ -63,10 +65,10 @@ To generate single DAG task, set `multi-DAG=false`, then in `single_task`:
 
 ### Multiple DAGs
 
-To generate multi-DAG taskset, set `multi-DAG=true`, then in `multi_task`:
+To generate a multi-DAG taskset, set `multi-DAG=true`, then in `multi_task`:
 
 - `set_number`: number of tasksets
-- `utilization`: total utilization
+- `utilization`: total utilisation
 - `task_number_per_set`: number of tasks in each taskset
 - `periods`: period set candidates
 
@@ -105,9 +107,9 @@ or more complicated DAGs that can also be generated:
 
 ## Known Issues
 
-1. *Compatiability on Windows*: This code is tested on Linux (Ubuntu) but not on Windows. There should not be too many problems as Python is good at cross-platform. However, the only potential issue is that the difference is in folder naming where Windows uses a backslash (`\`), instead of a forwardslash (`/`). I will test it and make it compatitable in the future. 
-2. In some cases, the workload of the critical path could be larger than the period. The generator does not prohibit this case as this is not treated as a bug (as you can distribute the workload to multiple cores). The users need to be aware this and deal with them in their favority way, e.g. discarding.
-3. If you get an error while building pygraphviz during installing the dependencies: install graphviz with `apt install graphviz graphviz-dev`.
+1. *Compatibility on Windows*: This code is tested on Linux (Ubuntu) but not on Windows. There should not be too many problems as Python is good at cross-platform. However, the only potential issue is that the difference is in folder naming, where Windows uses a backslash (`\`), instead of a forward slash (`/`). I will test it and make it compatible in the future. 
+2. In some cases, the workload of the critical path could be larger than the period. The generator does not prohibit this case as this is not treated as a bug (as you can distribute the workload to multiple cores). The users need to be awareof  this and deal with them in their favourite way, e.g. discarding.
+3. If you get an error while building pygraphviz during installing the dependencies, install graphviz with `apt install graphviz graphviz-dev`.
 
 ---
 
@@ -142,7 +144,7 @@ BibTex:
 Alternatively, if you just want to cite the software:
 
 ```
-Xiaotian Dai. (2022). dag-gen-rnd: A randomized multi-DAG task generator for scheduling and allocation research (v0.1). Zenodo. https://doi.org/10.5281/zenodo.6334205
+Xiaotian Dai. (2022). dag-gen-rnd: A randomised multi-DAG task generator for scheduling and allocation research (v0.1). Zenodo. https://doi.org/10.5281/zenodo.6334205
 ```
 
 BibTex:
@@ -150,7 +152,7 @@ BibTex:
 ```
 @software{xiaotian_dai_2022_6334205,
   author       = {Xiaotian Dai},
-  title        = {{dag-gen-rnd: A randomized multi-DAG task generator 
+  title        = {{dag-gen-rnd: A randomised multi-DAG task generator 
                    for scheduling and allocation research}},
   month        = mar,
   year         = 2022,
