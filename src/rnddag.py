@@ -389,7 +389,7 @@ class DAG:
     def load(self, basefolder="./data/"):
         pass
 
-    def plot(self, basefolder="./data"):
+    def plot(self, basefolder="./data/"):
         """ The current version of plot draws the generated png file to benefit
         from AGraph (Graphviz) layout functions.
         """
