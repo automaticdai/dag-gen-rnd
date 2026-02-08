@@ -399,7 +399,7 @@ class daggen_gui(QMainWindow):
                 util_algo = "drs" if "DRS" in self.opt_util_algo.currentText() else "uunifast_discard"
                 config = {
                     "misc": {
-                        "multi-DAG": is_multi,
+                        "multi-DAG_on": is_multi,
                         "cores": int(self.edit_cores.text()),
                         "print_DAG": False,
                         "save_to_file": True,
@@ -407,13 +407,13 @@ class daggen_gui(QMainWindow):
                         "rnd_seed": 1234,
                         "util_algorithm": util_algo
                     },
-                    "multi_task": {
+                    "multi-DAG": {
                         "set_number": int(self.edit_set_number.text()),
                         "task_number_per_set": int(self.edit_tasks_per_set.text()),
                         "utilization": float(self.edit_utilization.text()),
                         "periods": [int(p.strip()) for p in self.edit_periods.text().split(",")]
                     },
-                    "single_task": {
+                    "single-DAG": {
                         "set_number": 1,
                         "workload": int(self.edit_workload.text())
                     },
@@ -454,22 +454,22 @@ class daggen_gui(QMainWindow):
 
             # misc
             misc = config.get("misc", {})
-            is_multi = misc.get("multi-DAG", False)
+            is_multi = misc.get("multi-DAG_on", False)
             self.opt_mode.setCurrentIndex(1 if is_multi else 0)
             self.edit_cores.setText(str(misc.get("cores", 4)))
             util_algo = misc.get("util_algorithm", "uunifast_discard")
             self.opt_util_algo.setCurrentIndex(1 if util_algo == "drs" else 0)
 
-            # multi_task
-            mt = config.get("multi_task", {})
+            # multi-DAG
+            mt = config.get("multi-DAG", {})
             self.edit_set_number.setText(str(mt.get("set_number", 10)))
             self.edit_tasks_per_set.setText(str(mt.get("task_number_per_set", 5)))
             self.edit_utilization.setText(str(mt.get("utilization", 0.8)))
             periods = mt.get("periods", [1000, 2000, 5000])
             self.edit_periods.setText(",".join(str(p) for p in periods))
 
-            # single_task
-            st = config.get("single_task", {})
+            # single-DAG
+            st = config.get("single-DAG", {})
             self.edit_workload.setText(str(st.get("workload", 10000)))
 
             self.statusBar.showMessage("Configuration loaded from " + path)

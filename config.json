@@ -1,6 +1,6 @@
 {
   "misc": {
-    "multi-DAG": true,
+    "multi-DAG_on": true,
     "cores": 4,
     "print_DAG": true,
     "save_to_file": true,
@@ -8,13 +8,13 @@
     "rnd_seed": 1234,
     "util_algorithm": "uunifast_discard"
   },
-  "multi_task": {
+  "multi-DAG": {
     "set_number": 10,
     "task_number_per_set": 5,
     "utilization": 0.8,
     "periods": [1000, 2000, 5000, 10000, 20000, 50000]
   },
-  "single_task": {
+  "single-DAG": {
     "set_number": 1000,
     "workload": 10000
   },

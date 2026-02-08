@@ -64,7 +64,7 @@ def main(config_path=None, data_path=None):
     random.seed(config["misc"]["rnd_seed"])
 
     # single- or multi-dag
-    multi_dag = config["misc"]["multi-DAG"]
+    multi_dag = config["misc"]["multi-DAG_on"]
 
     # utilization algorithm
     util_algo = config["misc"].get("util_algorithm", "uunifast_discard")
@@ -76,8 +76,8 @@ def main(config_path=None, data_path=None):
     # I. single DAG generation
     ############################################################################
     if not multi_dag:
-        n = config["single_task"]["set_number"]
-        w = config["single_task"]["workload"]
+        n = config["single-DAG"]["set_number"]
+        w = config["single-DAG"]["workload"]
 
         for i in tqdm(range(n)):
             # create a new DAG
@@ -114,19 +114,19 @@ def main(config_path=None, data_path=None):
     ############################################################################
     else:
         # set of tasksets
-        n_set = config["multi_task"]["set_number"]
+        n_set = config["multi-DAG"]["set_number"]
 
         # total utilization
-        u_total = config["multi_task"]["utilization"]
+        u_total = config["multi-DAG"]["utilization"]
 
         # task number
-        n = config["multi_task"]["task_number_per_set"]
+        n = config["multi-DAG"]["task_number_per_set"]
 
         # number of cores
         cores = config["misc"]["cores"]
 
         # Load DAG period set (in us)
-        period_set = config["multi_task"]["periods"]
+        period_set = config["multi-DAG"]["periods"]
         period_set = [(x) for x in period_set]
 
         # DAG generation main loop

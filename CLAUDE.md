@@ -69,8 +69,8 @@ config.json → daggen-cli.py → generator.py (utilization/period generation)
 
 All generation parameters are in `config.json`. Key sections:
 - `misc`: mode selection (multi-DAG vs single), core count, random seed
-- `multi_task`: taskset count, tasks per set, total utilization, period options
-- `single_task`: set count, workload per DAG
+- `multi-DAG`: taskset count, tasks per set, total utilization, period options
+- `single-DAG`: set count, workload per DAG
 - `dag_config`: parallelism (max nodes/layer), layer count range, connection probability
 
 Output format is documented in `taskset.json` (example output with nodes, edges, periods, workloads).

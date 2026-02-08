@@ -60,15 +60,15 @@ Use the configuration file `config.json` to configure parameters.
 
 ### Single DAG
 
-To generate a single DAG task, set `multi-DAG=false`, then in `single_task`:
+To generate a single DAG task, set `multi-DAG_on=false`, then in `single-DAG`:
 
-- `multi-DAG`: false
+- `multi-DAG_on`: false
 - `set_number`: number of tasksets
 - `workload`: sum(C_i)
 
 ### Multiple DAGs
 
-To generate a multi-DAG taskset, set `multi-DAG=true`, then in `multi_task`:
+To generate a multi-DAG taskset, set `multi-DAG_on=true`, then in `multi-DAG`:
 
 - `set_number`: number of tasksets
 - `utilization`: total utilisation

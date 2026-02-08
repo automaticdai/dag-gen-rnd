@@ -24,9 +24,9 @@ class TestParseConfiguration:
 class TestMainSingleDag:
     def test_single_dag_generation(self, tmp_path, sample_config):
         """End-to-end single-DAG generation with save disabled."""
-        sample_config["misc"]["multi-DAG"] = False
+        sample_config["misc"]["multi-DAG_on"] = False
         sample_config["misc"]["save_to_file"] = False
-        sample_config["single_task"]["set_number"] = 3
+        sample_config["single-DAG"]["set_number"] = 3
 
         config_path = tmp_path / "config.json"
         config_path.write_text(json.dumps(sample_config))
@@ -40,9 +40,9 @@ class TestMainSingleDag:
 
     def test_single_dag_with_save(self, tmp_path, sample_config, _skip_if_no_pygraphviz):
         """End-to-end single-DAG generation with file saving."""
-        sample_config["misc"]["multi-DAG"] = False
+        sample_config["misc"]["multi-DAG_on"] = False
         sample_config["misc"]["save_to_file"] = True
-        sample_config["single_task"]["set_number"] = 2
+        sample_config["single-DAG"]["set_number"] = 2
 
         config_path = tmp_path / "config.json"
         config_path.write_text(json.dumps(sample_config))
@@ -63,10 +63,10 @@ class TestMainMultiDag:
 
     def test_multi_dag_with_save(self, tmp_path, sample_config, _skip_if_no_pygraphviz):
         """End-to-end multi-DAG generation with file saving."""
-        sample_config["misc"]["multi-DAG"] = True
+        sample_config["misc"]["multi-DAG_on"] = True
         sample_config["misc"]["save_to_file"] = True
-        sample_config["multi_task"]["set_number"] = 2
-        sample_config["multi_task"]["task_number_per_set"] = 2
+        sample_config["multi-DAG"]["set_number"] = 2
+        sample_config["multi-DAG"]["task_number_per_set"] = 2
 
         config_path = tmp_path / "config.json"
         config_path.write_text(json.dumps(sample_config))
