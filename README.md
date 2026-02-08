@@ -112,9 +112,8 @@ or more complicated DAGs that can also be generated:
 
 ## Known Issues
 
-1. *Compatibility on Windows*: This code is tested on Linux (Ubuntu) but not on Windows. There should not be too many problems as Python is good at cross-platform. However, the only potential issue is that the difference is in folder naming, where Windows uses a backslash (`\`) instead of a forward slash (`/`). I will test it and make it compatible in the future. 
-2. In some cases, the workload of the critical path could be larger than the period. The generator does not prohibit this case as this is not treated as a bug (as you can distribute the workload to multiple cores). The users need to be awareof  this and deal with them in their favourite way, e.g. discarding.
-3. If you get an error while building pygraphviz during installing the dependencies, install graphviz with `apt install graphviz graphviz-dev`.
+1. In some cases, the workload of the critical path could be larger than the period. The generator does not prohibit this case as this is not treated as a bug (as you can distribute the workload to multiple cores). The users need to be awareof  this and deal with them in their favourite way, e.g. discarding.
+2. If you get an error while building pygraphviz during installing the dependencies, install graphviz with `apt install graphviz graphviz-dev`.
 
 ---
 

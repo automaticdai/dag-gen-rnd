@@ -5,3 +5,5 @@ output/
 data/
 logs/
 __pycache__/
+.pytest_cache/
+htmlcov/
