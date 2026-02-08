@@ -5,7 +5,8 @@
     "print_DAG": true,
     "save_to_file": true,
     "dummy_source_and_sink": false,
-    "rnd_seed": 1234
+    "rnd_seed": 1234,
+    "util_algorithm": "uunifast_discard"
   },
   "multi_task": {
     "set_number": 10,

@@ -1,37 +1,7 @@
 import pytest
 import random
 
-from generator import uunifast, uunifast_discard, gen_period, gen_execution_times
-
-
-# ---- uunifast ----
-
-class TestUunifast:
-    def test_sum_equals_target(self):
-        result = uunifast(n=5, u=1.0)
-        assert sum(result) == pytest.approx(1.0)
-
-    def test_length_equals_n(self):
-        result = uunifast(n=8, u=2.0)
-        assert len(result) == 8
-
-    def test_all_positive(self):
-        random.seed(123)
-        result = uunifast(n=10, u=1.0)
-        for v in result:
-            assert v > 0
-
-    def test_deterministic_with_seed(self):
-        random.seed(42)
-        r1 = uunifast(n=5, u=1.0)
-        random.seed(42)
-        r2 = uunifast(n=5, u=1.0)
-        assert r1 == r2
-
-    def test_high_utilization(self):
-        result = uunifast(n=4, u=4.0)
-        assert sum(result) == pytest.approx(4.0)
-        assert len(result) == 4
+from generator import uunifast_discard, drs_gen, gen_period, gen_execution_times
 
 
 # ---- uunifast_discard ----
@@ -128,3 +98,35 @@ class TestGenExecutionTimes:
         c = gen_execution_times(n=10, w=1000, round_c=False, dummy=True)
         # Sum should be close to w (source=1, sink=1, rest sums to w-2)
         assert sum(c.values()) == pytest.approx(1000, rel=0.01)
+
+
+# ---- drs_gen ----
+
+drs_mod = pytest.importorskip("drs")
+
+class TestDrsGen:
+    def test_returns_nsets(self):
+        sets = drs_gen(n=5, u=1.0, nsets=3, ulimit=1)
+        assert len(sets) == 3
+
+    def test_each_set_has_n_elements(self):
+        sets = drs_gen(n=6, u=1.5, nsets=2, ulimit=1)
+        for s in sets:
+            assert len(s) == 6
+
+    def test_each_set_sums_to_u(self):
+        sets = drs_gen(n=5, u=2.0, nsets=3, ulimit=2)
+        for s in sets:
+            assert sum(s) == pytest.approx(2.0)
+
+    def test_respects_ulimit(self):
+        sets = drs_gen(n=5, u=2.0, nsets=3, ulimit=1)
+        for s in sets:
+            for v in s:
+                assert v <= 1.0 + 1e-9
+
+    def test_all_values_non_negative(self):
+        sets = drs_gen(n=5, u=1.0, nsets=3, ulimit=1)
+        for s in sets:
+            for v in s:
+                assert v >= 0

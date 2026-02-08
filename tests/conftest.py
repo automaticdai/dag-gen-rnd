@@ -12,7 +12,8 @@ def sample_config():
             "print_DAG": False,
             "save_to_file": False,
             "dummy_source_and_sink": False,
-            "rnd_seed": 42
+            "rnd_seed": 42,
+            "util_algorithm": "uunifast_discard"
         },
         "multi_task": {
             "set_number": 2,

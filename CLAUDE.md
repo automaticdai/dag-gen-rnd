@@ -57,7 +57,8 @@ config.json → daggen-cli.py → generator.py (utilization/period generation)
 `DAGTaskset` holds multiple `DAG` instances for multi-DAG mode.
 
 **`src/generator.py`** — Scheduling parameter generation:
-- `uunifast()` / `uunifast_discard()` — Utilization distribution algorithms
+- `uunifast_discard()` — UUniFast-discard utilization distribution
+- `drs_gen()` — DRS (Dirichlet-Rescale) utilization generation (requires `drs` package)
 - `gen_period()` — Period selection from discrete population
 - `gen_execution_times()` — Distributes workload across DAG nodes
 

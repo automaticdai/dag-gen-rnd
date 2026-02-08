@@ -38,6 +38,7 @@ References:
 - `numpy >= 1.17`
 - `tqdm >= 4.45.0`
 - `pyqt5 >= 5.12`
+- `drs >= 2.0`
 
 ---
 
@@ -73,6 +74,13 @@ To generate a multi-DAG taskset, set `multi-DAG=true`, then in `multi_task`:
 - `utilization`: total utilisation
 - `task_number_per_set`: number of tasks in each taskset
 - `periods`: period set candidates
+
+### Utilization Algorithm
+
+Set `util_algorithm` in `misc` to choose the utilization generation algorithm for multi-DAG mode:
+
+- `"uunifast_discard"` (default): UUniFast-discard [2]
+- `"drs"`: Dirichlet-Rescale [3]
 
 ---
 

@@ -14,7 +14,7 @@ import random
 from tqdm import tqdm
 
 from rnddag import DAG, DAGTaskset
-from generator import uunifast_discard, uunifast
+from generator import uunifast_discard, drs_gen
 from generator import gen_period, gen_execution_times
 
 
@@ -65,6 +65,9 @@ def main(config_path=None, data_path=None):
 
     # single- or multi-dag
     multi_dag = config["misc"]["multi-DAG"]
+
+    # utilization algorithm
+    util_algo = config["misc"].get("util_algorithm", "uunifast_discard")
 
     # DAG config
     dag_config = config["dag_config"]
@@ -135,7 +138,10 @@ def main(config_path=None, data_path=None):
             U_p = []
 
             # DAG taskset utilization
-            U = uunifast_discard(n, u=u_total, nsets=n_set, ulimit=cores)
+            if util_algo == "drs":
+                U = drs_gen(n, u=u_total, nsets=n_set, ulimit=cores)
+            else:
+                U = uunifast_discard(n, u=u_total, nsets=n_set, ulimit=cores)
 
             # generate periods
             periods = gen_period(period_set, n)

@@ -13,27 +13,6 @@ import random
 import math
 
 
-# UUniFast
-def uunifast(n, u):
-    """ Function: UUniFast
-    Inputs:
-        n (int): number of tasks
-        u (float): total utilization
-    Returns:
-        sets (list)
-    """
-    sumU = u
-    vectU = []
-
-    for i in range(1, n):
-        nextSumU = sumU * random.uniform(0, 1) ** (1.0 / (n - i))
-        vectU.append(sumU - nextSumU)
-        sumU = nextSumU
-
-    vectU.append(sumU)
-
-    return vectU
-
 def uunifast_discard(n, u, nsets, ulimit=1):
     """ Function: UUniFast-discard
     Inputs:
@@ -65,6 +44,24 @@ def uunifast_discard(n, u, nsets, ulimit=1):
 
         # print(sum(utilizations))
 
+    return sets
+
+def drs_gen(n, u, nsets, ulimit=1):
+    """ Function: DRS (Dirichlet-Rescale)
+    Inputs:
+        n (int): number of tasks
+        u (float): total utilization
+        nsets (int): number of sets
+        ulimit: upper limit of the utilization of a single DAG
+    Returns:
+        sets (list)
+    """
+    from drs import drs
+    sets = []
+    while len(sets) < nsets:
+        vec = drs(n=n, sumu=u, upper_bounds=[ulimit] * n)
+        if all(v >= 0 for v in vec):
+            sets.append(list(vec))
     return sets
 
 # random generate periods from a population set
@@ -140,9 +137,6 @@ if __name__ == "__main__":
     number_of_tasks = 10
 
     print(">> Utilization:")
-
-    vectU = uunifast(n=10, u=1.0)
-    print(vectU)
 
     sets = uunifast_discard(n=10, u=4.0, nsets=1)
     print(sets)
