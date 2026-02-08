@@ -8,15 +8,24 @@
 # University of York, UK
 # -------------------------------------------------------------------------------
 
+import os
 import networkx as nx
 
 
-def load_task(task_idx, dag_base_folder = "../data/"):
+def load_task(task_idx, dag_base_folder=None):
+    if dag_base_folder is None:
+        dag_base_folder = os.path.join(os.path.dirname(__file__), os.pardir, "data")
+
     # << load DAG task <<
-    dag_task_file = dag_base_folder + "Tau_{:d}.gpickle".format(task_idx)
+    dag_task_file = os.path.join(dag_base_folder, "Tau_{:d}.gpickle".format(task_idx))
 
     # task is saved as NetworkX gpickle format
-    G = nx.read_gpickle(dag_task_file)
+    try:
+        G = nx.read_gpickle(dag_task_file)
+    except AttributeError:
+        import pickle
+        with open(dag_task_file, 'rb') as f:
+            G = pickle.load(f)
 
     # formulate the graph list
     G_dict = {}

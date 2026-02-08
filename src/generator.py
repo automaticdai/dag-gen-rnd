@@ -168,5 +168,5 @@ if __name__ == "__main__":
     c_set = gen_execution_times(n=10, w=1000, round_c=True)
     print(c_set)
 
-    c_set = gen_execution_times_with_dummy(n=10, w=1000, round_c=True)
+    c_set = gen_execution_times(n=10, w=1000, round_c=True, dummy=True)
     print(c_set)

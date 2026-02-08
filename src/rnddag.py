@@ -66,6 +66,12 @@ class DAG:
         self.W = W
         self.L = -1 # needs to be computed later
 
+        # configs for gen_rnd_legacy()
+        self.parallelism = 8
+        self.layer_num_min = 5
+        self.layer_num_max = 12
+        self.connect_prob = 0.5
+
         # configs for gen_nfj()
         self.depth = 5
         self.p_fork = 0.3
@@ -88,7 +94,7 @@ class DAG:
 
     def gen(self, algorithm):
         if algorithm == "nfj":
-            self.gen_rnd_nfj()
+            self.gen_nfj()
         elif algorithm == "rnd":
             self.gen_rnd()
         else:
@@ -364,36 +370,45 @@ class DAG:
         print(self.G.nodes.data())
         print(self.G.edges.data())
 
-    def save(self, basefolder="./data/"):
+    def save(self, basefolder=None):
+        if basefolder is None:
+            basefolder = os.path.join(".", "data")
+
         # layout graph
         A = nx.nx_agraph.to_agraph(self.G)
-
-        #print("G", self.G.graph)
-        #print(A)
 
         A.layout(prog='dot')
 
         # create basefolder (if not exists)
-        if not os.path.exists(basefolder):
-            os.makedirs(basefolder)
+        os.makedirs(basefolder, exist_ok=True)
 
         # save graph (png)
-        A.draw(basefolder + self.name + '.png', format="png")
-        
-        # save graph (gpickle)
-        nx.write_gpickle(self.G, basefolder + self.name + '.gpickle')
-        
-        # save graph (gml)
-        nx.write_gml(self.G, basefolder + self.name + '.gml')
+        A.draw(os.path.join(basefolder, self.name + '.png'), format="png")
 
-    def load(self, basefolder="./data/"):
+        # save graph (gpickle)
+        gpickle_path = os.path.join(basefolder, self.name + '.gpickle')
+        try:
+            nx.write_gpickle(self.G, gpickle_path)
+        except AttributeError:
+            import pickle
+            with open(gpickle_path, 'wb') as f:
+                pickle.dump(self.G, f, pickle.HIGHEST_PROTOCOL)
+
+        # save graph (gml)
+        nx.write_gml(self.G, os.path.join(basefolder, self.name + '.gml'))
+
+    def load(self, basefolder=None):
+        if basefolder is None:
+            basefolder = os.path.join(".", "data")
         pass
 
-    def plot(self, basefolder="./data/"):
+    def plot(self, basefolder=None):
         """ The current version of plot draws the generated png file to benefit
         from AGraph (Graphviz) layout functions.
         """
-        img = mpimg.imread(basefolder + self.name + '.png')
+        if basefolder is None:
+            basefolder = os.path.join(".", "data")
+        img = mpimg.imread(os.path.join(basefolder, self.name + '.png'))
         ypixels, xpixels, bands = img.shape
         dpi = 100.
         xinch = xpixels / dpi
@@ -411,5 +426,5 @@ class DAG:
 if __name__ == "__main__":
     G = DAG()
     G.gen("nfj")
-    G.save(basefolder="./")
-    G.plot(basefolder="./")
+    G.save(basefolder=".")
+    G.plot(basefolder=".")

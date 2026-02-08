@@ -32,54 +32,25 @@ def print_usage_info():
     logging.info("[Usage] python3 daggen-cli.py --config config_file")
 
 
-if __name__ == "__main__":
-    ############################################################################
-    # Initialize directories
-    ############################################################################
+def main(config_path=None, data_path=None):
+    """Main entry point for DAG generation.
+
+    Args:
+        config_path: Path to config JSON file. Defaults to config.json in project root.
+        data_path: Path to output data directory. Defaults to data/ in project root.
+    """
     src_path = os.path.abspath(os.path.dirname(__file__))
     base_path = os.path.abspath(os.path.join(src_path, os.pardir))
 
-    data_path = os.path.join(base_path, "data")
-    if not os.path.exists(data_path):
-        os.makedirs(data_path)
+    if config_path is None:
+        config_path = os.path.join(base_path, "config.json")
+    if data_path is None:
+        data_path = os.path.join(base_path, "data")
+
+    os.makedirs(data_path, exist_ok=True)
 
     logs_path = os.path.join(base_path, "logs")
-    if not os.path.exists(logs_path):
-        os.makedirs(logs_path)
-
-    ############################################################################
-    # Parse cmd arguments
-    ############################################################################
-    config_path = os.path.join(base_path, "config.json")
-    directory = None
-    load_jobs = False
-    evaluate = False
-    train = False
-
-    try:
-        short_flags = "hc:d:e"
-        long_flags = ["help", "config=", "directory=", "evaluate"]
-        opts, args = getopt.getopt(sys.argv[1:], short_flags, long_flags)
-    except getopt.GetoptError as err:
-        logging.error(err)
-        print_usage_info()
-        sys.exit(2)
-
-    logging.info("Options:", opts)
-
-    for opt, arg in opts:
-        if opt in ("-h", "--help"):
-            print_usage_info()
-            sys.exit()
-        elif opt in ("-c", "--config"):
-            config_path = arg
-        elif opt in ("-d", "--directory"):
-            directory = arg
-            load_jobs = True
-        elif opt in ("-e", "--evaluate"):
-            evaluate = True
-        else:
-            raise ValueError("Unknown (opt, arg): (%s, %s)" % (opt, arg))
+    os.makedirs(logs_path, exist_ok=True)
 
     # load configuration
     config = parse_configuration(config_path)
@@ -133,7 +104,7 @@ if __name__ == "__main__":
 
             # save graph
             if config["misc"]["save_to_file"]:
-                G.save(basefolder="./data/")
+                G.save(basefolder=data_path)
 
     ############################################################################
     # II. multi-DAG generation
@@ -198,9 +169,6 @@ if __name__ == "__main__":
                 u_p = w_p / periods[i]
                 U_p.append(u_p)
 
-                # print("Task {}: U = {}, T = {}, W = {}>>".format(i, U[0][i], periods[i], w))
-                # print("w = {}, w' = {}, diff = {}".format(w, w_p, (w_p - w) / w * 100))
-
                 # set execution times on edges
                 w_e = {}
                 for e in G.get_graph().edges():
@@ -216,7 +184,7 @@ if __name__ == "__main__":
 
                 # save the graph
                 if config["misc"]["save_to_file"]:
-                    G.save(basefolder="./data/data-multi-m{}-u{:.1f}/{}/".format(cores, u_total, set_index))
+                    G.save(basefolder=os.path.join(data_path, "data-multi-m{}-u{:.1f}".format(cores, u_total), str(set_index)))
 
                 # (optional) plot the graph
                 # G.plot()
@@ -224,3 +192,31 @@ if __name__ == "__main__":
             logging.info("Total U:", sum(U_p), U_p)
             logging.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
             logging.info("")
+
+
+if __name__ == "__main__":
+    ############################################################################
+    # Parse cmd arguments
+    ############################################################################
+    src_path = os.path.abspath(os.path.dirname(__file__))
+    base_path = os.path.abspath(os.path.join(src_path, os.pardir))
+
+    config_path = os.path.join(base_path, "config.json")
+
+    try:
+        short_flags = "hc:d:e"
+        long_flags = ["help", "config=", "directory=", "evaluate"]
+        opts, args = getopt.getopt(sys.argv[1:], short_flags, long_flags)
+    except getopt.GetoptError as err:
+        logging.error(err)
+        print_usage_info()
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            print_usage_info()
+            sys.exit()
+        elif opt in ("-c", "--config"):
+            config_path = arg
+
+    main(config_path=config_path)
