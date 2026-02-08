@@ -15,7 +15,8 @@ import json
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QStatusBar, QWidget, QLabel,
-                             QPushButton, QFormLayout, QMessageBox, QFileDialog,
+                             QPushButton, QFormLayout, QHBoxLayout, QVBoxLayout,
+                             QMessageBox, QFileDialog, QScrollArea,
                              QComboBox, QLineEdit, QCheckBox, QMenu, QAction)
 
 import rnddag
@@ -61,11 +62,12 @@ class daggen_gui(QMainWindow):
         self.gui()
 
         # start the window
-        self.setGeometry(500, 500, 520, 600)
+        self.setGeometry(300, 300, 900, 600)
         self.setWindowTitle('dag-gen-rnd: Randomised DAG Generator')
         self.show()
 
     def gui(self):
+        # ---- Left panel: parameter form ----
         label = QLabel("<b>Parameter Configurations:</b>")
 
         self.opt_algorithm = QComboBox()
@@ -85,15 +87,8 @@ class daggen_gui(QMainWindow):
         self.button_gen_conf = QPushButton('Load Default Configuration')
         self.button_gen = QPushButton('Generate DAGs')
 
-        # DAG display area
-        self.dag_display = QLabel("No DAG generated yet.")
-        self.dag_display.setAlignment(Qt.AlignCenter)
-        self.dag_display.setMinimumHeight(200)
-
-        # create layout
         formLayout = QFormLayout()
         formLayout.addRow(label)
-
         formLayout.addRow("&Algorithm:", self.opt_algorithm)
         formLayout.addRow("&Maximum parallelism <font color='blue'>>=1</font>:", self.edit_parallelism)
         formLayout.addRow("Min critical path length <font color='blue'>>=3</font>:", self.edit_critical_min)
@@ -102,10 +97,33 @@ class daggen_gui(QMainWindow):
         formLayout.addRow("&Mixed-criticality DAG?", self.check_mcs_dag)
         formLayout.addRow("p(High)", self.edit_mcs)
         formLayout.addRow("&Conditional DAG?", self.check_conditional)
-
         formLayout.addRow(self.button_gen_conf)
         formLayout.addRow(self.button_gen)
-        formLayout.addRow(self.dag_display)
+
+        left_widget = QWidget()
+        left_widget.setLayout(formLayout)
+        left_widget.setFixedWidth(350)
+
+        # ---- Right panel: DAG visualisation ----
+        self.dag_display = QLabel("No DAG generated yet.")
+        self.dag_display.setAlignment(Qt.AlignCenter)
+
+        scroll_area = QScrollArea()
+        scroll_area.setWidget(self.dag_display)
+        scroll_area.setWidgetResizable(True)
+
+        right_layout = QVBoxLayout()
+        right_label = QLabel("<b>DAG Visualisation:</b>")
+        right_layout.addWidget(right_label)
+        right_layout.addWidget(scroll_area)
+
+        right_widget = QWidget()
+        right_widget.setLayout(right_layout)
+
+        # ---- Main horizontal layout ----
+        main_layout = QHBoxLayout()
+        main_layout.addWidget(left_widget)
+        main_layout.addWidget(right_widget, 1)
 
         # set some default values
         self.edit_parallelism.setText("4")
@@ -126,9 +144,9 @@ class daggen_gui(QMainWindow):
         self.button_gen.clicked.connect(self.event_on_button_gen_clicked)
         self.button_gen_conf.clicked.connect(self.load_default_config)
 
-        # create widget in the main window
+        # create central widget
         widget = QWidget()
-        widget.setLayout(formLayout)
+        widget.setLayout(main_layout)
         self.setCentralWidget(widget)
 
     def event_on_button_gen_clicked(self):
@@ -191,8 +209,8 @@ class daggen_gui(QMainWindow):
         img_path = os.path.join(basefolder, dag.name + '.png')
         if os.path.exists(img_path):
             pixmap = QPixmap(img_path)
-            scaled = pixmap.scaledToWidth(450, Qt.SmoothTransformation)
-            self.dag_display.setPixmap(scaled)
+            self.dag_display.setPixmap(pixmap)
+            self.dag_display.adjustSize()
         else:
             self.dag_display.setText("DAG generated but image not found.")
 
