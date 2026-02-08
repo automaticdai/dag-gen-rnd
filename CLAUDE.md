@@ -34,9 +34,6 @@ pytest
 # Run a single test file or test
 pytest tests/test_generator.py
 pytest tests/test_rnddag.py::TestGenRnd::test_produces_dag
-
-# Run example/test script (NetworkX tutorial, not actual tests)
-python3 src/test.py
 ```
 
 Tests that require `pygraphviz` (save/load round-trips, CLI end-to-end with file output) are automatically skipped if the library is not installed.
