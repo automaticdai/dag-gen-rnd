@@ -370,20 +370,18 @@ class DAG:
         print(self.G.nodes.data())
         print(self.G.edges.data())
 
-    def save(self, basefolder=None):
+    def save(self, basefolder=None, save_png=True):
         if basefolder is None:
             basefolder = os.path.join(".", "data")
-
-        # layout graph
-        A = nx.nx_agraph.to_agraph(self.G)
-
-        A.layout(prog='dot')
 
         # create basefolder (if not exists)
         os.makedirs(basefolder, exist_ok=True)
 
         # save graph (png)
-        A.draw(os.path.join(basefolder, self.name + '.png'), format="png")
+        if save_png:
+            A = nx.nx_agraph.to_agraph(self.G)
+            A.layout(prog='dot')
+            A.draw(os.path.join(basefolder, self.name + '.png'), format="png")
 
         # save graph (gpickle)
         gpickle_path = os.path.join(basefolder, self.name + '.gpickle')

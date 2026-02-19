@@ -398,11 +398,12 @@ class daggen_gui(QMainWindow):
                 is_multi = self.opt_mode.currentIndex() == 1
                 util_algo = "drs" if "DRS" in self.opt_util_algo.currentText() else "uunifast_discard"
                 config = {
-                    "misc": {
+                    "global": {
                         "multi-DAG_on": is_multi,
                         "cores": int(self.edit_cores.text()),
                         "print_DAG": False,
                         "save_to_file": True,
+                        "save_png": True,
                         "dummy_source_and_sink": False,
                         "rnd_seed": 1234,
                         "util_algorithm": util_algo
@@ -453,7 +454,7 @@ class daggen_gui(QMainWindow):
             self.edit_pc.setText(str(dag_cfg.get("connect_prob", 0.5)))
 
             # misc
-            misc = config.get("misc", {})
+            misc = config.get("global", {})
             is_multi = misc.get("multi-DAG_on", False)
             self.opt_mode.setCurrentIndex(1 if is_multi else 0)
             self.edit_cores.setText(str(misc.get("cores", 4)))

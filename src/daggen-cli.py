@@ -61,13 +61,13 @@ def main(config_path=None, data_path=None):
     # load generator basic configuration
     ############################################################################
     # load and set random seed
-    random.seed(config["misc"]["rnd_seed"])
+    random.seed(config["global"]["rnd_seed"])
 
     # single- or multi-dag
-    multi_dag = config["misc"]["multi-DAG_on"]
+    multi_dag = config["global"]["multi-DAG_on"]
 
     # utilization algorithm
-    util_algo = config["misc"].get("util_algorithm", "uunifast_discard")
+    util_algo = config["global"].get("util_algorithm", "uunifast_discard")
 
     # DAG config
     dag_config = config["dag_config"]
@@ -89,7 +89,7 @@ def main(config_path=None, data_path=None):
 
             # generate sub-DAG execution times
             n_nodes = G.get_number_of_nodes()
-            dummy = config["misc"]["dummy_source_and_sink"]
+            dummy = config["global"]["dummy_source_and_sink"]
             c_ = gen_execution_times(n_nodes, w, round_c=True, dummy=dummy)
             nx.set_node_attributes(G.get_graph(), c_, 'C')
 
@@ -102,12 +102,12 @@ def main(config_path=None, data_path=None):
             nx.set_edge_attributes(G.get_graph(), w_e, 'label')
 
             # print internal data
-            if config["misc"]["print_DAG"]:
+            if config["global"]["print_DAG"]:
                 G.print_data()
 
             # save graph
-            if config["misc"]["save_to_file"]:
-                G.save(basefolder=data_path)
+            if config["global"]["save_to_file"]:
+                G.save(basefolder=data_path, save_png=config["global"].get("save_png", True))
 
     ############################################################################
     # II. multi-DAG generation
@@ -123,7 +123,7 @@ def main(config_path=None, data_path=None):
         n = config["multi-DAG"]["task_number_per_set"]
 
         # number of cores
-        cores = config["misc"]["cores"]
+        cores = config["global"]["cores"]
 
         # Load DAG period set (in us)
         period_set = config["multi-DAG"]["periods"]
@@ -163,7 +163,7 @@ def main(config_path=None, data_path=None):
 
                 # generate sub-DAG execution times
                 n_nodes = G.get_number_of_nodes()
-                dummy = config["misc"]["dummy_source_and_sink"]
+                dummy = config["global"]["dummy_source_and_sink"]
                 c_ = gen_execution_times(n_nodes, w, round_c=True, dummy=dummy)
                 nx.set_node_attributes(G.get_graph(), c_, 'C')
 
@@ -184,13 +184,14 @@ def main(config_path=None, data_path=None):
                 nx.set_edge_attributes(G.get_graph(), w_e, 'label')
 
                 # print internal data
-                if config["misc"]["print_DAG"]:
+                if config["global"]["print_DAG"]:
                     G.print_data()
                     logging.info("")
 
                 # save the graph
-                if config["misc"]["save_to_file"]:
-                    G.save(basefolder=os.path.join(data_path, "data-multi-m{}-u{:.1f}".format(cores, u_total), str(set_index)))
+                if config["global"]["save_to_file"]:
+                    G.save(basefolder=os.path.join(data_path, "data-multi-m{}-u{:.1f}".format(cores, u_total), str(set_index)),
+                           save_png=config["global"].get("save_png", True))
 
                 # (optional) plot the graph
                 # G.plot()

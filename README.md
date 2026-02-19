@@ -58,6 +58,19 @@ and then install Python dependencies through `requirements.txt`:
 
 Use the configuration file `config.json` to configure parameters.
 
+### Global Settings
+
+Parameters in the `global` section apply to all generation modes:
+
+- `multi-DAG_on`: `true` for multi-DAG mode, `false` for single-DAG mode
+- `cores`: number of processor cores (used in multi-DAG mode)
+- `print_DAG`: print node/edge data to stdout during generation
+- `save_to_file`: save generated DAGs to the `data/` directory (GML, GPPickle, and optionally PNG)
+- `save_png`: save a PNG image of each DAG (default: `true`); set to `false` to skip PNG generation and save disk space
+- `dummy_source_and_sink`: add dummy source and sink nodes to each DAG
+- `rnd_seed`: random seed for reproducibility
+- `util_algorithm`: utilization generation algorithm (see [Utilization Algorithm](#utilization-algorithm))
+
 ### Single DAG
 
 To generate a single DAG task, set `multi-DAG_on=false`, then in `single-DAG`:
@@ -77,7 +90,7 @@ To generate a multi-DAG taskset, set `multi-DAG_on=true`, then in `multi-DAG`:
 
 ### Utilization Algorithm
 
-Set `util_algorithm` in `misc` to choose the utilization generation algorithm for multi-DAG mode:
+Set `util_algorithm` in `global` to choose the utilization generation algorithm for multi-DAG mode:
 
 - `"uunifast_discard"` (default): UUniFast-discard [2]
 - `"drs"`: Dirichlet-Rescale [3]

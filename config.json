@@ -1,22 +1,23 @@
 {
-  "misc": {
+  "global": {
     "multi-DAG_on": true,
     "cores": 4,
     "print_DAG": true,
     "save_to_file": true,
+    "save_png": true,
     "dummy_source_and_sink": false,
     "rnd_seed": 1234,
     "util_algorithm": "uunifast_discard"
+  },
+  "single-DAG": {
+    "set_number": 1000,
+    "workload": 10000
   },
   "multi-DAG": {
     "set_number": 10,
     "task_number_per_set": 5,
     "utilization": 0.8,
     "periods": [1000, 2000, 5000, 10000, 20000, 50000]
-  },
-  "single-DAG": {
-    "set_number": 1000,
-    "workload": 10000
   },
   "dag_config": {
     "parallelism": 5,

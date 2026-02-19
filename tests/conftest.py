@@ -6,7 +6,7 @@ import json
 def sample_config():
     """Returns a minimal valid config dict."""
     return {
-        "misc": {
+        "global": {
             "multi-DAG_on": False,
             "cores": 4,
             "print_DAG": False,
@@ -45,8 +45,8 @@ def config_file(tmp_path, sample_config):
 @pytest.fixture
 def multi_dag_config_file(tmp_path, sample_config):
     """Config file with multi-DAG mode enabled."""
-    sample_config["misc"]["multi-DAG_on"] = True
-    sample_config["misc"]["save_to_file"] = True
+    sample_config["global"]["multi-DAG_on"] = True
+    sample_config["global"]["save_to_file"] = True
     p = tmp_path / "config_multi.json"
     p.write_text(json.dumps(sample_config))
     return str(p)
