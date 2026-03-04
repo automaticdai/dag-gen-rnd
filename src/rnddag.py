@@ -100,14 +100,13 @@ class DAG:
         else:
             self.gen_rnd_legacy()
 
-    def gen_rnd_legacy(self):
-        # data structures
-        nodes = []          # nodes in all layers (in form of shape decomposition)
-        nodes_parent = []   # nodes that can be parents
-        nodes_parent_childless = []  # nodes without child
-        nodes_orphan = []   # nodes without any parent
+    def _generate_layer_by_layer(self, parallelism, layer_num_min, layer_num_max, connect_prob):
+        """Shared implementation for layer-by-layer random DAG generation."""
+        nodes = []
+        nodes_parent = []
+        nodes_parent_childless = []
+        nodes_orphan = []
 
-        # initial a new graph
         G = nx.DiGraph(Index=self.task_num, U=self.U, T=self.T, W=self.W)
 
         # add the root node
@@ -116,93 +115,12 @@ class DAG:
         nodes.append([n])
         nodes_parent.append(n)
         n = n + 1
-        
-        # random and remove the source and the sink node
-        layer_num_this = randint(self.layer_num_min - 2, self.layer_num_max - 2)
 
-        # generate layer by layer
-        for k in range(layer_num_this):
-            # randomised nodes in each layer
-            m = randint(1, self.parallelism)
-
-            nodes_t = []
-            for _ in range(m):
-                nodes_t.append(n)
-                nodes_orphan.append(n)
-                G.add_node(n, rank=k+1)
-                n = n + 1
-
-            nodes.append(nodes_t)
-
-            # initially assume all parents are childless
-            nodes_parent_childless[:] = nodes_parent_childless[:] + nodes_parent[:]
-
-            # iterates all nodes in the current layout
-            for i in nodes[k+1]:
-                for ii in nodes_parent:
-                    # add connections
-                    if random() < self.connect_prob:
-                        G.add_edge(ii, i)
-                        if i in nodes_orphan:
-                            nodes_orphan.remove(i)
-                        if ii in nodes_parent_childless:
-                            nodes_parent_childless.remove(ii)
-            
-            # add all childs as candidate parents for the next layer
-            nodes_parent[:] = nodes[k+1]
-
-            # connect all orphan to the root node
-            for i in nodes_orphan:
-                nodes_orphan.remove(i)
-                G.add_edge(1, i)
-                # if i in nodes_parent:
-                #     nodes_parent.remove(i)
-
-        # Dealing with the final layer
-        # connect everything together to a final node
-        for i in nodes_parent:
-            G.add_edge(i, n)
-
-        for i in nodes_parent_childless:
-            G.add_edge(i, n)
-
-        # connect all orphan to the root node
-        for i in nodes_orphan:
-            nodes_orphan.remove(i)
-            G.add_edge(1, i)
-
-        # (optional) mutate a node to be conditional
-        # G.add_node('2', style='filled', fillcolor='red', shape='diamond')
-
-        #print(nodes)
-        #print(nodes_orphan)
-
-        # return the graph
-        self.G = G
-
-    def gen_rnd(self, parallelism=8, layer_num_min=5, layer_num_max=12, connect_prob=0.5):
-        # data structures
-        nodes = []          # nodes in all layers (in form of shape decomposition)
-        nodes_parent = []   # nodes that can be parents
-        nodes_parent_childless = []  # nodes without child
-        nodes_orphan = []   # nodes without any parent
-
-        # initial a new graph
-        G = nx.DiGraph(Index=self.task_num, U=self.U, T=self.T, W=self.W)
-
-        # add the root node
-        n = 1
-        G.add_node(n, rank=0)
-        nodes.append([n])
-        nodes_parent.append(n)
-        n = n + 1
-        
         # random and remove the source and the sink node
         layer_num_this = randint(layer_num_min - 2, layer_num_max - 2)
 
         # generate layer by layer
         for k in range(layer_num_this):
-            # randomised nodes in each layer
             m = randint(1, parallelism)
 
             nodes_t = []
@@ -214,31 +132,23 @@ class DAG:
 
             nodes.append(nodes_t)
 
-            # initially assume all parents are childless
             nodes_parent_childless[:] = nodes_parent_childless[:] + nodes_parent[:]
 
-            # iterates all nodes in the current layout
             for i in nodes[k+1]:
                 for ii in nodes_parent:
-                    # add connections
                     if random() < connect_prob:
                         G.add_edge(ii, i)
                         if i in nodes_orphan.copy():
                             nodes_orphan.remove(i)
                         if ii in nodes_parent_childless.copy():
                             nodes_parent_childless.remove(ii)
-            
-            # add all childs as candidate parents for the next layer
+
             nodes_parent[:] = nodes[k+1]
 
-            # connect all orphan to the root node
             for i in nodes_orphan.copy():
                 G.add_edge(1, i)
                 nodes_orphan.remove(i)
-                # if i in nodes_parent:
-                #     nodes_parent.remove(i)
 
-        # Dealing with the final layer
         # connect everything together to a final node
         for i in nodes_parent:
             G.add_edge(i, n)
@@ -246,19 +156,20 @@ class DAG:
         for i in nodes_parent_childless:
             G.add_edge(i, n)
 
-        # connect all orphan to the root node
         for i in nodes_orphan.copy():
             G.add_edge(1, i)
             nodes_orphan.remove(i)
 
-        # (optional) mutate a node to be conditional
-        # G.add_node('2', style='filled', fillcolor='red', shape='diamond')
-
-        #print(nodes)
-        #print(nodes_orphan)
-        
-        # return the graph
         self.G = G
+
+    def gen_rnd_legacy(self):
+        self._generate_layer_by_layer(
+            self.parallelism, self.layer_num_min,
+            self.layer_num_max, self.connect_prob)
+
+    def gen_rnd(self, parallelism=8, layer_num_min=5, layer_num_max=12, connect_prob=0.5):
+        self._generate_layer_by_layer(
+            parallelism, layer_num_min, layer_num_max, connect_prob)
 
     def gen_nfj(self):
         """ Generate Nested Fork-Join DAG

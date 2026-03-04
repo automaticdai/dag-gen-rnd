@@ -22,7 +22,7 @@ from PyQt5.QtWidgets import (QMainWindow, QApplication, QStatusBar, QWidget, QLa
 import networkx as nx
 
 import rnddag
-from generator import uunifast_discard, drs_gen, gen_period, gen_execution_times
+from generator import uunifast_discard, drs_gen, gen_period, apply_execution_times
 
 
 class daggen_gui(QMainWindow):
@@ -286,12 +286,7 @@ class daggen_gui(QMainWindow):
                 self._generate_dag_structure(G, algorithm, parallelism, layer_min, layer_max, connect_prob)
 
                 n_nodes = G.get_number_of_nodes()
-                c_ = gen_execution_times(n_nodes, workload, round_c=True)
-                nx.set_node_attributes(G.get_graph(), c_, 'C')
-                w_e = {}
-                for e in G.get_graph().edges():
-                    w_e[e] = c_[e[0]]
-                nx.set_edge_attributes(G.get_graph(), w_e, 'label')
+                apply_execution_times(G, n_nodes, workload, round_c=True)
 
                 G.save(basefolder=data_dir)
                 self.progressBar.setValue(1)
@@ -340,12 +335,7 @@ class daggen_gui(QMainWindow):
                         self._generate_dag_structure(G, algorithm, parallelism, layer_min, layer_max, connect_prob)
 
                         n_nodes = G.get_number_of_nodes()
-                        c_ = gen_execution_times(n_nodes, w, round_c=True)
-                        nx.set_node_attributes(G.get_graph(), c_, 'C')
-                        w_e = {}
-                        for e in G.get_graph().edges():
-                            w_e[e] = c_[e[0]]
-                        nx.set_edge_attributes(G.get_graph(), w_e, 'label')
+                        apply_execution_times(G, n_nodes, w, round_c=True)
 
                         save_dir = os.path.join(data_dir, "data-multi-m{}-u{:.1f}".format(cores, u_total), str(set_index))
                         G.save(basefolder=save_dir)

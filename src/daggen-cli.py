@@ -15,7 +15,7 @@ from tqdm import tqdm
 
 from rnddag import DAG, DAGTaskset
 from generator import uunifast_discard, drs_gen
-from generator import gen_period, gen_execution_times
+from generator import gen_period, gen_execution_times, apply_execution_times
 
 
 def parse_configuration(config_path):
@@ -87,19 +87,10 @@ def main(config_path=None, data_path=None):
                       layer_num_max=dag_config["layer_num_max"],
                       connect_prob=dag_config["connect_prob"])
 
-            # generate sub-DAG execution times
+            # generate and apply execution times
             n_nodes = G.get_number_of_nodes()
             dummy = config["global"]["dummy_source_and_sink"]
-            c_ = gen_execution_times(n_nodes, w, round_c=True, dummy=dummy)
-            nx.set_node_attributes(G.get_graph(), c_, 'C')
-
-            # set execution times on edges
-            w_e = {}
-            for e in G.get_graph().edges():
-                ccc = c_[e[0]]
-                w_e[e] = ccc
-
-            nx.set_edge_attributes(G.get_graph(), w_e, 'label')
+            apply_execution_times(G, n_nodes, w, round_c=True, dummy=dummy)
 
             # print internal data
             if config["global"]["print_DAG"]:
@@ -161,27 +152,15 @@ def main(config_path=None, data_path=None):
                           layer_num_max=dag_config["layer_num_max"],
                           connect_prob=dag_config["connect_prob"])
 
-                # generate sub-DAG execution times
+                # generate and apply execution times
                 n_nodes = G.get_number_of_nodes()
                 dummy = config["global"]["dummy_source_and_sink"]
-                c_ = gen_execution_times(n_nodes, w, round_c=True, dummy=dummy)
-                nx.set_node_attributes(G.get_graph(), c_, 'C')
+                c_ = apply_execution_times(G, n_nodes, w, round_c=True, dummy=dummy)
 
                 # calculate actual workload and utilization
-                w_p = 0
-                for item in c_.items():
-                    w_p = w_p + item[1]
-
+                w_p = sum(c_.values())
                 u_p = w_p / periods[i]
                 U_p.append(u_p)
-
-                # set execution times on edges
-                w_e = {}
-                for e in G.get_graph().edges():
-                    ccc = c_[e[0]]
-                    w_e[e] = ccc
-
-                nx.set_edge_attributes(G.get_graph(), w_e, 'label')
 
                 # print internal data
                 if config["global"]["print_DAG"]:

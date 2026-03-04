@@ -1,6 +1,6 @@
 # Randomised Multi-DAG Task Generator for Scheduling and Allocation
 
-![](doc/dag-gen-rnd-banner.png)
+![](docs/dag-gen-rnd-banner.png)
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
@@ -118,12 +118,12 @@ To use the generated DAGs, see the provided API in `utility.py` which also gives
 
 Here are some simple examples of generated DAGs:
 
-|![](doc/example_1.png)|![](doc/example_2.png)|![](doc/example_3.png)|
+|![](docs/example_1.png)|![](docs/example_2.png)|![](docs/example_3.png)|
 |--|--|--|
 
 or more complicated DAGs that can also be generated:
 
-|![](doc/example_4.png)|![](doc/example_5.png)|
+|![](docs/example_4.png)|![](docs/example_5.png)|
 |--|--|
 
 ---

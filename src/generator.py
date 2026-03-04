@@ -9,6 +9,7 @@
 # -------------------------------------------------------------------------------
 
 import numpy as np
+import networkx as nx
 import random
 import math
 
@@ -129,6 +130,29 @@ def gen_execution_times(n, w, round_c=False, dummy=False):
 
         # dummy sink node
         c_dict[n] = 1
+
+    return c_dict
+
+
+def apply_execution_times(dag, n_nodes, workload, round_c=True, dummy=False):
+    """Generate execution times and apply them as node/edge attributes on a DAG.
+
+    Args:
+        dag: A DAG instance (from rnddag.DAG).
+        n_nodes: Number of nodes in the DAG.
+        workload: Total workload to distribute.
+        round_c: Whether to round execution times to integers.
+        dummy: Whether source/sink nodes get unit execution times.
+    Returns:
+        c_dict: The generated execution time dictionary.
+    """
+    c_dict = gen_execution_times(n_nodes, workload, round_c=round_c, dummy=dummy)
+    nx.set_node_attributes(dag.get_graph(), c_dict, 'C')
+
+    w_e = {}
+    for e in dag.get_graph().edges():
+        w_e[e] = c_dict[e[0]]
+    nx.set_edge_attributes(dag.get_graph(), w_e, 'label')
 
     return c_dict
 
