@@ -17,12 +17,12 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QStatusBar, QWidget, QLabel,
                              QPushButton, QFormLayout, QHBoxLayout, QVBoxLayout,
                              QMessageBox, QFileDialog, QScrollArea, QProgressBar,
-                             QComboBox, QLineEdit, QCheckBox, QMenu, QAction)
+                             QComboBox, QLineEdit, QMenu, QAction)
 
 from dag_factory import generate_dag, generate_multi_dag_taskset
 
 
-class daggen_gui(QMainWindow):
+class DagGenGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -81,9 +81,6 @@ class daggen_gui(QMainWindow):
         self.opt_algorithm.addItem("Random Legacy (rnd_legacy)")
         self.opt_algorithm.addItem("Nested-Fork Join (nfj)")
 
-        self.check_conditional = QCheckBox()
-        self.check_mcs_dag = QCheckBox()
-
         # mode selector
         self.opt_mode = QComboBox()
         self.opt_mode.addItem("Single DAG")
@@ -94,8 +91,6 @@ class daggen_gui(QMainWindow):
         self.edit_critical_max = QLineEdit()
         self.edit_critical_min = QLineEdit()
         self.edit_pc = QLineEdit()
-        self.edit_mcs = QLineEdit()
-
         # single-DAG specific
         self.edit_workload = QLineEdit()
         self.label_workload = QLabel("Workload:")
@@ -135,9 +130,6 @@ class daggen_gui(QMainWindow):
         formLayout.addRow(self.label_periods, self.edit_periods)
         formLayout.addRow(self.label_cores, self.edit_cores)
         formLayout.addRow(self.label_util_algo, self.opt_util_algo)
-        formLayout.addRow("&Mixed-criticality DAG?", self.check_mcs_dag)
-        formLayout.addRow("p(High)", self.edit_mcs)
-        formLayout.addRow("&Conditional DAG?", self.check_conditional)
         formLayout.addRow(self.button_gen_conf)
         formLayout.addRow(self.button_gen)
 
@@ -171,7 +163,6 @@ class daggen_gui(QMainWindow):
         self.edit_critical_max.setText("7")
         self.edit_critical_min.setText("3")
         self.edit_pc.setText("0.5")
-        self.edit_mcs.setText("0.5")
         self.edit_workload.setText("10000")
         self.edit_set_number.setText("10")
         self.edit_tasks_per_set.setText("5")
@@ -181,14 +172,6 @@ class daggen_gui(QMainWindow):
 
         # set initial mode visibility
         self._update_mode_visibility()
-
-        # disable unimplemented features
-        self.check_conditional.setEnabled(False)
-        self.check_conditional.setToolTip("Conditional DAG support not yet implemented")
-        self.check_mcs_dag.setEnabled(False)
-        self.check_mcs_dag.setToolTip("Mixed-criticality DAG support not yet implemented")
-        self.edit_mcs.setEnabled(False)
-        self.edit_mcs.setToolTip("Mixed-criticality DAG support not yet implemented")
 
         # set signal / slots
         self.button_gen.clicked.connect(self.event_on_button_gen_clicked)
@@ -446,5 +429,5 @@ class daggen_gui(QMainWindow):
 # Main function
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    win = daggen_gui()
+    win = DagGenGUI()
     sys.exit(app.exec_())

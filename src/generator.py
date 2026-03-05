@@ -8,10 +8,8 @@
 # University of York, UK
 # -------------------------------------------------------------------------------
 
-import numpy as np
 import networkx as nx
 import random
-import math
 
 
 def uunifast_discard(n, u, nsets, ulimit=1):
@@ -24,12 +22,16 @@ def uunifast_discard(n, u, nsets, ulimit=1):
     Returns:
         sets (list)
     """
-    # if (n <= u):
-    #     # no feasible solution
-    #     return []
-
+    MAX_ITERATIONS = nsets * 1000
     sets = []
+    iterations = 0
     while len(sets) < nsets:
+        iterations += 1
+        if iterations > MAX_ITERATIONS:
+            raise RuntimeError(
+                "uunifast_discard: failed to generate {} feasible sets after {} "
+                "iterations (n={}, u={}, ulimit={})".format(nsets, MAX_ITERATIONS, n, u, ulimit))
+
         # Classic UUniFast algorithm:
         utilizations = []
         sumU = u
@@ -42,8 +44,6 @@ def uunifast_discard(n, u, nsets, ulimit=1):
         # If no task utilization exceeds ulimit:
         if all(ut <= ulimit for ut in utilizations):
             sets.append(utilizations)
-
-        # print(sum(utilizations))
 
     return sets
 
@@ -58,8 +58,15 @@ def drs_gen(n, u, nsets, ulimit=1):
         sets (list)
     """
     from drs import drs
+    MAX_ITERATIONS = nsets * 1000
     sets = []
+    iterations = 0
     while len(sets) < nsets:
+        iterations += 1
+        if iterations > MAX_ITERATIONS:
+            raise RuntimeError(
+                "drs_gen: failed to generate {} feasible sets after {} "
+                "iterations (n={}, u={}, ulimit={})".format(nsets, MAX_ITERATIONS, n, u, ulimit))
         vec = drs(n=n, sumu=u, upper_bounds=[ulimit] * n)
         if all(v >= 0 for v in vec):
             sets.append(list(vec))

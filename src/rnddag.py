@@ -9,12 +9,9 @@
 # -------------------------------------------------------------------------------
 
 import os
-import json
 import networkx as nx
-from networkx.drawing.nx_agraph import graphviz_layout, to_agraph
-import pygraphviz as pgv
 
-from random import seed, randint, random
+from random import randint, random
 
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -29,20 +26,6 @@ class DAG:
         self.U = U
         self.T = T
         self.W = W
-        self.L = -1 # needs to be computed later
-
-        # configs for gen_rnd_legacy()
-        self.parallelism = 8
-        self.layer_num_min = 5
-        self.layer_num_max = 12
-        self.connect_prob = 0.5
-
-        # configs for gen_nfj()
-        self.depth = 5
-        self.p_fork = 0.3
-        self.p_join = 0.8
-        self.fork_n_min = 2
-        self.fork_n_max = 4
 
     def __str__(self):
         A = nx.nx_agraph.to_agraph(self.G)
@@ -127,18 +110,16 @@ class DAG:
 
         self.G = G
 
-    def gen_rnd_legacy(self):
+    def gen_rnd_legacy(self, parallelism=8, layer_num_min=5, layer_num_max=12, connect_prob=0.5):
         self._generate_layer_by_layer(
-            self.parallelism, self.layer_num_min,
-            self.layer_num_max, self.connect_prob)
+            parallelism, layer_num_min, layer_num_max, connect_prob)
 
     def gen_rnd(self, parallelism=8, layer_num_min=5, layer_num_max=12, connect_prob=0.5):
         self._generate_layer_by_layer(
             parallelism, layer_num_min, layer_num_max, connect_prob)
 
-    def gen_nfj(self):
-        """ Generate Nested Fork-Join DAG
-        """
+    def gen_nfj(self, depth=5, p_fork=0.3, p_join=0.8, fork_n_min=2, fork_n_max=4):
+        """Generate Nested Fork-Join DAG."""
         # data structures
         nodes = []        # nodes in all layers (in form of shape decomposition)
         nodes_parent = [] # nodes that can become parent
@@ -158,15 +139,15 @@ class DAG:
 
         ancestor_dict[1] = []
 
-        layer_num = max(self.depth - 2, 0)
+        layer_num = max(depth - 2, 0)
 
         # I. fork phase
         for i in range(layer_num):
             nodes_parent_next = []
             fork_happened = False
             for node_p in nodes_parent:
-                if random() < self.p_fork or node_p == 1:
-                    kk = randint(self.fork_n_min, self.fork_n_max)
+                if random() < p_fork or node_p == 1:
+                    kk = randint(fork_n_min, fork_n_max)
                     for i in range(kk):
                         G.add_node(n, rank=r)
                         G.add_edge(node_p, n, label="n/a")
@@ -184,8 +165,6 @@ class DAG:
             
             nodes_parent = nodes_parent_next
 
-        # print(ancestor_dict)
-
         # II. join phase
         # table contains all ancestors and nodes list, with ancestor as the key
         # it is a reverse of ancestor_dict
@@ -198,21 +177,16 @@ class DAG:
                 else:
                     table[j] = table[j] + [i]
 
-        # print(table)
-
         # start to join
         join_list = []
         for node_p in nodes_parent:
-            if random() < self.p_join:
+            if random() < p_join:
                 join_list.append(node_p)
-
-        # print(join_list)
 
         # connect edges if all ancestor constraints are satisfied.
         joined_happened = False
         for i in sorted(table.keys()):
             v = table[i]
-            # print(v)
             if set(v).issubset(set(join_list)):
                 G.add_node(n, rank=r)
                 nodes_parent.append(n)
@@ -238,11 +212,7 @@ class DAG:
         # return the generated graph
         self.G = G
 
-    def config(self):
-        pass
-
     def print_data(self):
-        #print(self.G.graph)
         print(self.G.nodes.data())
         print(self.G.edges.data())
 
@@ -293,7 +263,6 @@ class DAG:
         ax = plt.axes([0., 0., 1., 1.], frameon=False, xticks=[], yticks=[])
         ax.imshow(img, interpolation='none')
 
-        # plt.show(block=False)
         plt.show()
 
 

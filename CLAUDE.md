@@ -66,7 +66,7 @@ config.json → daggen-cli.py → dag_factory.py (shared generation orchestratio
 
 **`src/utility.py`** — API for loading generated DAGs from disk for downstream use.
 
-**`src/daggen-gui.py`** — PyQt5 GUI. Supports algorithm selection, parameter input, config load/save, and DAG image display. Mixed-criticality and conditional DAG options are disabled (not yet implemented in core).
+**`src/daggen-gui.py`** — PyQt5 GUI (`DagGenGUI` class). Supports algorithm selection, parameter input, config load/save, and DAG image display.
 
 ## Configuration
 

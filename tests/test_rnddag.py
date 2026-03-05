@@ -14,7 +14,6 @@ class TestDAGInit:
         assert d.U == -1
         assert d.T == -1
         assert d.W == -1
-        assert d.L == -1
 
     def test_parameterized_init(self):
         d = DAG(i=5, U=0.3, T=1000, W=300)
@@ -22,14 +21,6 @@ class TestDAGInit:
         assert d.U == 0.3
         assert d.T == 1000
         assert d.W == 300
-
-    def test_legacy_defaults_exist(self):
-        """gen_rnd_legacy() needs these attributes on the instance."""
-        d = DAG()
-        assert hasattr(d, 'parallelism')
-        assert hasattr(d, 'layer_num_min')
-        assert hasattr(d, 'layer_num_max')
-        assert hasattr(d, 'connect_prob')
 
 
 # ---- gen_rnd ----

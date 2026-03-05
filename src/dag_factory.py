@@ -37,11 +37,10 @@ def generate_dag(i, dag_config, workload, algorithm="rnd", utilization=-1,
     elif algorithm == "nfj":
         G.gen_nfj()
     else:
-        G.parallelism = dag_config["parallelism"]
-        G.layer_num_min = dag_config["layer_num_min"]
-        G.layer_num_max = dag_config["layer_num_max"]
-        G.connect_prob = dag_config["connect_prob"]
-        G.gen_rnd_legacy()
+        G.gen_rnd_legacy(parallelism=dag_config["parallelism"],
+                         layer_num_min=dag_config["layer_num_min"],
+                         layer_num_max=dag_config["layer_num_max"],
+                         connect_prob=dag_config["connect_prob"])
 
     n_nodes = G.get_number_of_nodes()
     c_dict = apply_execution_times(G, n_nodes, workload, round_c=round_c, dummy=dummy)
