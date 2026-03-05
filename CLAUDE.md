@@ -41,8 +41,9 @@ Tests that require `pygraphviz` (save/load round-trips, CLI end-to-end with file
 ## Architecture
 
 ```
-config.json → daggen-cli.py → generator.py (utilization/period generation)
-                             → rnddag.py   (DAG structure generation)
+config.json → daggen-cli.py → dag_factory.py (shared generation orchestration)
+                             → generator.py  (utilization/period generation)
+                             → rnddag.py     (DAG structure generation)
                              → output: data/ (GML, GPPickle, PNG)
 ```
 
@@ -51,13 +52,15 @@ config.json → daggen-cli.py → generator.py (utilization/period generation)
 - `gen_nfj()` — Nested fork-join
 - `gen_rnd_legacy()` — Legacy randomized
 
-`DAGTaskset` holds multiple `DAG` instances for multi-DAG mode.
-
 **`src/generator.py`** — Scheduling parameter generation:
 - `uunifast_discard()` — UUniFast-discard utilization distribution
 - `drs_gen()` — DRS (Dirichlet-Rescale) utilization generation (requires `drs` package)
 - `gen_period()` — Period selection from discrete population
 - `gen_execution_times()` — Distributes workload across DAG nodes
+
+**`src/dag_factory.py`** — Shared generation orchestration:
+- `generate_dag()` — Creates a single DAG with structure and execution times applied
+- `generate_multi_dag_taskset()` — Generator yielding `(set_index, task_index, DAG, c_dict)` tuples
 
 **`src/daggen-cli.py`** — CLI entry point. `main(config_path, data_path)` function is importable for testing. Reads `config.json`, supports single-DAG and multi-DAG modes. Outputs to `data/` and `logs/` directories.
 

@@ -2,7 +2,7 @@ import pytest
 import random
 import networkx as nx
 
-from rnddag import DAG, DAGTaskset
+from rnddag import DAG
 
 
 # ---- DAG.__init__ ----
@@ -163,13 +163,3 @@ class TestSave:
         G_loaded = nx.read_gml(str(tmp_path / "Tau_0.gml"))
         assert G_loaded.number_of_nodes() == d.get_number_of_nodes()
         assert G_loaded.number_of_edges() == d.get_number_of_edges()
-
-
-# ---- DAGTaskset ----
-
-class TestDAGTaskset:
-    def test_init(self):
-        ts = DAGTaskset()
-        assert ts.util == 0
-        assert ts.task_number == 0
-        assert ts.tasks == []

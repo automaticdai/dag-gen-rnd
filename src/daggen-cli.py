@@ -8,22 +8,19 @@
 # University of York, UK
 # -------------------------------------------------------------------------------
 
-import os, sys, logging, getopt, time, json
-import networkx as nx
+import os, sys, logging, getopt, json
 import random
 from tqdm import tqdm
 
-from rnddag import DAG, DAGTaskset
-from generator import uunifast_discard, drs_gen
-from generator import gen_period, gen_execution_times, apply_execution_times
+from dag_factory import generate_dag, generate_multi_dag_taskset
 
 
 def parse_configuration(config_path):
     try:
         with open(config_path, "r") as config_file:
             config_json = json.load(config_file)
-    except:
-        raise EnvironmentError("Unable to open %s" % (config_path))
+    except (FileNotFoundError, json.JSONDecodeError, OSError) as e:
+        raise EnvironmentError("Unable to open %s" % (config_path)) from e
 
     return config_json
 
@@ -52,10 +49,12 @@ def main(config_path=None, data_path=None):
     logs_path = os.path.join(base_path, "logs")
     os.makedirs(logs_path, exist_ok=True)
 
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
     # load configuration
     config = parse_configuration(config_path)
 
-    logging.info("Configurations:", config)
+    logging.info("Configurations: %s", config)
 
     ############################################################################
     # load generator basic configuration
@@ -78,25 +77,15 @@ def main(config_path=None, data_path=None):
     if not multi_dag:
         n = config["single-DAG"]["set_number"]
         w = config["single-DAG"]["workload"]
+        dummy = config["global"]["dummy_source_and_sink"]
 
         for i in tqdm(range(n)):
-            # create a new DAG
-            G = DAG(i=i, U=-1, T=-1, W=w)
-            G.gen_rnd(parallelism=dag_config["parallelism"],
-                      layer_num_min=dag_config["layer_num_min"],
-                      layer_num_max=dag_config["layer_num_max"],
-                      connect_prob=dag_config["connect_prob"])
+            G, _ = generate_dag(i=i, dag_config=dag_config, workload=w,
+                                round_c=True, dummy=dummy)
 
-            # generate and apply execution times
-            n_nodes = G.get_number_of_nodes()
-            dummy = config["global"]["dummy_source_and_sink"]
-            apply_execution_times(G, n_nodes, w, round_c=True, dummy=dummy)
-
-            # print internal data
             if config["global"]["print_DAG"]:
                 G.print_data()
 
-            # save graph
             if config["global"]["save_to_file"]:
                 G.save(basefolder=data_path, save_png=config["global"].get("save_png", True))
 
@@ -104,78 +93,48 @@ def main(config_path=None, data_path=None):
     # II. multi-DAG generation
     ############################################################################
     else:
-        # set of tasksets
         n_set = config["multi-DAG"]["set_number"]
-
-        # total utilization
         u_total = config["multi-DAG"]["utilization"]
-
-        # task number
         n = config["multi-DAG"]["task_number_per_set"]
-
-        # number of cores
         cores = config["global"]["cores"]
-
-        # Load DAG period set (in us)
         period_set = config["multi-DAG"]["periods"]
-        period_set = [(x) for x in period_set]
+        dummy = config["global"]["dummy_source_and_sink"]
 
-        # DAG generation main loop
-        for set_index in tqdm(range(n_set)):
-            logging.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            # create a new taskset
-            Gamma = DAGTaskset()
+        U_p = []
+        prev_set_index = -1
 
-            U_p = []
+        for set_index, i, G, c_dict in tqdm(
+                generate_multi_dag_taskset(
+                    dag_config=dag_config, n_tasks=n, n_sets=n_set,
+                    u_total=u_total, period_set=period_set, cores=cores,
+                    util_algo=util_algo, dummy=dummy),
+                total=n_set * n):
 
-            # DAG taskset utilization
-            if util_algo == "drs":
-                U = drs_gen(n, u=u_total, nsets=n_set, ulimit=cores)
-            else:
-                U = uunifast_discard(n, u=u_total, nsets=n_set, ulimit=cores)
-
-            # generate periods
-            periods = gen_period(period_set, n)
-            logging.info(periods)
-
-            for i in range(n):
-                # calculate workload (in us)
-                w = U[set_index][i] * periods[i]
-
-                # create a new DAG
-                G = DAG(i=i, U=U[set_index][i], T=periods[i], W=w)
-
-                # generate nodes in the DAG
-                # G.gen_nfj()
-                G.gen_rnd(parallelism=dag_config["parallelism"],
-                          layer_num_min=dag_config["layer_num_min"],
-                          layer_num_max=dag_config["layer_num_max"],
-                          connect_prob=dag_config["connect_prob"])
-
-                # generate and apply execution times
-                n_nodes = G.get_number_of_nodes()
-                dummy = config["global"]["dummy_source_and_sink"]
-                c_ = apply_execution_times(G, n_nodes, w, round_c=True, dummy=dummy)
-
-                # calculate actual workload and utilization
-                w_p = sum(c_.values())
-                u_p = w_p / periods[i]
-                U_p.append(u_p)
-
-                # print internal data
-                if config["global"]["print_DAG"]:
-                    G.print_data()
+            if set_index != prev_set_index:
+                if prev_set_index >= 0:
+                    logging.info("Total U: %s %s", sum(U_p), U_p)
+                    logging.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
                     logging.info("")
+                logging.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                U_p = []
+                prev_set_index = set_index
 
-                # save the graph
-                if config["global"]["save_to_file"]:
-                    G.save(basefolder=os.path.join(data_path, "data-multi-m{}-u{:.1f}".format(cores, u_total), str(set_index)),
-                           save_png=config["global"].get("save_png", True))
+            # calculate actual workload and utilization
+            w_p = sum(c_dict.values())
+            u_p = w_p / G.T
+            U_p.append(u_p)
 
-                # (optional) plot the graph
-                # G.plot()
+            if config["global"]["print_DAG"]:
+                G.print_data()
+                logging.info("")
 
-            logging.info("Total U:", sum(U_p), U_p)
+            if config["global"]["save_to_file"]:
+                G.save(basefolder=os.path.join(data_path, "data-multi-m{}-u{:.1f}".format(cores, u_total), str(set_index)),
+                       save_png=config["global"].get("save_png", True))
+
+        # log final set
+        if prev_set_index >= 0:
+            logging.info("Total U: %s %s", sum(U_p), U_p)
             logging.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
             logging.info("")
 

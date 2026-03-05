@@ -20,41 +20,6 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 
-# Class: DAGTaskset
-class DAGTaskset:
-    def __init__(self):
-        self.rnd_seed = randint(1, 1000)
-        self.util = 0
-        self.task_number = 0
-        self.tasks = []
-
-    def gen(self, u, n):
-        # generate tasks
-
-        # generate utilizations
-
-        # generate periods
-
-        # generate execution times
-        pass
-
-    def add(self, tau):
-        # add a task to taskset
-        pass
-
-    def remove(self, tau):
-        # remove a task from taskset
-        pass
-
-    def dump(self):
-        # dump tasksets into a json file
-        pass
-
-    def load(self):
-        # load tasksets from a json file
-        pass
-
-
 # Class: DAG (Directed Acyclic Graph Task)
 class DAG:
     def __init__(self, i=0, U=-1, T=-1, W=-1):

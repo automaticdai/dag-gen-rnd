@@ -19,10 +19,7 @@ from PyQt5.QtWidgets import (QMainWindow, QApplication, QStatusBar, QWidget, QLa
                              QMessageBox, QFileDialog, QScrollArea, QProgressBar,
                              QComboBox, QLineEdit, QCheckBox, QMenu, QAction)
 
-import networkx as nx
-
-import rnddag
-from generator import uunifast_discard, drs_gen, gen_period, apply_execution_times
+from dag_factory import generate_dag, generate_multi_dag_taskset
 
 
 class daggen_gui(QMainWindow):
@@ -244,25 +241,15 @@ class daggen_gui(QMainWindow):
 
         return algorithm, parallelism, layer_min, layer_max, connect_prob
 
-    def _generate_dag_structure(self, G, algorithm, parallelism, layer_min, layer_max, connect_prob):
-        """Generate DAG structure using the selected algorithm."""
-        if algorithm == "rnd":
-            G.gen_rnd(parallelism=parallelism,
-                      layer_num_min=layer_min,
-                      layer_num_max=layer_max,
-                      connect_prob=connect_prob)
-        elif algorithm == "nfj":
-            G.gen_nfj()
-        else:
-            G.parallelism = parallelism
-            G.layer_num_min = layer_min
-            G.layer_num_max = layer_max
-            G.connect_prob = connect_prob
-            G.gen_rnd_legacy()
-
     def event_on_button_gen_clicked(self):
         try:
             algorithm, parallelism, layer_min, layer_max, connect_prob = self._read_dag_params()
+            dag_config = {
+                "parallelism": parallelism,
+                "layer_num_min": layer_min,
+                "layer_num_max": layer_max,
+                "connect_prob": connect_prob,
+            }
 
             src_dir = os.path.dirname(os.path.abspath(__file__))
             data_dir = os.path.join(src_dir, os.pardir, "data")
@@ -282,11 +269,8 @@ class daggen_gui(QMainWindow):
                 self.statusBar.showMessage("Generating DAG...")
                 QApplication.processEvents()
 
-                G = rnddag.DAG(i=0, W=workload)
-                self._generate_dag_structure(G, algorithm, parallelism, layer_min, layer_max, connect_prob)
-
-                n_nodes = G.get_number_of_nodes()
-                apply_execution_times(G, n_nodes, workload, round_c=True)
+                G, _ = generate_dag(i=0, dag_config=dag_config, workload=workload,
+                                    algorithm=algorithm)
 
                 G.save(basefolder=data_dir)
                 self.progressBar.setValue(1)
@@ -317,36 +301,27 @@ class daggen_gui(QMainWindow):
                 QApplication.processEvents()
 
                 util_algo_text = self.opt_util_algo.currentText()
-                if "DRS" in util_algo_text:
-                    U = drs_gen(n_tasks, u=u_total, nsets=n_set, ulimit=cores)
-                else:
-                    U = uunifast_discard(n_tasks, u=u_total, nsets=n_set, ulimit=cores)
+                util_algo = "drs" if "DRS" in util_algo_text else "uunifast_discard"
 
                 first_dag = None
                 first_dag_dir = None
                 count = 0
 
-                for set_index in range(n_set):
-                    periods = gen_period(period_set, n_tasks)
+                for set_index, i, G, c_dict in generate_multi_dag_taskset(
+                        dag_config=dag_config, n_tasks=n_tasks, n_sets=n_set,
+                        u_total=u_total, period_set=period_set, cores=cores,
+                        algorithm=algorithm, util_algo=util_algo):
 
-                    for i in range(n_tasks):
-                        w = U[set_index][i] * periods[i]
-                        G = rnddag.DAG(i=i, U=U[set_index][i], T=periods[i], W=w)
-                        self._generate_dag_structure(G, algorithm, parallelism, layer_min, layer_max, connect_prob)
+                    save_dir = os.path.join(data_dir, "data-multi-m{}-u{:.1f}".format(cores, u_total), str(set_index))
+                    G.save(basefolder=save_dir)
 
-                        n_nodes = G.get_number_of_nodes()
-                        apply_execution_times(G, n_nodes, w, round_c=True)
+                    if first_dag is None:
+                        first_dag = G
+                        first_dag_dir = save_dir
 
-                        save_dir = os.path.join(data_dir, "data-multi-m{}-u{:.1f}".format(cores, u_total), str(set_index))
-                        G.save(basefolder=save_dir)
-
-                        if first_dag is None:
-                            first_dag = G
-                            first_dag_dir = save_dir
-
-                        count += 1
-                        self.progressBar.setValue(count)
-                        QApplication.processEvents()
+                    count += 1
+                    self.progressBar.setValue(count)
+                    QApplication.processEvents()
 
                 if first_dag is not None:
                     self.display_dag(first_dag, first_dag_dir)

@@ -2,36 +2,23 @@
 
 ## Critical
 
-### 1. Near-duplicate functions: gen_rnd_legacy() and gen_rnd()
+### ~~1. Near-duplicate functions: gen_rnd_legacy() and gen_rnd()~~ SOLVED
 - **Location:** `src/rnddag.py:103-261`
-- **Issue:** These two functions are ~95% identical. The only differences are that `gen_rnd_legacy()` uses instance attributes while `gen_rnd()` accepts parameters with defaults, and `gen_rnd()` uses `.copy()` on list operations.
-- **Recommendation:** Extract a shared `_generate_layer_by_layer()` helper that both methods call with normalized parameters.
+- **Resolution:** Extracted shared `_generate_layer_by_layer()` helper; both methods are now thin wrappers. Also fixed #15 (unsafe list mutation) by using `.copy()` in the shared implementation.
 
-### 2. Node/edge attribute assignment repeated 4 times
-- **Locations:**
-  - `src/daggen-cli.py:93-102` (single-DAG mode)
-  - `src/daggen-cli.py:167-184` (multi-DAG mode)
-  - `src/daggen-gui.py:289-294` (single-DAG mode)
-  - `src/daggen-gui.py:343-348` (multi-DAG mode)
-- **Issue:** The same pattern for generating execution times, setting node attributes, and computing edge weights is copy-pasted across four locations.
-- **Recommendation:** Extract into a utility function, e.g. `apply_execution_times_to_dag(dag, n_nodes, workload, dummy=False)`.
+### ~~2. Node/edge attribute assignment repeated 4 times~~ SOLVED
+- **Resolution:** Extracted `apply_execution_times()` in `src/generator.py`; all 4 call sites now use it.
 
 ## High
 
-### 3. Empty DAGTaskset class
-- **Location:** `src/rnddag.py:24-56`
-- **Issue:** 6 methods defined but all are stubs with `pass`: `gen()`, `add()`, `remove()`, `dump()`, `load()`. Only initialization is tested.
-- **Recommendation:** Either implement all methods or remove the class entirely.
+### ~~3. Empty DAGTaskset class~~ SOLVED
+- **Resolution:** Removed the dead `DAGTaskset` class from `src/rnddag.py` and all references in `daggen-cli.py`, `test_rnddag.py`, and `CLAUDE.md`.
 
-### 4. daggen-gui.py is a god class
-- **Location:** `src/daggen-gui.py` (485 lines, single class)
-- **Issue:** Mixes UI creation/layout, parameter reading/validation, DAG generation logic, file I/O for config, and mode visibility management.
-- **Recommendation:** Split into separate concerns: `DAGGenerationLogic`, `ConfigManager`, `ParameterValidator`.
+### ~~4. daggen-gui.py is a god class~~ SOLVED
+- **Resolution:** Extracted shared DAG generation logic into `src/dag_factory.py` with `generate_dag()` and `generate_multi_dag_taskset()`. Both CLI and GUI now call these factory functions instead of duplicating orchestration code.
 
-### 5. Bare except clause
-- **Location:** `src/daggen-cli.py:25`
-- **Issue:** `except:` catches all exceptions without specificity. Swallows the original error context.
-- **Recommendation:** Use specific exception types (`FileNotFoundError`, `json.JSONDecodeError`) and preserve context with `raise ... from e`.
+### ~~5. Bare except clause~~ SOLVED
+- **Resolution:** Changed bare `except:` to `except (FileNotFoundError, json.JSONDecodeError, OSError) as e:` with `raise ... from e` to preserve exception context.
 
 ## Medium
 
@@ -47,21 +34,14 @@
 - **Issue:** `gen_rnd_legacy()` uses instance attributes (`self.parallelism`, etc.), `gen_rnd()` uses function parameters with defaults, `gen_nfj()` uses instance attributes again.
 - **Recommendation:** Standardize on one approach across all generation methods.
 
-### 8. Mixed logging and no logging configuration
-- **Locations:**
-  - `src/daggen-cli.py` uses `logging.info()` but never calls `logging.basicConfig()`
-  - `src/generator.py` uses `print()` instead of logging
-- **Recommendation:** Configure logging in `main()` and standardize on the `logging` module everywhere.
+### ~~8. Mixed logging and no logging configuration~~ SOLVED
+- **Resolution:** Added `logging.basicConfig()` in `main()` and fixed `logging.info()` calls to use proper `%s` formatting. `generator.py` `__main__` block kept as `print()` since it's a manual test script.
 
-### 9. Unused import
-- **Location:** `src/daggen-cli.py:14`
-- **Issue:** Imports `time` but never uses it.
-- **Recommendation:** Remove the import.
+### ~~9. Unused import~~ SOLVED
+- **Resolution:** Removed unused `time` import from `src/daggen-cli.py`.
 
-### 10. No-op list comprehension
-- **Location:** `src/daggen-cli.py:130`
-- **Issue:** `period_set = [(x) for x in period_set]` does nothing — parentheses don't create a copy or change the type.
-- **Recommendation:** Remove or replace with `period_set = list(period_set)` if a copy is intended.
+### ~~10. No-op list comprehension~~ SOLVED
+- **Resolution:** Removed the no-op `[(x) for x in period_set]` line from `src/daggen-cli.py`.
 
 ## Low
 
@@ -87,10 +67,8 @@
 - **Issue:** `while len(sets) < nsets:` loops with no iteration limit. If parameters are too restrictive, this loops forever.
 - **Recommendation:** Add a max iteration limit with a clear error message.
 
-### 15. Unsafe list mutation during iteration
-- **Location:** `src/rnddag.py:155-157`
-- **Issue:** `gen_rnd_legacy()` calls `nodes_orphan.remove(i)` while iterating over `nodes_orphan`. `gen_rnd()` correctly uses `.copy()` at line 235.
-- **Recommendation:** Use `.copy()` in `gen_rnd_legacy()` as well, or consolidate with issue #1.
+### ~~15. Unsafe list mutation during iteration~~ SOLVED
+- **Resolution:** Fixed as part of issue #1 — the shared `_generate_layer_by_layer()` uses `.copy()` correctly.
 
 ### 16. Conditional DAG UI elements disabled but not removed
 - **Location:** `src/daggen-gui.py:141-143, 188-194`
