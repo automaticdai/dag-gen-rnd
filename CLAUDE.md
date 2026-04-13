@@ -9,31 +9,30 @@ Randomised Multi-DAG Task Generator for scheduling and allocation research in pa
 ## Environment Setup
 
 ```bash
-# Conda environment (recommended)
-conda activate dag-gen-rnd
-
-# Or manual install:
+# System libs (one-time)
 sudo apt install python3-dev graphviz libgraphviz-dev pkg-config
-pip install -r requirements.txt
-pip install -r requirements-dev.txt  # pytest
+
+# Python env managed by uv
+uv sync                # runtime deps
+uv sync --group dev    # include pytest
 ```
 
 ## Commands
 
 ```bash
 # Generate DAGs (main entry point)
-python3 src/daggen-cli.py
-python3 src/daggen-cli.py --config /path/to/config.json
+uv run python src/daggen-cli.py
+uv run python src/daggen-cli.py --config /path/to/config.json
 
 # GUI (requires PyQt5)
-python3 src/daggen-gui.py
+uv run python src/daggen-gui.py
 
 # Run all tests
-pytest
+uv run pytest
 
 # Run a single test file or test
-pytest tests/test_generator.py
-pytest tests/test_rnddag.py::TestGenRnd::test_produces_dag
+uv run pytest tests/test_generator.py
+uv run pytest tests/test_rnddag.py::TestGenRnd::test_produces_dag
 ```
 
 Tests that require `pygraphviz` (save/load round-trips, CLI end-to-end with file output) are automatically skipped if the library is not installed.
@@ -80,4 +79,4 @@ Output format is documented in `taskset.json` (example output with nodes, edges,
 
 ## Dependencies
 
-Python 3.7+, numpy, networkx, matplotlib, pygraphviz, tqdm. pygraphviz requires graphviz system libraries.
+Python 3.7+, numpy, networkx, matplotlib, pygraphviz, tqdm. Declared in `pyproject.toml` (managed with `uv`). pygraphviz requires graphviz system libraries.

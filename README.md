@@ -44,13 +44,20 @@ References:
 
 ## Installation on Linux
 
-Install dependencies using apt:
+This project uses [uv](https://docs.astral.sh/uv/) for Python package management.
+
+Install system dependencies with apt:
 
 `$ sudo apt install python3-dev graphviz libgraphviz-dev pkg-config libxcb-xinerama0 libxcb-cursor0`
 
-and then install Python dependencies through `requirements.txt`:
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/), then sync the environment:
 
-`$ pip3 install -r requirements.txt`
+```
+$ uv sync                # runtime dependencies
+$ uv sync --group dev    # include pytest for running tests
+```
+
+Run commands inside the managed environment with `uv run`, e.g. `uv run python src/daggen-cli.py` or `uv run pytest`.
 
 ---
 
@@ -103,12 +110,12 @@ Set `util_algorithm` in `global` to choose the utilization generation algorithm 
 
 First, change the configurations in `config.json`. Then, run the command line interface:
 
-`$ python3 src/daggen-cli.py`
+`$ uv run python src/daggen-cli.py`
 
 
 ### Use the GUI
 
-`$ python3 src/daggen-gui.py`
+`$ uv run python src/daggen-gui.py`
 
 To use the generated DAGs, see the provided API in `utility.py` which also gives an example.
 
