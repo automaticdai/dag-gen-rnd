@@ -17,8 +17,8 @@ Support the following DAG generation algorithms:
 
 Supported utilisation generation algorithms:
 
-- `UUnifast` [1]
-- `UUnifast-discard` [2]
+- `UUniFast` [1]
+- `UUniFast-discard` [2]
 - `DRS`: The Dirichlet-Rescale (DRS) algorithm [3]
 
 References:  
@@ -31,14 +31,15 @@ References:
 
 ## Requirements
 
-- `Python >= 3.7`
+- `Python >= 3.10`
 - `NetworkX >= 2.4`
 - `Matplotlib >= 3.1.3`
 - `pygraphviz >= 1.5`
-- `numpy >= 1.17`
+- `numpy == 2.1`
 - `tqdm >= 4.45.0`
 - `pyqt5 >= 5.12`
 - `drs >= 2.0`
+- `zipp == 3.19.1`
 
 ---
 
@@ -138,7 +139,6 @@ or more complicated DAGs that can also be generated:
 ## Known Issues
 
 1. In some cases, the workload of the critical path could be larger than the period. The generator does not prohibit this case as this is not treated as a bug (as you can distribute the workload to multiple cores). The users need to be aware of this and deal with them in their favourite way, e.g. discarding.
-1. If you get an error while building pygraphviz during installing the dependencies, install graphviz with `apt install graphviz graphviz-dev`.
 
 ---
 
@@ -146,12 +146,14 @@ or more complicated DAGs that can also be generated:
 
 The generator is featured in multiple academic papers:
 
-1. Ping, Yani, Kun Xie, Xiaohong Huang, Chengcheng Li, and Yasheng Zhang. "GNN-Based QoE Optimization for Dependent Task Scheduling in Edge-Cloud Computing Network." In 2024 IEEE Wireless Communications and Networking Conference (WCNC), pp. 1-6. IEEE, 2024.
-1. Zhang, Yuanhai, Shuai Zhao, Gang Chen, and Kai Huang. "Fault-tolerant DAG scheduling with runtime reconfiguration on multicore real-time systems." In 2024 IEEE 35th International Conference on Application-specific Systems, Architectures and Processors (ASAP), pp. 19-27. IEEE, 2024.
-1. Kang, Hong, Minghao Li, Lehao Lin, Sizheng Fan, and Wei Cai. "Bridging Incentives and Dependencies: An Iterative Combinatorial Auction Approach to Dependency-Aware Offloading in Mobile Edge Computing." IEEE Transactions on Mobile Computing, 2024.
-1. Cucinotta, Tommaso, Alexandre Amory, Gabriele Ara, Francesco Paladino, and Marco Di Natale. "Multi-criteria optimization of real-time DAGs on heterogeneous platforms under p-EDF." ACM Transactions on Embedded Computing Systems 23, no. 1, 2024.
 1. Shuai Zhao, Xiaotian Dai, Iain Bate, Alan Burns, Wanli Chang. "DAG scheduling and analysis on multiprocessor systems: Exploitation of parallelism and dependency." In Real-Time Systems Symposium (RTSS), pp. 128-140. IEEE, 2020.
-1. Shuai Zhao, Xiaotian Dai, Iain Bate. "DAG Scheduling and Analysis on Multi-core Systems by Modelling Parallelism and Dependency." Transactions on Parallel and Distributed Systems (TPDS). IEEE, 2022.
+1. Shuai Zhao, Xiaotian Dai, Iain Bate. "DAG Scheduling and Analysis on Multi-core Systems by Modelling Parallelism and Dependency." Transactions on Parallel and Distributed Systems (TPDS). IEEE, 2022. 
+1. Yani Ping, Kun Xie, Xiaohong Huang, Chengcheng Li, and Yasheng Zhang. "GNN-Based QoE Optimization for Dependent Task Scheduling in Edge-Cloud Computing Network." In 2024 IEEE Wireless Communications and Networking Conference (WCNC), pp. 1-6. IEEE, 2024.
+1. Yuanhai Zhang, Shuai Zhao, Gang Chen, and Kai Huang. "Fault-tolerant DAG scheduling with runtime reconfiguration on multicore real-time systems." In 2024 IEEE 35th International Conference on Application-specific Systems, Architectures and Processors (ASAP), pp. 19-27. IEEE, 2024.
+1. Hong Kang, Minghao Li, Lehao Lin, Sizheng Fan, and Wei Cai. "Bridging Incentives and Dependencies: An Iterative Combinatorial Auction Approach to Dependency-Aware Offloading in Mobile Edge Computing." IEEE Transactions on Mobile Computing, 2024.
+1. Tommaso Cucinotta, Alexandre Amory, Gabriele Ara, Francesco Paladino, and Marco Di Natale. "Multi-criteria optimization of real-time DAGs on heterogeneous platforms under p-EDF." ACM Transactions on Embedded Computing Systems 23, no. 1, 2024.
+1. Abigail Eisenklam, Robert Gifford, Georgiy A. Bondar, Yifan Cai, Tushar Sial, Linh Thi Xuan Phan, and Abhishek Halder. "Rasco: Resource Allocation and Scheduling Co-design for DAG Applications on Multicore." ACM Transactions on Embedded Computing Systems 24, no. 5s, 2025.
+1. Yuanhai Zhang, Shuai Zhao, and Kai Huang. "DAG Scheduling and Analysis in Multicore Real-Time Systems via Sub-Graph Division." IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2026.
 
 ---
 
@@ -176,7 +178,7 @@ BibTex:
 }
 ```
 
-Alternatively, if you want to cite the software:
+Alternatively, if you just want to cite the software:
 
 ```
 Xiaotian Dai. (2022). dag-gen-rnd: A randomised multi-DAG task generator for scheduling and allocation research (v0.1). Zenodo. https://doi.org/10.5281/zenodo.6334205
