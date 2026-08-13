@@ -99,7 +99,11 @@ def gen_execution_times(n, w, round_c=False, dummy=False):
         # normalise to w & assign to the execution time list
         c_dict = {}
         w_p = sum(c_set)
-        f = w_p / w
+        if w_p == 0 or w <= 0:
+            # degenerate case: no workload to distribute, fall back to unit times
+            f = 1.0
+        else:
+            f = w_p / w
 
         for i in range(n):
             if round_c == False:
@@ -121,7 +125,11 @@ def gen_execution_times(n, w, round_c=False, dummy=False):
         w = w - 2 # remove c(source) and c(sink)
         c_dict = {}
         w_p = sum(c_set)
-        f = w_p / w
+        if w_p == 0 or w <= 0:
+            # degenerate case: no internal workload (w too small or no internal nodes)
+            f = 1.0
+        else:
+            f = w_p / w
 
         # dummy source node
         c_dict[1] = 1

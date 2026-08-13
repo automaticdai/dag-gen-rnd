@@ -99,6 +99,23 @@ class TestGenExecutionTimes:
         # Sum should be close to w (source=1, sink=1, rest sums to w-2)
         assert sum(c.values()) == pytest.approx(1000, rel=0.01)
 
+    def test_dummy_small_w_no_crash(self):
+        """Small workload with dummy=True should not raise ZeroDivisionError."""
+        c = gen_execution_times(n=4, w=2, round_c=True, dummy=True)
+        assert c[1] == 1  # source
+        assert c[4] == 1  # sink
+        assert len(c) == 4
+
+    def test_dummy_two_nodes_no_crash(self):
+        """n=2 with dummy=True has no internal nodes; source and sink only."""
+        c = gen_execution_times(n=2, w=2, round_c=True, dummy=True)
+        assert c == {1: 1, 2: 1}
+
+    def test_zero_workload_no_crash(self):
+        """w=0 should not raise ZeroDivisionError."""
+        c = gen_execution_times(n=4, w=0, round_c=True)
+        assert len(c) == 4
+
 
 # ---- drs_gen ----
 
