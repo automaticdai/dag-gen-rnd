@@ -11,6 +11,7 @@ def sample_config():
             "cores": 4,
             "print_DAG": False,
             "save_to_file": False,
+            "save_png": True,
             "dummy_source_and_sink": False,
             "rnd_seed": 42,
             "util_algorithm": "uunifast_discard"
@@ -47,6 +48,7 @@ def multi_dag_config_file(tmp_path, sample_config):
     """Config file with multi-DAG mode enabled."""
     sample_config["global"]["multi-DAG_on"] = True
     sample_config["global"]["save_to_file"] = True
+    sample_config["global"]["save_png"] = True
     p = tmp_path / "config_multi.json"
     p.write_text(json.dumps(sample_config))
     return str(p)
