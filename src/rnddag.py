@@ -148,7 +148,7 @@ class DAG:
             for node_p in nodes_parent:
                 if random() < p_fork or node_p == 1:
                     kk = randint(fork_n_min, fork_n_max)
-                    for i in range(kk):
+                    for _ in range(kk):
                         G.add_node(n, rank=r)
                         G.add_edge(node_p, n, label="n/a")
                         nodes_parent_next.append(n)

@@ -68,12 +68,17 @@ def drs_gen(n, u, nsets, ulimit=1):
                 "drs_gen: failed to generate {} feasible sets after {} "
                 "iterations (n={}, u={}, ulimit={})".format(nsets, MAX_ITERATIONS, n, u, ulimit))
         vec = drs(n=n, sumu=u, upper_bounds=[ulimit] * n)
-        if all(v >= 0 for v in vec):
+        if all(0 <= v <= ulimit + 1e-9 for v in vec):
             sets.append(list(vec))
     return sets
 
-# random generate periods from a population set
 def gen_period(population, n):
+    """Generate n periods sampled from a population.
+
+    Note: a population of exactly two elements is treated as an inclusive
+    range [min, max] rather than a two-element choice set. Use 3+ elements
+    (or a single-element list) to sample from a discrete set.
+    """
     periods = []
 
     for _ in range(n):
@@ -91,7 +96,7 @@ def gen_period(population, n):
 def gen_execution_times(n, w, round_c=False, dummy=False):
     c_set = []
 
-    if dummy == False:
+    if not dummy:
         for i in range(n):
             c = random.random()
             c_set.append(c)
@@ -106,7 +111,7 @@ def gen_execution_times(n, w, round_c=False, dummy=False):
             f = w_p / w
 
         for i in range(n):
-            if round_c == False:
+            if not round_c:
                 # +1 as node number starts from 1, not 0
                 c_dict[i + 1] = c_set[i] / f
             else:
@@ -135,7 +140,7 @@ def gen_execution_times(n, w, round_c=False, dummy=False):
         c_dict[1] = 1
 
         for i in range(n - 2):
-            if round_c == False:
+            if not round_c:
                 # +1 as node number starts from 1, not 0
                 # +1 more as the source node is skipped
                 c_dict[i + 1 + 1] = c_set[i] / f
