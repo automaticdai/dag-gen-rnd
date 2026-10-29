@@ -2,6 +2,9 @@
 
 ![](docs/dag-gen-rnd-banner.png)
 
+
+![](https://img.shields.io/github/stars/automaticdai/dag-gen-rnd)
+![](https://img.shields.io/github/forks/automaticdai/dag-gen-rnd)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
@@ -107,14 +110,14 @@ Set `util_algorithm` in `global` to choose the utilization generation algorithm 
 
 ## Usage
 
-### Use the cli
+### Use the CLI (`daggen-cli`)
 
 First, change the configurations in `config.json`. Then, run the command line interface:
 
 `$ uv run python src/daggen-cli.py`
 
 
-### Use the GUI
+### Use the GUI (`daggen-gui`)
 
 `$ uv run python src/daggen-gui.py`
 
