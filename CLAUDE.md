@@ -79,4 +79,4 @@ Output format is documented in `taskset.json` (example output with nodes, edges,
 
 ## Dependencies
 
-Python 3.7+, numpy, networkx, matplotlib, pygraphviz, tqdm. Declared in `pyproject.toml` (managed with `uv`). pygraphviz requires graphviz system libraries.
+Python 3.11+, numpy, networkx, matplotlib, pygraphviz, tqdm. Declared in `pyproject.toml` (managed with `uv`). pygraphviz requires graphviz system libraries.

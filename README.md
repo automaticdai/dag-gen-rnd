@@ -31,7 +31,7 @@ References:
 
 ## Requirements
 
-- `Python >= 3.10`
+- `Python >= 3.11`
 - `NetworkX >= 2.4`
 - `Matplotlib >= 3.1.3`
 - `pygraphviz >= 1.5`
