@@ -9,6 +9,8 @@
 from rnddag import DAG
 from generator import uunifast_discard, drs_gen, gen_period, apply_execution_times
 
+ALGORITHMS = ("rnd", "nfj", "legacy")
+
 
 def generate_dag(i, dag_config, workload, algorithm="rnd", utilization=-1,
                  period=-1, round_c=True, dummy=False):
@@ -27,6 +29,10 @@ def generate_dag(i, dag_config, workload, algorithm="rnd", utilization=-1,
     Returns:
         Tuple of (DAG, c_dict) where c_dict is the execution time dictionary.
     """
+    if algorithm not in ALGORITHMS:
+        raise ValueError("Unknown DAG algorithm {!r}; expected one of {}".format(
+            algorithm, ", ".join(ALGORITHMS)))
+
     G = DAG(i=i, U=utilization, T=period, W=workload)
 
     if algorithm == "rnd":

@@ -75,3 +75,72 @@ class TestMainMultiDag:
         main(config_path=str(config_path), data_path=str(data_dir))
 
         assert data_dir.exists()
+
+
+class TestParseArgs:
+    def test_defaults(self):
+        config_path, data_path = _cli.parse_args([])
+        assert config_path is None
+        assert data_path is None
+
+    def test_short_flags(self):
+        assert _cli.parse_args(["-c", "a.json", "-d", "out"]) == ("a.json", "out")
+
+    def test_long_flags(self):
+        assert _cli.parse_args(["--config=a.json", "--directory=out"]) == ("a.json", "out")
+
+
+class TestDirectoryFlag:
+    def test_cli_writes_to_directory(self, tmp_path, sample_config):
+        """Running the script with -d creates the output directory there."""
+        import subprocess, sys
+        config_path = tmp_path / "config.json"
+        sample_config["single-DAG"]["set_number"] = 1
+        config_path.write_text(json.dumps(sample_config))
+        out_dir = tmp_path / "custom_out"
+
+        script = os.path.join(os.path.dirname(__file__), os.pardir, "src", "daggen-cli.py")
+        result = subprocess.run(
+            [sys.executable, script, "-c", str(config_path), "-d", str(out_dir)],
+            capture_output=True, text=True)
+
+        assert result.returncode == 0, result.stderr
+        assert out_dir.is_dir()
+
+
+class TestAlgorithmConfig:
+    @pytest.fixture
+    def seen(self, monkeypatch):
+        recorded = []
+
+        for name in ("generate_dag", "generate_multi_dag_taskset"):
+            original = getattr(_cli, name)
+
+            def spy(*args, _orig=original, **kwargs):
+                recorded.append(kwargs.get("algorithm"))
+                return _orig(*args, **kwargs)
+
+            monkeypatch.setattr(_cli, name, spy)
+        return recorded
+
+    def _run(self, tmp_path, config):
+        config_path = tmp_path / "config.json"
+        config_path.write_text(json.dumps(config))
+        main(config_path=str(config_path), data_path=str(tmp_path / "data"))
+
+    def test_single_dag_uses_configured_algorithm(self, tmp_path, sample_config, seen):
+        sample_config["single-DAG"]["set_number"] = 2
+        sample_config["dag_config"]["algorithm"] = "nfj"
+        self._run(tmp_path, sample_config)
+        assert seen == ["nfj", "nfj"]
+
+    def test_multi_dag_uses_configured_algorithm(self, tmp_path, sample_config, seen):
+        sample_config["global"]["multi-DAG_on"] = True
+        sample_config["dag_config"]["algorithm"] = "legacy"
+        self._run(tmp_path, sample_config)
+        assert seen == ["legacy"]
+
+    def test_algorithm_defaults_to_rnd(self, tmp_path, sample_config, seen):
+        sample_config["single-DAG"]["set_number"] = 1
+        self._run(tmp_path, sample_config)
+        assert seen == ["rnd"]

@@ -22,7 +22,7 @@ uv sync --group dev    # include pytest
 ```bash
 # Generate DAGs (main entry point)
 uv run python src/daggen-cli.py
-uv run python src/daggen-cli.py --config /path/to/config.json
+uv run python src/daggen-cli.py --config /path/to/config.json --directory /path/to/output
 
 # GUI (requires PyQt5)
 uv run python src/daggen-gui.py
@@ -73,7 +73,7 @@ All generation parameters are in `config.json`. Key sections:
 - `misc`: mode selection (multi-DAG vs single), core count, random seed
 - `multi-DAG`: taskset count, tasks per set, total utilization, period options
 - `single-DAG`: set count, workload per DAG
-- `dag_config`: parallelism (max nodes/layer), layer count range, connection probability
+- `dag_config`: algorithm (`rnd`/`nfj`/`legacy`, default `rnd`), parallelism (max nodes/layer), layer count range, connection probability
 
 Output format is documented in `taskset.json` (example output with nodes, edges, periods, workloads).
 

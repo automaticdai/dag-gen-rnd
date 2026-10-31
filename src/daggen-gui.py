@@ -370,7 +370,8 @@ class DagGenGUI(QMainWindow):
                         "parallelism": int(self.edit_parallelism.text()),
                         "layer_num_min": int(self.edit_critical_min.text()),
                         "layer_num_max": int(self.edit_critical_max.text()),
-                        "connect_prob": float(self.edit_pc.text())
+                        "connect_prob": float(self.edit_pc.text()),
+                        "algorithm": self._read_dag_params()[0]
                     }
                 }
                 with open(path, 'w') as f:
@@ -400,6 +401,8 @@ class DagGenGUI(QMainWindow):
             self.edit_critical_min.setText(str(dag_cfg.get("layer_num_min", 3)))
             self.edit_critical_max.setText(str(dag_cfg.get("layer_num_max", 8)))
             self.edit_pc.setText(str(dag_cfg.get("connect_prob", 0.5)))
+            algo_index = {"rnd": 0, "legacy": 1, "nfj": 2}
+            self.opt_algorithm.setCurrentIndex(algo_index.get(dag_cfg.get("algorithm", "rnd"), 0))
 
             # misc
             misc = config.get("global", {})

@@ -26,7 +26,32 @@ def parse_configuration(config_path):
 
 
 def print_usage_info():
-    logging.info("[Usage] python3 daggen-cli.py --config config_file")
+    print("[Usage] python3 daggen-cli.py [--config config_file] [--directory output_dir]")
+
+
+def parse_args(argv):
+    """Parse command-line arguments.
+
+    Returns:
+        Tuple of (config_path, data_path); either is None when not given,
+        in which case main() falls back to its defaults.
+    """
+    short_flags = "hc:d:e"
+    long_flags = ["help", "config=", "directory=", "evaluate"]
+    opts, _ = getopt.getopt(argv, short_flags, long_flags)
+
+    config_path = None
+    data_path = None
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            print_usage_info()
+            sys.exit()
+        elif opt in ("-c", "--config"):
+            config_path = arg
+        elif opt in ("-d", "--directory"):
+            data_path = arg
+
+    return config_path, data_path
 
 
 def main(config_path=None, data_path=None):
@@ -70,6 +95,7 @@ def main(config_path=None, data_path=None):
 
     # DAG config
     dag_config = config["dag_config"]
+    algorithm = dag_config.get("algorithm", "rnd")
 
     ############################################################################
     # I. single DAG generation
@@ -81,7 +107,7 @@ def main(config_path=None, data_path=None):
 
         for i in tqdm(range(n)):
             G, _ = generate_dag(i=i, dag_config=dag_config, workload=w,
-                                round_c=True, dummy=dummy)
+                                algorithm=algorithm, round_c=True, dummy=dummy)
 
             if config["global"]["print_DAG"]:
                 G.print_data()
@@ -107,7 +133,7 @@ def main(config_path=None, data_path=None):
                 generate_multi_dag_taskset(
                     dag_config=dag_config, n_tasks=n, n_sets=n_set,
                     u_total=u_total, period_set=period_set, cores=cores,
-                    util_algo=util_algo, dummy=dummy),
+                    algorithm=algorithm, util_algo=util_algo, dummy=dummy),
                 total=n_set * n):
 
             if set_index != prev_set_index:
@@ -140,28 +166,11 @@ def main(config_path=None, data_path=None):
 
 
 if __name__ == "__main__":
-    ############################################################################
-    # Parse cmd arguments
-    ############################################################################
-    src_path = os.path.abspath(os.path.dirname(__file__))
-    base_path = os.path.abspath(os.path.join(src_path, os.pardir))
-
-    config_path = os.path.join(base_path, "config.json")
-
     try:
-        short_flags = "hc:d:e"
-        long_flags = ["help", "config=", "directory=", "evaluate"]
-        opts, args = getopt.getopt(sys.argv[1:], short_flags, long_flags)
+        config_path, data_path = parse_args(sys.argv[1:])
     except getopt.GetoptError as err:
         logging.error(err)
         print_usage_info()
         sys.exit(2)
 
-    for opt, arg in opts:
-        if opt in ("-h", "--help"):
-            print_usage_info()
-            sys.exit()
-        elif opt in ("-c", "--config"):
-            config_path = arg
-
-    main(config_path=config_path)
+    main(config_path=config_path, data_path=data_path)

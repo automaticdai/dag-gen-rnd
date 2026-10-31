@@ -106,6 +106,17 @@ Set `util_algorithm` in `global` to choose the utilization generation algorithm 
 - `"uunifast_discard"` (default): UUniFast-discard [2]
 - `"drs"`: Dirichlet-Rescale [3]
 
+### DAG Shape
+
+Parameters in `dag_config` control the structure of each DAG:
+
+- `algorithm`: DAG generation algorithm — `"rnd"` (default, layer-by-layer randomised), `"nfj"` (nested fork-join) or `"legacy"` (legacy randomised)
+- `parallelism`: maximum number of nodes per layer
+- `layer_num_min` / `layer_num_max`: range for the number of layers
+- `connect_prob`: probability of connecting nodes in adjacent layers
+
+`nfj` ignores the shape parameters above.
+
 ---
 
 ## Usage
@@ -115,6 +126,11 @@ Set `util_algorithm` in `global` to choose the utilization generation algorithm 
 First, change the configurations in `config.json`. Then, run the command line interface:
 
 `$ uv run python src/daggen-cli.py`
+
+Options:
+
+- `-c, --config <file>`: use a different config file (default: `config.json`)
+- `-d, --directory <dir>`: write generated DAGs to `<dir>` instead of `data/`
 
 
 ### Use the GUI (`daggen-gui`)
